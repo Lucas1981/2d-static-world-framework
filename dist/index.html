@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>2d game proof of concept</title>
+  <style>
+
+    @font-face {
+      font-family: 'MyArcade';
+      src: url('arcadeclassic.regular.ttf') format('truetype');
+    }
+
+    .body {
+      background-color: black;
+      overflow: hidden;
+      font-family: 'MyArcade';
+    }
+
+    .header {
+      color: white;
+    }
+
+    .wrapper {
+      text-align: center;
+      padding-top: 64px;
+    }
+  </style>
+</head>
+<body class="body">
+
+    <div class="wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+    <script src="main.bundle.js"></script>
+</body>
+</html>
