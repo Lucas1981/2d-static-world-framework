@@ -10,12 +10,10 @@ export default class Sound {
     this.sources = {};
     this.buffers = new Array(channels);
     for (let i = 0; i < this.buffers.length; i++) this.buffers[i] = new Audio();
-    console.log(this.buffers);
   }
 
   play(name) {
-    console.log(this.index);
-    this.buffers[this.index].src = this.buffers[name].src;
+    this.buffers[this.index].src = this.sources[name].src;
     this.buffers[this.index].play();
     this.index = (this.index + 1) % this.buffers.length;
   }
@@ -23,6 +21,6 @@ export default class Sound {
   registerSample(key, data) {
     const audio = new Audio();
     audio.src = data;
-    this.buffers[key] = audio;
+    this.sources[key] = audio;
   }
 }
