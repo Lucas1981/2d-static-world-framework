@@ -1,17 +1,14 @@
 /* NOTE: This is a .js file because TypeScript doesn't like the window object */
 
+const channels = 4;
+
 export default class Sound {
 
   constructor() {
     window.AudioContext = window.AudioContext || window.webkitAudioContext || {};
     this.index = 0;
     this.sources = {};
-    this.buffers = [
-      new Audio(),
-      new Audio(),
-      new Audio(),
-      new Audio()
-    ];
+    this.buffers = new Array(channels).fill(new Audio());
   }
 
   play(name) {
