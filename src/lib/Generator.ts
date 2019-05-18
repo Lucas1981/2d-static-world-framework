@@ -30,8 +30,9 @@ export default class Generator {
     for (let actor of actors) {
       const actorType = data.actors[actor.type];
       result.push(new Actor(
-        actor.x,
-        actor.y,
+        // Make sure to correct for the offset of half a unit
+        actor.x + Math.floor(data.config.unit / 2),
+        actor.y + Math.floor(data.config.unit / 2),
         actorType.states,
         new actorAttributes[actorType.name].mover(),
         new actorAttributes[actorType.name].hurtable(),

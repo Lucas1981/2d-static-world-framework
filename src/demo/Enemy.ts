@@ -21,7 +21,6 @@ class EnemyMover implements IMovable {
   private direction: any;
   private directionChange: any;
   private directionChangeCutoff: number;
-  private directions: any;
 
   constructor() {
     this.directionChangeCutoff = Math.floor(Math.random() * 500) + 150;
@@ -33,7 +32,6 @@ class EnemyMover implements IMovable {
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
     const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
-    const state: any = global.keyboard.state;
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
     let probeY: number;

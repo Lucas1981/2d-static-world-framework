@@ -20,6 +20,14 @@ export default class Canvas {
     return this.canvasPointer.height;
   }
 
+  public drawCircle(x, y, radius = 10, color = 'red') {
+    this.context.beginPath();
+    this.context.arc(x, y, radius, 0, 2 * Math.PI);
+    this.context.fillStyle = color;
+    this.context.fill();
+    this.context.closePath();
+  }
+
   public write(
     text: string,
     textFillColor,
