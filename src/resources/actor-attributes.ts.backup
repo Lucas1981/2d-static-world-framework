@@ -1,0 +1,122 @@
+import Active from './Active';
+import Passive from './Passive';
+import Benevolent from './Benevolent';
+import Malevolent from './Malevolent';
+import UntilHit from './UntilHit';
+
+const up = 0;
+const upperRight = 1;
+const right = 2;
+const lowerRight = 3;
+const down = 4;
+const lowerLeft = 5
+const left = 6;
+const upperLeft = 7;
+
+const fourtyFiveDegrees = 1;
+const ninetyDegrees = 2;
+const oneEightyDegrees = 4;
+const twoSevenDegrees = 6;
+
+const clockwise = 1;
+const counterClockwise = -1;
+
+const allContingencies = {
+  walHugger: [{
+    conditions: [
+      // If we hit a wall
+      { direction: 0, isSolid: true }
+    ],
+    // Turn ninety degrees left
+    turn: -1 * ninetyDegrees
+  },
+  {
+    conditions: [
+      // If we can move right
+      { direction: 2, isSolid: false }
+    ],
+    // Then move right
+    turn: ninetyDegrees
+  }],
+  ninetyDegreesCounterClockwiseOnSolid: [{
+    conditions: [
+      { direction: 0, isSolid: true}
+    ],
+    turn: counterClockwise * ninetyDegrees
+  }],
+  ninetyDegreesOnSolid: [{
+    conditions: [
+      { direction: 0, isSolid: true }
+    ],
+    turn: ninetyDegrees
+  }],
+  oneEightyDegreesOnSolid: [{
+    conditions: [
+      { direction: 0, isSolid: true }
+    ],
+    turn: oneEightyDegrees
+  }]
+}
+
+function moveFactory(contingencies: any = allContingencies.ninetyDegreesOnSolid, startingPosition = up) {
+  return class extends UntilHit {
+    constructor() {
+        super(contingencies, startingPosition);
+    };
+  };
+}
+
+export default {
+  'red': {
+    mover: moveFactory(),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'green': {
+    mover: moveFactory(allContingencies.ninetyDegreesOnSolid),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'blue': {
+    mover: moveFactory(),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'yellow': {
+    mover: moveFactory(),
+    hurtable: Benevolent,
+    active: Active
+  },
+
+  'purple': {
+    mover: moveFactory(allContingencies.oneEightyDegreesOnSolid, left),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'brown': {
+    mover: moveFactory(),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'grey': {
+    mover: moveFactory(allContingencies.oneEightyDegreesOnSolid, right),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'cyaan': {
+    mover: moveFactory(allContingencies.oneEightyDegreesOnSolid, up),
+    hurtable: Benevolent,
+    active: Active
+  },
+
+  'magenta': {
+    mover: moveFactory(allContingencies.oneEightyDegreesOnSolid, down),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'black': {
+    mover: moveFactory(allContingencies.ninetyDegreesCounterClockwiseOnSolid, right),
+    hurtable: Benevolent,
+    active: Active
+  },
+};
