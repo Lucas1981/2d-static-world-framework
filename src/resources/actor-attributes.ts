@@ -2,7 +2,9 @@ import Active from './Active';
 import Passive from './Passive';
 import Benevolent from './Benevolent';
 import Malevolent from './Malevolent';
-import UntilHit from './UntilHit';
+import BasicMover from './BasicMover';
+import DiagonalMover from './DiagonalMover';
+import CircularMover from './CircularMover';
 
 const up = 0;
 const upperRight = 1;
@@ -50,11 +52,26 @@ const allContingencies = {
 }
 
 function moveFactory(contingencies: any = allContingencies.ninetyDegrees, startingPosition = up) {
-  return class extends UntilHit {
+  return class extends BasicMover {
     constructor() {
         super(contingencies, startingPosition);
     };
   };
+}
+
+function circularMoveFactory(
+    horizontal: number = 1,
+    vertical: number = 1,
+    radius: number = 32,
+    angle: number = 0,
+    speed: number = 300,
+    direction: number = 1
+  ) {
+  return class extends CircularMover {
+    constructor() {
+      super(horizontal, vertical, radius, angle, speed, direction);
+    }
+  }
 }
 
 export default {
@@ -85,7 +102,7 @@ export default {
     active: Active
   },
   'brown': {
-    mover: moveFactory(allContingencies.wallHugger, right),
+    mover: DiagonalMover,
     hurtable: Benevolent,
     active: Active
   },
@@ -111,12 +128,28 @@ export default {
     active: Active
   },
   'orange': {
-    mover: moveFactory(),
+    mover: moveFactory(allContingencies.wallHugger, right),
     hurtable: Benevolent,
     active: Active
   },
   'pink': {
     mover: moveFactory(allContingencies.stageFright, left),
+    hurtable: Benevolent,
+    active: Active
+  },
+
+  'teal': {
+    mover: circularMoveFactory(1, 0),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'navy': {
+    mover: circularMoveFactory(1, 1, 32, 0, 100),
+    hurtable: Benevolent,
+    active: Active
+  },
+  'burlywood': {
+    mover: circularMoveFactory(0, 1, 32, 0, 200, -1),
     hurtable: Benevolent,
     active: Active
   }

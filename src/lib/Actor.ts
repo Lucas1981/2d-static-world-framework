@@ -10,6 +10,8 @@ export default class Actor {
   private stateChange: any;
   private alive: Boolean;
   private context: any;
+  private _originX: number;
+  private _originY: number;
 
   constructor(
     private _x: number,
@@ -23,6 +25,8 @@ export default class Actor {
     this.stateChange = global.clock.getTime();
     this.alive = true;
     this.context = global.canvas.getContext();
+    this._originX = this._x;
+    this._originY = this._y;
   }
 
   public updateAnimationKey(animationKey) {
@@ -46,6 +50,14 @@ export default class Actor {
 
   public set y(y: number) {
     this._y = y;
+  }
+
+  public get originX(): number {
+    return this._originX;
+  }
+
+  public get originY() {
+    return this._originY;
   }
 
   public progress(): void {
@@ -88,17 +100,30 @@ export default class Actor {
   }
 
   public checkGrid(probeX: number, probeY: number): Boolean {
+    const coordinates = this.getProbeCoordinates(probeX, probeY);
+    for (const key in coordinates) {
+      const coordinate = coordinates[key];
+      if (coordinate === false) return false;
+    }
+    return true;
+  }
+
+  public gridReport(probeX: number, probeY: number): any {
+    return this.getProbeCoordinates(probeX, probeY);
+  }
+
+  private getProbeCoordinates(probeX: number, probeY: number): any {
     const probeLeft: number = this.playerToGrid(probeX - (global.config.unit / 2));
     const probeRight: number = this.playerToGrid(probeX + (global.config.unit / 2) - 1);
     const probeTop: number = this.playerToGrid(probeY - (global.config.unit / 2));
     const probeBottom: number = this.playerToGrid(probeY + (global.config.unit / 2) - 1);
 
-    return (
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeTop) &&
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeTop) &&
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom) &&
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom)
-    );
+    return [
+      global.maps[global.activeMap].grid.isSafe(probeLeft, probeTop),
+      global.maps[global.activeMap].grid.isSafe(probeRight, probeTop),
+      global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom),
+      global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom)
+    ];
   }
 
   public draw(animate: boolean = true): void {

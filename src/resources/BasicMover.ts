@@ -22,14 +22,17 @@ const directions = [
   { x: -1, y: -1 }, // upper-left
 ]
 
-export default abstract class UntilHitsMover implements IMovable {
+export default abstract class BasicMover implements IMovable {
   private direction: any;
+  private elapsedTime: number;
+  private timer: any;
 
   constructor(
     private contingencies: any,
     private directionIndex: number = 0
   ) {
     this.direction = directions[this.directionIndex];
+    this.elapsedTime = 0;
   }
 
   public progress(actor: Actor) {
@@ -93,12 +96,16 @@ export default abstract class UntilHitsMover implements IMovable {
     const probeY = actor.y + (movement * this.direction.y);
     const probeX = actor.x + (movement * this.direction.x);
 
-    // Do we hit a wall if we are trying this?
-    if (actor.checkGrid(probeX, probeY)) {
+    this.elapsedTime += elapsedTime;
+    const timeIsUp = 'timer' in this.contingencies ? this.elapsedTime > this.contingencies.timer : false;
+
+    // Do we hit a wall if we are trying this or is it time to move on?
+    if (actor.checkGrid(probeX, probeY) && !timeIsUp) {
       // If not, do the usual
       actor.x = probeX;
       actor.y = probeY;
     } else {
+      this.elapsedTime = 0;
       this.centerActorAndChangeDirection(actor, gridX, gridY, this.contingencies.default);
     }
   }
