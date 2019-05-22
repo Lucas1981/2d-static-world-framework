@@ -23,18 +23,20 @@ export default class Stage implements IStage {
   }
 
   public handleCollision(collider, actor) {
-    // If the collider can't move and the actor can move but can't hurt, then the player hit a coin
-    if (!collider.element.isActive() && actor.element.isActive() && !actor.element.canHurt()) {
-      // So remove the coin
-      collider.element.die();
-      global.sound.play('coin');
-    }
+    if (actor.element.isActive()) {
+      // If the collider can't move and the actor can move but can't hurt, then the player hit a coin
+      if (!collider.element.isActive() && actor.element.isActive() && !actor.element.canHurt()) {
+        // So remove the coin
+        collider.element.die();
+        global.sound.play('coin');
+      }
 
-    // If we can move but can't hurt, we are the player
-    if (collider.element.isActive() && !collider.element.canHurt()) {
-      // Which means an enemy hit us, so we're dead
-      global.sound.play('dead');
-      global.gameState = GameState.Dead;
+      // If we can move but can't hurt, we are the player
+      if (collider.element.isActive() && !collider.element.canHurt()) {
+        // Which means an enemy hit us, so we're dead
+        global.sound.play('dead');
+        global.gameState = GameState.Dead;
+      }
     }
   }
 }

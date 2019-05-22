@@ -2,7 +2,7 @@ import IActionable from '../lib/IActionable';
 import IHurtable from '../lib/IHurtable';
 import IMovable from '../lib/IMovable';
 import Actor from '../lib/Actor';
-import { DirectionTypes } from './DirectionTypes';
+import { DirectionTypes } from '../resources/DirectionTypes';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 100;

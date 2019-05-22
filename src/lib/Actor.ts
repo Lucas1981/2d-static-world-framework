@@ -7,21 +7,25 @@ import global from './Global';
 
 export default class Actor {
   private animationKey: string;
+  private animationKeyNames: string[];
   private stateChange: any;
   private alive: Boolean;
   private context: any;
+  private _prevX: number;
+  private _prevY: number;
   private _originX: number;
   private _originY: number;
 
   constructor(
     private _x: number,
     private _y: number,
-    private animationKeys: string[],
+    private animationKeys: any[],
     private movable: IMovable,
     private hurtable: IHurtable,
     private actionable: IActionable
   ) {
-    this.animationKey = Object.keys(this.animationKeys)[0];
+    this.animationKeyNames = Object.keys(this.animationKeys);
+    this.animationKey = this.animationKeyNames[0];
     this.stateChange = global.clock.getTime();
     this.alive = true;
     this.context = global.canvas.getContext();
@@ -30,7 +34,7 @@ export default class Actor {
   }
 
   public updateAnimationKey(animationKey) {
-    if (this.animationKey !== animationKey) {
+    if (this.animationKey !== animationKey && this.animationKeyNames.indexOf(animationKey) !== -1) {
       this.animationKey = animationKey;
       this.stateChange = global.clock.getTime();
     }
@@ -41,6 +45,7 @@ export default class Actor {
   }
 
   public set x(x: number) {
+    this._prevX = this._x;
     this._x = x;
   }
 
@@ -49,7 +54,24 @@ export default class Actor {
   }
 
   public set y(y: number) {
+    this._prevY = this._y;
     this._y = y;
+  }
+
+  public get prevX(): number {
+    return this._prevX;
+  }
+
+  public get prevY(): number {
+    return this._prevY;
+  }
+
+  public set prevX(x: number) {
+      this._prevX = x;
+  }
+
+  public set prevY(y: number) {
+    this._prevY = y;
   }
 
   public get originX(): number {
@@ -78,6 +100,11 @@ export default class Actor {
 
   public die(): void {
     this.alive = false;
+  }
+
+  public restorePreviousLocation() {
+    this.x = this._prevX;
+    this.y = this._prevY;
   }
 
   public getCurrentBox(): any {
@@ -153,5 +180,9 @@ export default class Actor {
       }
     }
     return null;
+  }
+
+  public isCollidingWith(actor: Actor): boolean {
+    return Collision.isColliding(this, actor);
   }
 }

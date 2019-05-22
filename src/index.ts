@@ -1,9 +1,9 @@
 /* This bootstraps and starts off everything */
 
-import Game from './demo/Game';
-import actorAttributes from './demo/actor-attributes';
-import Stage from './demo/Stage';
-import data from './demo/data';
+import Game from './push-interaction/Game';
+import actorAttributes from './push-interaction/actor-attributes';
+import Stage from './push-interaction/Stage';
+import data from './push-interaction/data';
 
 (function(Game, Stage, actorAttributes, data) {
   const stage = new Stage();
