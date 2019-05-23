@@ -21,6 +21,7 @@ export default class PlayerMover implements IMovable {
   public progress(actor: Actor): void {
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
+    const grid = global.maps[global.activeMap].grid;
     const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const state: any = global.keyboard.state;
     const gridX: number = Math.floor(actor.x / global.config.unit);
@@ -31,7 +32,7 @@ export default class PlayerMover implements IMovable {
     if (state.up) {
       const probeX: number = actor.x;
       const probeY: number = actor.y - movement;
-      if(actor.checkGrid(probeX, probeY)) actor.y -= movement;
+      if(grid.checkGrid(probeX, probeY)) actor.y -= movement;
       else actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
       this.state = StateTypes.Walking;
       this.direction = DirectionTypes.Up;
@@ -39,7 +40,7 @@ export default class PlayerMover implements IMovable {
     if (state.down) {
       const probeX: number = actor.x;
       const probeY: number = actor.y + movement;
-      if(actor.checkGrid(probeX, probeY)) actor.y += movement;
+      if(grid.checkGrid(probeX, probeY)) actor.y += movement;
       else actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
       this.state = StateTypes.Walking;
       this.direction = DirectionTypes.Down;
@@ -47,7 +48,7 @@ export default class PlayerMover implements IMovable {
     if (state.left) {
       const probeX: number = actor.x - movement;
       const probeY: number = actor.y;
-      if(actor.checkGrid(probeX, probeY)) actor.x -= movement;
+      if(grid.checkGrid(probeX, probeY)) actor.x -= movement;
       else actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
       this.state = StateTypes.Walking;
       this.direction = DirectionTypes.Left;
@@ -55,7 +56,7 @@ export default class PlayerMover implements IMovable {
     if (state.right) {
       const probeX: number = actor.x + movement;
       const probeY: number = actor.y;
-      if(actor.checkGrid(probeX, probeY)) actor.x += movement;
+      if(grid.checkGrid(probeX, probeY)) actor.x += movement;
       else actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
       this.state = StateTypes.Walking;
       this.direction = DirectionTypes.Right;

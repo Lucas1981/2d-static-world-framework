@@ -22,6 +22,9 @@ export default class Stage implements IStage {
     }
   }
 
+  public beforeDetectCollision() {}
+  public afterDetectCollision() {}
+  
   public handleCollision(collider, actor) {
     if (actor.element.isActive()) {
       // If the collider can't move and the actor can move but can't hurt, then the player hit a coin

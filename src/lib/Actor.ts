@@ -3,6 +3,7 @@ import IHurtable from './IHurtable';
 import IActionable from './IActionable';
 import Collision from './Collision';
 import Frame from './Frame';
+import Grid from './Grid';
 import global from './Global';
 
 export default class Actor {
@@ -103,8 +104,8 @@ export default class Actor {
   }
 
   public restorePreviousLocation() {
-    this.x = this._prevX;
-    this.y = this._prevY;
+    this._x = this._prevX;
+    this._y = this._prevY;
   }
 
   public getCurrentBox(): any {
@@ -126,31 +127,15 @@ export default class Actor {
     return frame;
   }
 
-  public checkGrid(probeX: number, probeY: number): Boolean {
-    const coordinates = this.getProbeCoordinates(probeX, probeY);
-    for (const key in coordinates) {
-      const coordinate = coordinates[key];
-      if (coordinate === false) return false;
-    }
-    return true;
-  }
-
-  public gridReport(probeX: number, probeY: number): any {
-    return this.getProbeCoordinates(probeX, probeY);
-  }
-
-  private getProbeCoordinates(probeX: number, probeY: number): any {
-    const probeLeft: number = this.playerToGrid(probeX - (global.config.unit / 2));
-    const probeRight: number = this.playerToGrid(probeX + (global.config.unit / 2) - 1);
-    const probeTop: number = this.playerToGrid(probeY - (global.config.unit / 2));
-    const probeBottom: number = this.playerToGrid(probeY + (global.config.unit / 2) - 1);
-
-    return [
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeTop),
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeTop),
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom),
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom)
-    ];
+  public hitsGrid(grid: Grid, gridX: number, gridY: number): Boolean {
+    const {
+      probeLeft, probeRight, probeTop, probeBottom
+    } = grid.getProbes(this._x, this._y);
+    if (probeLeft == gridX && probeTop == gridY) return true;
+    if (probeRight == gridX && probeTop == gridY) return true;
+    if (probeLeft == gridX && probeBottom == gridY) return true;
+    if (probeRight == gridX && probeBottom == gridY) return true;
+    return false;
   }
 
   public draw(animate: boolean = true): void {
@@ -164,10 +149,6 @@ export default class Actor {
       elapsedTime,
       animate
     );
-  }
-
-  private playerToGrid(value): number {
-    return Math.floor(value / global.config.unit);
   }
 
   public detectCollision(): any {

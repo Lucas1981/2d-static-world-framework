@@ -28,16 +28,16 @@ export default class Grid {
     }
   }
 
-  getGrid() {
+  public getGrid() {
     return this.grid;
   }
 
-  isSafe(x, y) {
+  public isSafe(x, y) {
     const tile = this.grid[y + 1][x + 1];
     return tile !== null && this.tiles[tile].type === 'background';
   }
 
-  draw() {
+  public draw() {
     for(let x = 0; x < this.width; x++) {
       for(let y = 0; y < this.height; y++) {
         const tile = this.grid[y + 1][x + 1];
@@ -49,5 +49,42 @@ export default class Grid {
         );
       }
     }
+  }
+
+  public checkGrid(probeX: number, probeY: number): Boolean {
+    const coordinates = this.getProbeCoordinates(probeX, probeY);
+    for (const key in coordinates) {
+      const coordinate = coordinates[key];
+      if (coordinate === false) return false;
+    }
+    return true;
+  }
+
+  public gridReport(probeX: number, probeY: number): any {
+    return this.getProbeCoordinates(probeX, probeY);
+  }
+
+  public getProbes(probeX: number, probeY: number): any {
+    return {
+      probeLeft: this.playerToGrid(probeX - (global.config.unit / 2)),
+      probeRight: this.playerToGrid(probeX + (global.config.unit / 2) - 1),
+      probeTop: this.playerToGrid(probeY - (global.config.unit / 2)),
+      probeBottom: this.playerToGrid(probeY + (global.config.unit / 2) - 1)
+    }
+  }
+
+  private getProbeCoordinates(probeX: number, probeY: number): any {
+    const { probeLeft, probeRight, probeTop, probeBottom } = this.getProbes(probeX, probeY);
+
+    return [
+      global.maps[global.activeMap].grid.isSafe(probeLeft, probeTop),
+      global.maps[global.activeMap].grid.isSafe(probeRight, probeTop),
+      global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom),
+      global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom)
+    ];
+  }
+
+  private playerToGrid(value): number {
+    return Math.floor(value / global.config.unit);
   }
 }

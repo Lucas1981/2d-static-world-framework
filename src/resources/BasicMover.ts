@@ -5,6 +5,7 @@
 */
 
 import Actor from '../lib/Actor';
+import Grid from '../lib/Grid';
 import IMovable from '../lib/IMovable';
 import global from '../lib/Global';
 
@@ -93,6 +94,7 @@ export default abstract class BasicMover implements IMovable {
   private checkForCollision(elapsedTime: number, movement: number, actor: Actor) {
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
+    const grid: Grid = global.maps[global.activeMap].grid;
     const probeY = actor.y + (movement * this.direction.y);
     const probeX = actor.x + (movement * this.direction.x);
 
@@ -100,7 +102,7 @@ export default abstract class BasicMover implements IMovable {
     const timeIsUp = 'timer' in this.contingencies ? this.elapsedTime > this.contingencies.timer : false;
 
     // Do we hit a wall if we are trying this or is it time to move on?
-    if (actor.checkGrid(probeX, probeY) && !timeIsUp) {
+    if (grid.checkGrid(probeX, probeY) && !timeIsUp) {
       // If not, do the usual
       actor.x = probeX;
       actor.y = probeY;

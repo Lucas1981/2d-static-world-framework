@@ -14,7 +14,9 @@ export default class MainLoop {
       this.moveObjects(progress);
     }
     if (progress) {
+      this.beforeDetectCollision();
       this.detectCollision();
+      this.afterDetectCollision();
       this.checkStage();
     }
     if (actors) {
@@ -39,6 +41,10 @@ export default class MainLoop {
     }
   }
 
+  private beforeDetectCollision() {
+    this.stage.beforeDetectCollision();
+  }
+
   private detectCollision(): void {
     for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
       const collider = actor.element.detectCollision();
@@ -47,6 +53,10 @@ export default class MainLoop {
         this.handleCollision(collider, actor);
       }
     }
+  }
+
+  private afterDetectCollision() {
+    this.stage.afterDetectCollision();
   }
 
   private handleCollision(collider: Actor, actor: Actor) {

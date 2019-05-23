@@ -2,6 +2,7 @@ import IActionable from '../lib/IActionable';
 import IHurtable from '../lib/IHurtable';
 import IMovable from '../lib/IMovable';
 import Actor from '../lib/Actor';
+import Grid from '../lib/Grid';
 import { DirectionTypes } from '../resources/DirectionTypes';
 import global from '../lib/Global';
 
@@ -34,6 +35,7 @@ class EnemyMover implements IMovable {
     const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
+    const grid: Grid = global.maps[global.activeMap].grid;
     let probeY: number;
     let probeX: number;
 
@@ -44,7 +46,7 @@ class EnemyMover implements IMovable {
     switch(this.direction) {
       case DirectionTypes.Up:
         probeY = actor.y - movement;
-        if(actor.checkGrid(actor.x, probeY)) actor.y -= movement;
+        if(grid.checkGrid(actor.x, probeY)) actor.y -= movement;
         else {
           actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
           this.direction = this.changeDirection();
@@ -52,7 +54,7 @@ class EnemyMover implements IMovable {
         break;
       case DirectionTypes.Down:
         probeY = actor.y + movement;
-        if(actor.checkGrid(actor.x, probeY)) actor.y += movement;
+        if(grid.checkGrid(actor.x, probeY)) actor.y += movement;
         else {
           actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
           this.direction = this.changeDirection();
@@ -60,7 +62,7 @@ class EnemyMover implements IMovable {
         break;
       case DirectionTypes.Left:
         probeX = actor.x - movement;
-        if(actor.checkGrid(probeX, actor.y)) actor.x -= movement;
+        if(grid.checkGrid(probeX, actor.y)) actor.x -= movement;
         else {
           actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
           this.direction = this.changeDirection();
@@ -68,7 +70,7 @@ class EnemyMover implements IMovable {
         break;
       case DirectionTypes.Right:
         probeX = actor.x + movement;
-        if(actor.checkGrid(probeX, actor.y)) actor.x += movement;
+        if(grid.checkGrid(probeX, actor.y)) actor.x += movement;
         else {
           actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
           this.direction = this.changeDirection();

@@ -4,6 +4,7 @@ import { GameState } from '../lib/GameState';
 import AbstractGame from '../lib/AbstractGame';
 
 export default class Game extends AbstractGame implements IGame {
+
   constructor(stage: IStage) {
     super(stage);
     this.global.activeMap = 0;

@@ -4,6 +4,7 @@
 */
 
 import Actor from '../lib/Actor';
+import Grid from '../lib/Grid';
 import IMovable from '../lib/IMovable';
 import global from '../lib/Global';
 
@@ -31,15 +32,16 @@ export default class DiagonalMover implements IMovable {
     const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
-    const probeY = actor.y + (movement * this.direction.y);
-    const probeX = actor.x + (movement * this.direction.x);
+    const grid: Grid = global.maps[global.activeMap].grid;
+    const probeY: number = actor.y + (movement * this.direction.y);
+    const probeX: number = actor.x + (movement * this.direction.x);
 
-    if (actor.checkGrid(probeX, probeY)) {
+    if (grid.checkGrid(probeX, probeY)) {
       actor.x = probeX;
       actor.y = probeY;
     } else {
       // Get the report on all the surrounding grid spots
-      const report = actor.gridReport(probeX, probeY);
+      const report = grid.gridReport(probeX, probeY);
 
       // Pick out the proper values we need (the environment report rotated)
       const v = [
