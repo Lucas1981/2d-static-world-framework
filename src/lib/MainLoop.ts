@@ -8,18 +8,16 @@ export default class MainLoop {
     private stage: IStage
   ) {}
 
-  public run(progress: boolean = true, animate: boolean = true, actors: boolean = true): void {
+  public run(progress: boolean = true, animate: boolean = true, handleActors: boolean = true): void {
     global.maps[global.activeMap].grid.draw();
-    if (actors) {
+    if (handleActors) {
       this.moveObjects(progress);
     }
     if (progress) {
-      this.beforeDetectCollision();
       this.detectCollision();
-      this.afterDetectCollision();
       this.checkStage();
     }
-    if (actors) {
+    if (handleActors) {
       this.drawObjects(animate);
     }
   }
@@ -41,22 +39,14 @@ export default class MainLoop {
     }
   }
 
-  private beforeDetectCollision() {
-    this.stage.beforeDetectCollision();
-  }
-
   private detectCollision(): void {
     for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
-      const collider = actor.element.detectCollision();
+      const colliders = actor.element.detectCollisions();
       // Try this if we found something other than ourselves
-      if(collider !== null && collider.element !== actor.element) {
-        this.handleCollision(collider, actor);
+      if (colliders.length > 0) {
+        this.handleCollision(colliders, actor);
       }
     }
-  }
-
-  private afterDetectCollision() {
-    this.stage.afterDetectCollision();
   }
 
   private handleCollision(collider: Actor, actor: Actor) {

@@ -163,6 +163,19 @@ export default class Actor {
     return null;
   }
 
+  public detectCollisions(): any {
+    const collisions = [];
+    for(let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
+      if(
+        actor.element !== this &&
+        Collision.isColliding(this, actor.element)
+      ) {
+        collisions.push(actor);
+      }
+    }
+    return collisions;
+  }
+
   public isCollidingWith(actor: Actor): boolean {
     return Collision.isColliding(this, actor);
   }

@@ -17,26 +17,22 @@ export default class Stage implements IStage {
     // If we've got them all...
     if (remainingCoins === 0) {
       // Then this stage is completed
-      global.sound.play('level-clear');
       global.gameState = GameState.StageCompleted;
     }
   }
 
   public handleCollision(colliders, actor) {
-    const collider = colliders[0]; // We only need the first collider
-
+    const collider = colliders[0];
     if (actor.element.isActive()) {
       // If the collider can't move and the actor can move but can't hurt, then the player hit a coin
       if (!collider.element.isActive() && actor.element.isActive() && !actor.element.canHurt()) {
         // So remove the coin
         collider.element.die();
-        global.sound.play('coin');
       }
 
       // If we can move but can't hurt, we are the player
       if (collider.element.isActive() && !collider.element.canHurt()) {
         // Which means an enemy hit us, so we're dead
-        global.sound.play('dead');
         global.gameState = GameState.Dead;
       }
     }
