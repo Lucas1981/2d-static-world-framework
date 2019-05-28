@@ -3,25 +3,24 @@ import Passive from '../resources/Passive';
 import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Unmovable from '../resources/Unmovable';
-import BasicPlayerMover from '../resources/BasicPlayerMover';
-
-const pixelsPerSecond = 200;
-
-class PlayerMover extends BasicPlayerMover {
-  constructor() {
-    super(pixelsPerSecond);
-  }
-}
+import PlayerMover from './PlayerMover';
+import Enemy1Mover from './Enemy1Mover';
+import Enemy2Mover from './Enemy2Mover';
 
 export default {
   'player': {
     mover: PlayerMover,
     hurtable: Benevolent,
-    active: Active
+    active: Passive
   },
-  'box': {
-    mover: Unmovable,
-    hurtable: Benevolent,
+  'enemy1': {
+    mover: Enemy1Mover,
+    hurtable: Malevolent,
+    active: Passive
+  },
+  'enemy2': {
+    mover: Enemy2Mover,
+    hurtable: Malevolent,
     active: Passive
   },
 }

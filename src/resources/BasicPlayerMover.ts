@@ -7,9 +7,9 @@ import global from '../lib/Global';
 
 const defaultPixelsPerSecond = 150;
 
-export default class PlayerMover implements IMovable {
-  private state: StateTypes;
-  private direction: DirectionTypes;
+export default class BasicPlayerMover implements IMovable {
+  public state: StateTypes;
+  public direction: DirectionTypes;
 
   constructor(
     private pixelsPerSecond = defaultPixelsPerSecond
@@ -65,7 +65,12 @@ export default class PlayerMover implements IMovable {
       global.gameState = GameState.ResetGame;
     }
 
-    actor.updateAnimationKey(`${this.state}-${this.direction}`);
+    this.updateAnimationKey(actor);
 
+  }
+
+  public updateAnimationKey(actor: Actor) {
+    // Default behaviour
+    actor.updateAnimationKey(`${this.state}-${this.direction}`);
   }
 }
