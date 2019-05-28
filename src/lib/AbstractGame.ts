@@ -88,7 +88,6 @@ export default abstract class AbstractGame implements IGame {
     global.actorAttributes = actorAttributes;
     global.config = data.config;
     global.tiles = data.tiles;
-    global.clock = new Clock();
     global.canvas = new Canvas(data.config.unit * data.config.gridWidth, (data.config.unit + 3) * data.config.gridHeight);
     global.sound = await Generator.getSounds(data);
     global.animations = await Generator.getAnimations(data);

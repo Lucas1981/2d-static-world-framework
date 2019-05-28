@@ -33,7 +33,7 @@ export default class PlayerMover extends BasicPlayerMover {
   }
 
   private canFire() {
-    const now = +new Date();
+    const now = global.clock.getTime();
     if (this.lastShotFired === null || now - this.lastShotFired > timeToNextShot) {
       this.lastShotFired = now;
       return true;

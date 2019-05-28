@@ -23,11 +23,14 @@ class Global {
     private lastGameStateChange: any = null;
     private _sound: Sound = null;
 
-    constructor() {}
+    constructor() {
+      // We need to do this immediately
+      this._clock = new Clock();
+    }
 
     public set gameState(gameState: GameState) {
       this._gameState = gameState;
-      this.lastGameStateChange = new Date();
+      this.lastGameStateChange = global.clock.getTime();
     }
 
     public get gameState(): GameState {
@@ -35,7 +38,7 @@ class Global {
     }
 
     public getTimeSinceLastStateChange(): number {
-      const now = new Date();
+      const now = global.clock.getTime();
       return +now - this.lastGameStateChange;
     }
 

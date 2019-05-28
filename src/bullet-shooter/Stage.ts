@@ -12,6 +12,7 @@ export default class Stage implements IStage {
           counter++;
         }
     }
+    // If all enemies are killed, the stage is completed
     if (counter === 0) {
       global.gameState = GameState.StageCompleted;
     }
@@ -26,6 +27,7 @@ export default class Stage implements IStage {
         // Is this an enemy or an enemy bullet?
         actor.element.canHurt()
       ) {
+        // Then you're dead
         global.gameState = GameState.Dead;
       }
 
@@ -37,6 +39,7 @@ export default class Stage implements IStage {
         actor.element.isActive() &&
         !actor.element.canHurt()
       ) {
+        // Then kill the enemy
         collider.element.die()
       }
     }

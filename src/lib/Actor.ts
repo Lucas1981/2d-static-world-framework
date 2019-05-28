@@ -41,6 +41,10 @@ export default class Actor {
     }
   }
 
+  public getTimeSinceLastStateChange() {
+    return global.clock.getTime() - this.stateChange;
+  }
+
   public get x(): number {
     return this._x;
   }

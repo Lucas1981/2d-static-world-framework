@@ -18,7 +18,7 @@ export default class BulletMover implements IMovable {
   constructor(
     private direction
   ) {
-    this.timeCreated = +new Date();
+    this.timeCreated = global.clock.getTime();
   }
 
   public progress(actor: Actor) {

@@ -19,7 +19,7 @@ export default class Enemy2Mover {
   }
 
   public progress(actor: Actor) {
-    const now = +new Date();
+    const now = global.clock.getTime();
     const actorType = global.gameData.actors.find(e => e.name === 'enemyBullet');
     if (now - this.lastShotFired > timeToNextShot) {
       this.lastShotFired = global.clock.getTime();
