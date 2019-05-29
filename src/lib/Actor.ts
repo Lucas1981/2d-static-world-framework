@@ -9,7 +9,8 @@ import Grid from './Grid';
 import global from './Global';
 
 export default class Actor {
-  private animationKey: string;
+  private _state: any;
+  private animationKeyName: string;
   private animationKeyNames: string[];
   private stateChange: any;
   private alive: Boolean;
@@ -22,15 +23,16 @@ export default class Actor {
   constructor(
     private _x: number,
     private _y: number,
-    private animationKeys: any[],
+    private states: any[],
     private movable: IMovable,
     private threat: IThreat,
     private volition: IVolition,
     private vulnerable: IVulnerable,
     private actionable: IActionable,
   ) {
-    this.animationKeyNames = Object.keys(this.animationKeys);
-    this.animationKey = this.animationKeyNames[0];
+    this.animationKeyNames = Object.keys(this.states);
+    this.animationKeyName = this.animationKeyNames[0];
+    this._state = this.states[this.animationKeyName];
     this.stateChange = global.clock.getTime();
     this.alive = true;
     this.context = global.canvas.getContext();
@@ -38,15 +40,20 @@ export default class Actor {
     this._originY = this._y;
   }
 
-  public updateAnimationKey(animationKey) {
-    if (this.animationKey !== animationKey && this.animationKeyNames.indexOf(animationKey) !== -1) {
-      this.animationKey = animationKey;
+  public updateAnimationKey(animationKeyName) {
+    if (this.animationKeyName !== animationKeyName && this.animationKeyNames.indexOf(animationKeyName) !== -1) {
+      this._state = this.states[animationKeyName];
+      this.animationKeyName = animationKeyName;
       this.stateChange = global.clock.getTime();
     }
   }
 
   public getTimeSinceLastStateChange() {
     return global.clock.getTime() - this.stateChange;
+  }
+
+  public get state(): any {
+    return this._state;
   }
 
   public get x(): number {
@@ -96,19 +103,19 @@ export default class Actor {
   }
 
   public isHarmful(): Boolean {
-    return this.threat.isHarmful();
+    return this.threat.isHarmful(this);
   }
 
   public isBenevolent(): Boolean {
-    return this.volition.isBenevolent();
+    return this.volition.isBenevolent(this);
   }
 
   public isVulnerable(): Boolean {
-    return this.vulnerable.isVulnerable();
+    return this.vulnerable.isVulnerable(this);
   }
 
   public isActive(): Boolean {
-    return this.actionable.isActive();
+    return this.actionable.isActive(this);
   };
 
   public isAlive(): Boolean {
@@ -137,7 +144,7 @@ export default class Actor {
     const now: any = global.clock.getTime();
     const elapsedTime: number = now - this.stateChange;
     const frame: Frame = global.animations.data[
-      this.animationKeys[this.animationKey]
+      this._state.animationKey
     ].getCurrentFrame(elapsedTime);
 
     return frame;
@@ -157,7 +164,7 @@ export default class Actor {
   public draw(animate: boolean = true): void {
     const now: any = global.clock.getTime();
     const elapsedTime: number = now - this.stateChange;
-    const animationKey = this.animationKeys[this.animationKey];
+    const animationKey = this._state.animationKey;
     global.animations.data[animationKey].draw(
       this.context,
       Math.floor(this._x - (global.config.unit / 2)),

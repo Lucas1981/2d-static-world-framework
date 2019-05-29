@@ -1,3 +1,5 @@
+import Actor from './Actor';
+
 export default interface IVolition {
-  isBenevolent(): Boolean;
+  isBenevolent(actor: Actor): Boolean;
 }

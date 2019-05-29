@@ -27,5 +27,5 @@ export default class Enemy2Mover {
   public updateAnimationKey(actor: Actor) {
     actor.updateAnimationKey(this.state);
   }
-
+  
 }

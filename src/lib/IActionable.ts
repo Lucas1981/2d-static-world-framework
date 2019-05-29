@@ -1,3 +1,5 @@
+import Actor from './Actor';
+
 export default interface IActionable {
-  isActive(): Boolean;
+  isActive(actor: Actor): Boolean;
 }

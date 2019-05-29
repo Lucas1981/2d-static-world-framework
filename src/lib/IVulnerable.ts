@@ -1,3 +1,5 @@
+import Actor from './Actor';
+
 export default interface IVulnerable {
-  isVulnerable(): Boolean;
+  isVulnerable(actor: Actor): Boolean;
 }

@@ -1,6 +1,7 @@
+import Actor from '../lib/Actor';
 import IVulnerable from '../lib/IVulnerable';
 
 export default class Invulnerable implements IVulnerable {
   constructor() {}
-  public isVulnerable(): Boolean { return false; }
+  public isVulnerable(actor: Actor): Boolean { return false; }
 }

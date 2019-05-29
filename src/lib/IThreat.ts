@@ -1,3 +1,5 @@
+import Actor from './Actor';
+
 export default interface IThreat {
-  isHarmful(): Boolean;
+  isHarmful(actor: Actor): Boolean;
 }

@@ -17,6 +17,12 @@ export default class Game extends AbstractGame implements IGame {
   }
 
   public stage(): void {
+    this.global.canvas.clearRect(
+      0,
+      this.global.config.unit * this.global.config.gridHeight,
+      this.global.config.unit * this.global.config.gridWidth,
+      (this.global.config.unit * 3) * this.global.config.gridHeight,
+    )
     this.mainLoop.run();
   }
 
