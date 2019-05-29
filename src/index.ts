@@ -1,9 +1,9 @@
 /* This bootstraps and starts off everything */
 
-import Game from './bullet-shooter/Game';
-import actorAttributes from './bullet-shooter/actor-attributes';
-import Stage from './bullet-shooter/Stage';
-import data from './bullet-shooter/data';
+import Game from './fighting-interaction/Game';
+import actorAttributes from './fighting-interaction/actor-attributes';
+import Stage from './fighting-interaction/Stage';
+import data from './fighting-interaction/data';
 
 (function(Game, Stage, actorAttributes, data) {
   const stage = new Stage();

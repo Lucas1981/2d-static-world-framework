@@ -1,7 +1,9 @@
 import Actor from '../lib/Actor';
 import BasicPlayerMover from '../resources/BasicPlayerMover';
-import Active from '../resources/Active';
+import Harmful from '../resources/Harmful';
 import Benevolent from '../resources/Benevolent';
+import Invulnerable from '../resources/Invulnerable';
+import Active from '../resources/Active';
 import BulletMover from './BulletMover';
 import global from '../lib/Global';
 
@@ -26,8 +28,10 @@ export default class PlayerMover extends BasicPlayerMover {
         actor.y,
         actorType.states,
         new BulletMover(this.direction),
+        new Harmful(),
         new Benevolent(),
-        new Active(),
+        new Invulnerable(),
+        new Active()
       ));
     }
   }

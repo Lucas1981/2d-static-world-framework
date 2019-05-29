@@ -1,7 +1,11 @@
+import Harmful from './Harmful';
+import Harmless from './Harmless';
 import Active from './Active';
 import Passive from './Passive';
 import Benevolent from './Benevolent';
 import Malevolent from './Malevolent';
+import Vulnerable from './Vulnerable';
+import Invulnerable from './Invulnerable';
 import BasicMover from './BasicMover';
 import DiagonalMover from './DiagonalMover';
 import CircularMover from './CircularMover';
@@ -77,80 +81,109 @@ function circularMoveFactory(
 export default {
   'red': {
     mover: moveFactory(),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'green': {
     mover: moveFactory(allContingencies.ninetyDegreesCounterClockwise, left),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'blue': {
     mover: moveFactory(),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'yellow': {
     mover: moveFactory(),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
 
   'purple': {
     mover: moveFactory(allContingencies.oneEightyDegrees, left),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'brown': {
     mover: DiagonalMover,
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'grey': {
     mover: moveFactory(allContingencies.oneEightyDegrees, right),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'cyaan': {
     mover: moveFactory(allContingencies.oneEightyDegrees, up),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
-
   'magenta': {
     mover: moveFactory(allContingencies.oneEightyDegrees, down),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'black': {
     mover: moveFactory(allContingencies.ninetyDegreesCounterClockwise, right),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'orange': {
     mover: moveFactory(allContingencies.wallHugger, right),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'pink': {
     mover: moveFactory(allContingencies.stageFright, left),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
 
   'teal': {
     mover: circularMoveFactory(1, 0),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'navy': {
     mover: circularMoveFactory(1, 1, 32, 0, 100),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'burlywood': {
     mover: circularMoveFactory(0, 1, 32, 0, 200, -1),
-    hurtable: Benevolent,
-    active: Active
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   }
 };

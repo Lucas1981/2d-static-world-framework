@@ -26,15 +26,15 @@ export default class Stage implements IStage {
     const collider = colliders[0]; // We only need the first collider
 
     if (actor.element.isActive()) {
-      // If the collider can't move and the actor can move but can't hurt, then the player hit a coin
-      if (!collider.element.isActive() && actor.element.isActive() && !actor.element.canHurt()) {
+      // If the collider can't move and the actor can move and is benevolent, then the player hit a coin
+      if (!collider.element.isActive() && actor.element.isActive() && actor.element.isBenevolent()) {
         // So remove the coin
         collider.element.die();
         global.sound.play('coin');
       }
 
-      // If we can move but can't hurt, we are the player
-      if (collider.element.isActive() && !collider.element.canHurt()) {
+      // If we can move and are benevolent, we are the player
+      if (collider.element.isActive() && collider.element.isBenevolent()) {
         // Which means an enemy hit us, so we're dead
         global.sound.play('dead');
         global.gameState = GameState.Dead;

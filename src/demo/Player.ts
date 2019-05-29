@@ -1,5 +1,3 @@
-import IActionable from '../lib/IActionable';
-import IHurtable from '../lib/IHurtable';
 import IMovable from '../lib/IMovable';
 import Actor from '../lib/Actor';
 import Grid from '../lib/Grid';
@@ -10,15 +8,7 @@ import global from '../lib/Global';
 
 const pixelsPerSecond = 150;
 
-class PlayerActive implements IActionable {
-  public isActive(): Boolean { return true; }
-}
-
-class PlayerHurtable implements IHurtable {
-  public canHurt(): Boolean { return false; }
-}
-
-class PlayerMover implements IMovable {
+export default class PlayerMover implements IMovable {
   private state: StateTypes;
   private direction: DirectionTypes;
 
@@ -77,6 +67,4 @@ class PlayerMover implements IMovable {
     actor.updateAnimationKey(`${this.state}-${this.direction}`);
 
   }
-}
-
-export { PlayerActive, PlayerHurtable, PlayerMover };
+};

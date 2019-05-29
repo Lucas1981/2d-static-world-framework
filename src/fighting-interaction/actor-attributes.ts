@@ -6,9 +6,9 @@ import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Vulnerable from '../resources/Vulnerable';
 import Invulnerable from '../resources/Invulnerable';
+import Unmovable from '../resources/Unmovable';
+import EnemyMover from './EnemyMover';
 import PlayerMover from './PlayerMover';
-import Enemy1Mover from './Enemy1Mover';
-import Enemy2Mover from './Enemy2Mover';
 
 export default {
   'player': {
@@ -18,16 +18,9 @@ export default {
     vulnerable: Vulnerable,
     actionable: Active
   },
-  'enemy1': {
-    mover: Enemy1Mover,
-    threat: Harmful,
-    volition: Malevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
-  },
-  'enemy2': {
-    mover: Enemy2Mover,
-    threat: Harmful,
+  'enemy': {
+    mover: EnemyMover,
+    threat: Harmless,
     volition: Malevolent,
     vulnerable: Vulnerable,
     actionable: Active

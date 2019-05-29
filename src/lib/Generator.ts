@@ -35,8 +35,10 @@ export default class Generator {
         actor.y + Math.floor(data.config.unit / 2),
         actorType.states,
         new actorAttributes[actorType.name].mover(),
-        new actorAttributes[actorType.name].hurtable(),
-        new actorAttributes[actorType.name].active(),
+        new actorAttributes[actorType.name].threat(),
+        new actorAttributes[actorType.name].volition(),
+        new actorAttributes[actorType.name].vulnerable(),
+        new actorAttributes[actorType.name].actionable(),
       ));
     }
     return result;

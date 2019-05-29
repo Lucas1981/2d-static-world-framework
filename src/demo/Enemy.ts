@@ -1,5 +1,3 @@
-import IActionable from '../lib/IActionable';
-import IHurtable from '../lib/IHurtable';
 import IMovable from '../lib/IMovable';
 import Actor from '../lib/Actor';
 import Grid from '../lib/Grid';
@@ -9,15 +7,7 @@ import global from '../lib/Global';
 const pixelsPerSecond = 100;
 const directions = [ 'up', 'down', 'left', 'right' ];
 
-class EnemyActive implements IActionable {
-  public isActive(): Boolean { return true; }
-}
-
-class EnemyHurtable implements IHurtable {
-  public canHurt(): Boolean { return true; }
-}
-
-class EnemyMover implements IMovable {
+export default class EnemyMover implements IMovable {
 
   private direction: any;
   private directionChange: any;
@@ -90,6 +80,4 @@ class EnemyMover implements IMovable {
     this.directionChangeCutoff = Math.floor(Math.random() * 300) + 150;
     return direction;
   }
-}
-
-export { EnemyMover, EnemyHurtable, EnemyActive };
+};

@@ -1,6 +1,7 @@
 import Actor from '../lib/Actor';
-import PlayerMover from '../resources/PlayerMover';
+import Harmful from '../resources/Harmful';
 import Malevolent from '../resources/Malevolent';
+import Invulnerable from '../resources/Invulnerable';
 import Active from '../resources/Active';
 import BulletMover from './BulletMover';
 import global from '../lib/Global';
@@ -29,8 +30,10 @@ export default class Enemy2Mover {
         actor.y,
         actorType.states,
         new BulletMover(this.direction),
+        new Harmful(),
         new Malevolent(),
-        new Active(),
+        new Invulnerable(),
+        new Active()
       ));
     }
   }

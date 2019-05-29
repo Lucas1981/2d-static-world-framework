@@ -1,5 +1,6 @@
-import IHurtable from '../lib/IHurtable';
+import IVolition from '../lib/IVolition';
 
-export default class Beneficent implements IHurtable {
-  public canHurt(): Boolean { return true; }
+export default class Malevolent implements IVolition {
+  constructor() {}
+  public isBenevolent(): Boolean { return false; }
 }

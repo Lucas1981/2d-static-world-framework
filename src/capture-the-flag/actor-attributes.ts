@@ -1,10 +1,14 @@
+import Harmful from '../resources/Harmful';
+import Harmless from '../resources/Harmless';
 import Active from '../resources/Active';
 import Passive from '../resources/Passive';
 import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
+import Vulnerable from '../resources/Vulnerable';
+import Invulnerable from '../resources/Invulnerable';
 import BasicMover from '../resources/BasicMover';
-import { ItemActive, ItemHurtable, ItemMover } from './Item';
-import { PlayerActive, PlayerHurtable, PlayerMover } from './Player';
+import ItemMover from './Item';
+import PlayerMover from './Player';
 
 const fourtyFiveDegrees = 1;
 const ninetyDegrees = 2;
@@ -39,17 +43,23 @@ class EnemyMover extends BasicMover {
 export default {
   'player': {
     mover: PlayerMover,
-    hurtable: PlayerHurtable,
-    active: PlayerActive
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'coin': {
     mover: ItemMover,
-    hurtable: ItemHurtable,
-    active: ItemActive
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Passive
   },
   'enemy': {
     mover: EnemyMover,
-    hurtable: Malevolent,
-    active: Active
+    threat: Harmful,
+    volition: Malevolent,
+    vulnerable: Invulnerable,
+    actionable: Active
   },
 };

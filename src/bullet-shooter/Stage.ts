@@ -8,7 +8,7 @@ export default class Stage implements IStage {
   public checkStage() {
     let counter = 0;
     for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
-        if (actor.element.canHurt() && !actor.element.isActive()) {
+        if (!actor.element.isBenevolent() && actor.element.isVulnerable()) {
           counter++;
         }
     }
@@ -22,10 +22,11 @@ export default class Stage implements IStage {
     for (let collider of colliders) {
       if (
         // Is this the player?
-        !collider.element.canHurt() &&
-        !collider.element.isActive() &&
+        collider.element.isBenevolent() &&
+        !collider.element.isHarmful() &&
         // Is this an enemy or an enemy bullet?
-        actor.element.canHurt()
+        !actor.element.isBenevolent() &&
+        actor.element.isHarmful()
       ) {
         // Then you're dead
         global.gameState = GameState.Dead;
@@ -33,11 +34,11 @@ export default class Stage implements IStage {
 
       if (
         // Is this an enemy?
-        collider.element.canHurt() &&
-        !collider.element.isActive() &&
+        !collider.element.isBenevolent() &&
+        collider.element.isVulnerable() &&
         // Is it hit by a player's bullet?
-        actor.element.isActive() &&
-        !actor.element.canHurt()
+        actor.element.isBenevolent() &&
+        actor.element.isHarmful()
       ) {
         // Then kill the enemy
         collider.element.die()

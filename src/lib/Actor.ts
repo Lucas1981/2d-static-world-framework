@@ -1,5 +1,7 @@
 import IMovable from './IMovable';
-import IHurtable from './IHurtable';
+import IThreat from './IThreat';
+import IVolition from './IVolition';
+import IVulnerable from './IVulnerable';
 import IActionable from './IActionable';
 import Collision from './Collision';
 import Frame from './Frame';
@@ -22,8 +24,10 @@ export default class Actor {
     private _y: number,
     private animationKeys: any[],
     private movable: IMovable,
-    private hurtable: IHurtable,
-    private actionable: IActionable
+    private threat: IThreat,
+    private volition: IVolition,
+    private vulnerable: IVulnerable,
+    private actionable: IActionable,
   ) {
     this.animationKeyNames = Object.keys(this.animationKeys);
     this.animationKey = this.animationKeyNames[0];
@@ -91,8 +95,16 @@ export default class Actor {
     this.movable.progress(this);
   }
 
-  public canHurt(): Boolean {
-    return this.hurtable.canHurt();
+  public isHarmful(): Boolean {
+    return this.threat.isHarmful();
+  }
+
+  public isBenevolent(): Boolean {
+    return this.volition.isBenevolent();
+  }
+
+  public isVulnerable(): Boolean {
+    return this.vulnerable.isVulnerable();
   }
 
   public isActive(): Boolean {
