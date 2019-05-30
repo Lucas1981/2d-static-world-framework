@@ -1,4 +1,4 @@
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import Actor from '../lib/Actor';
 import Grid from '../lib/Grid';
 import { DirectionTypes } from '../resources/DirectionTypes';
@@ -8,7 +8,7 @@ import global from '../lib/Global';
 
 const pixelsPerSecond = 150;
 
-export default class PlayerMover implements IMovable {
+export default class PlayerProgress implements IProgress {
   private state: StateTypes;
   private direction: DirectionTypes;
 

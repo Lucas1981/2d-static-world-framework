@@ -1,3 +1,5 @@
+import Movable from '../resources/Movable';
+import Immovable from '../resources/Immovable';
 import Harmful from '../resources/Harmful';
 import Harmless from '../resources/Harmless';
 import Active from '../resources/Active';
@@ -6,34 +8,38 @@ import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Vulnerable from '../resources/Vulnerable';
 import Invulnerable from '../resources/Invulnerable';
-import EnemyMover from './Enemy';
-import ItemMover from './Item';
-import PlayerMover from './Player';
+import EnemyProgress from './EnemyProgress';
+import ItemProgress from './ItemProgress';
+import PlayerProgress from './PlayerProgress';
 
 export default {
   'player': {
-    mover: PlayerMover,
+    progress: PlayerProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: Vulnerable,
     actionable: Active
   },
   'coin': {
-    mover: ItemMover,
+    progress: ItemProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: Vulnerable,
     actionable: Passive
   },
   'baddy': {
-    mover: EnemyMover,
+    progress: EnemyProgress,
+    movable: Immovable,
     threat: Harmful,
     volition: Malevolent,
     vulnerable: Invulnerable,
     actionable: Active
   },
   'thug': {
-    mover: EnemyMover,
+    progress: EnemyProgress,
+    movable: Immovable,
     threat: Harmful,
     volition: Malevolent,
     vulnerable: Invulnerable,

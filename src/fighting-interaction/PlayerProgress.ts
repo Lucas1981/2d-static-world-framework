@@ -1,10 +1,10 @@
 import Actor from '../lib/Actor';
-import BasicPlayerMover from '../resources/BasicPlayerMover';
+import BasicPlayerProgress from '../resources/BasicPlayerProgress';
 import global from '../lib/Global';
 
 const qualities = [ 'vulnerable', 'invincible' ]
 
-export default class PlayerMover extends BasicPlayerMover {
+export default class PlayerProgress extends BasicPlayerProgress {
   private lock: boolean;
   private quality: string;
   constructor() {

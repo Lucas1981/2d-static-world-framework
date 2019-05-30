@@ -6,27 +6,32 @@ import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Vulnerable from '../resources/Vulnerable';
 import Invulnerable from '../resources/Invulnerable';
-import PlayerMover from './PlayerMover';
-import Enemy1Mover from './Enemy1Mover';
-import Enemy2Mover from './Enemy2Mover';
+import Movable from '../resources/Movable';
+import Immovable from '../resources/Immovable';
+import PlayerProgress from './PlayerProgress';
+import Enemy1Progress from './Enemy1Progress';
+import Enemy2Progress from './Enemy2Progress';
 
 export default {
   'player': {
-    mover: PlayerMover,
+    progress: PlayerProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: Vulnerable,
     actionable: Active
   },
   'enemy1': {
-    mover: Enemy1Mover,
+    progress: Enemy1Progress,
+    movable: Immovable,
     threat: Harmful,
     volition: Malevolent,
     vulnerable: Vulnerable,
     actionable: Active
   },
   'enemy2': {
-    mover: Enemy2Mover,
+    progress: Enemy2Progress,
+    movable: Immovable,
     threat: Harmful,
     volition: Malevolent,
     vulnerable: Vulnerable,

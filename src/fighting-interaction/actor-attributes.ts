@@ -1,6 +1,8 @@
 import Actor from '../lib/Actor';
 import IThreat from '../lib/IThreat';
 import IVulnerable from '../lib/IVulnerable';
+import Movable from '../resources/Movable';
+import Immovable from '../resources/Immovable';
 import Harmless from '../resources/Harmless';
 import Active from '../resources/Active';
 import Passive from '../resources/Passive';
@@ -8,9 +10,8 @@ import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Vulnerable from '../resources/Vulnerable';
 import Invulnerable from '../resources/Invulnerable';
-import Unmovable from '../resources/Unmovable';
-import EnemyMover from './EnemyMover';
-import PlayerMover from './PlayerMover';
+import EnemyProgress from './EnemyProgress';
+import PlayerProgress from './PlayerProgress';
 
 class EnemyThreat implements IThreat {
   public isHarmful(actor: Actor): Boolean {
@@ -26,14 +27,16 @@ class PlayerVulnerable implements IVulnerable {
 
 export default {
   'player': {
-    mover: PlayerMover,
+    progress: PlayerProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: PlayerVulnerable,
     actionable: Active
   },
   'enemy': {
-    mover: EnemyMover,
+    progress: EnemyProgress,
+    movable: Immovable,
     threat: EnemyThreat,
     volition: Malevolent,
     vulnerable: Vulnerable,

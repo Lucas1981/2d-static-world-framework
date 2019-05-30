@@ -6,7 +6,7 @@
 
 import Actor from '../lib/Actor';
 import Grid from '../lib/Grid';
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 100;
@@ -23,7 +23,7 @@ const directions = [
   { x: -1, y: -1 }, // upper-left
 ]
 
-export default abstract class BasicMover implements IMovable {
+export default abstract class BasicProgress implements IProgress {
   private direction: any;
   private elapsedTime: number;
   private timer: any;

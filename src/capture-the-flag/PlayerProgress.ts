@@ -1,19 +1,18 @@
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import Actor from '../lib/Actor';
-import { StateTypes } from './StateTypes';
-import { DirectionTypes } from './DirectionTypes';
+import Grid from '../lib/Grid';
+import { DirectionTypes } from '../resources/DirectionTypes';
+import { StateTypes } from '../resources/StateTypes';
 import { GameState } from '../lib/GameState';
 import global from '../lib/Global';
 
-const defaultPixelsPerSecond = 150;
+const pixelsPerSecond = 150;
 
-export default class BasicPlayerMover implements IMovable {
-  public state: StateTypes;
-  public direction: DirectionTypes;
+export default class PlayerProgress implements IProgress {
+  private state: StateTypes;
+  private direction: DirectionTypes;
 
-  constructor(
-    private pixelsPerSecond = defaultPixelsPerSecond
-  ) {
+  constructor() {
     this.state = StateTypes.Standing;
     this.direction = DirectionTypes.Up;
   }
@@ -21,9 +20,9 @@ export default class BasicPlayerMover implements IMovable {
   public progress(actor: Actor): void {
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
-    const grid = global.maps[global.activeMap].grid;
-    const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
+    const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const state: any = global.keyboard.state;
+    const grid: Grid = global.maps[global.activeMap].grid;
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
 
@@ -65,12 +64,7 @@ export default class BasicPlayerMover implements IMovable {
       global.gameState = GameState.ResetGame;
     }
 
-    this.updateAnimationKey(actor);
-
-  }
-
-  public updateAnimationKey(actor: Actor) {
-    // Default behaviour
     actor.updateAnimationKey(`${this.state}-${this.direction}`);
+
   }
-}
+};

@@ -4,10 +4,10 @@
 */
 
 import Actor from '../lib/Actor';
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import global from '../lib/Global';
 
-export default abstract class CircularMover implements IMovable {
+export default abstract class CircularProgress implements IProgress {
   constructor(
     private horizontal,
     private vertical,

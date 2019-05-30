@@ -1,3 +1,5 @@
+import Movable from '../resources/Movable';
+import Immovable from '../resources/Immovable';
 import Harmful from '../resources/Harmful';
 import Harmless from '../resources/Harmless';
 import Active from '../resources/Active';
@@ -6,9 +8,9 @@ import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
 import Vulnerable from '../resources/Vulnerable';
 import Invulnerable from '../resources/Invulnerable';
-import BasicMover from '../resources/BasicMover';
-import ItemMover from './Item';
-import PlayerMover from './Player';
+import BasicProgress from '../resources/BasicProgress';
+import ItemProgress from './ItemProgress';
+import PlayerProgress from './PlayerProgress';
 
 const fourtyFiveDegrees = 1;
 const ninetyDegrees = 2;
@@ -27,7 +29,7 @@ const lowerLeft = 5
 const left = 6;
 const upperLeft = 7;
 
-class EnemyMover extends BasicMover {
+class EnemyProgress extends BasicProgress {
   constructor() {
     super({
       conditions: {
@@ -42,21 +44,24 @@ class EnemyMover extends BasicMover {
 
 export default {
   'player': {
-    mover: PlayerMover,
+    progress: PlayerProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: Vulnerable,
     actionable: Active
   },
   'coin': {
-    mover: ItemMover,
+    progress: ItemProgress,
+    movable: Immovable,
     threat: Harmless,
     volition: Benevolent,
     vulnerable: Vulnerable,
     actionable: Passive
   },
   'enemy': {
-    mover: EnemyMover,
+    progress: EnemyProgress,
+    movable: Immovable,
     threat: Harmful,
     volition: Malevolent,
     vulnerable: Invulnerable,

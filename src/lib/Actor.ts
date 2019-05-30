@@ -1,3 +1,4 @@
+import IProgress from './IProgress';
 import IMovable from './IMovable';
 import IThreat from './IThreat';
 import IVolition from './IVolition';
@@ -24,6 +25,7 @@ export default class Actor {
     private _x: number,
     private _y: number,
     private states: any[],
+    private _progress: IProgress,
     private movable: IMovable,
     private threat: IThreat,
     private volition: IVolition,
@@ -99,7 +101,11 @@ export default class Actor {
   }
 
   public progress(): void {
-    this.movable.progress(this);
+    this._progress.progress(this);
+  }
+
+  public isMovable(): Boolean {
+    return this.movable.isMovable(this);
   }
 
   public isHarmful(): Boolean {

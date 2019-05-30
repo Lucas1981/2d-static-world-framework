@@ -1,12 +1,13 @@
 import Actor from '../lib/Actor';
 import Malevolent from '../resources/Malevolent';
 import Active from '../resources/Active';
+import IProgress from '../lib/IProgress';
 import global from '../lib/Global';
 
 const states = [ 'good', 'bad' ];
 const timeToNextStateChange = 1000;
 
-export default class Enemy2Mover {
+export default class Enemy2Progress implements IProgress {
   public state;
   private lastStateChange: number;
 
@@ -27,5 +28,5 @@ export default class Enemy2Mover {
   public updateAnimationKey(actor: Actor) {
     actor.updateAnimationKey(this.state);
   }
-  
+
 }

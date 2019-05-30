@@ -1,13 +1,19 @@
-import Active from '../resources/Active';
-import Passive from '../resources/Passive';
+import Movable from '../resources/Movable';
+import Immovable from '../resources/Immovable';
+import Harmful from '../resources/Harmful';
+import Harmless from '../resources/Harmless';
 import Benevolent from '../resources/Benevolent';
 import Malevolent from '../resources/Malevolent';
-import Unmovable from '../resources/Unmovable';
-import BasicPlayerMover from '../resources/BasicPlayerMover';
+import Vulnerable from '../resources/Vulnerable';
+import Invulnerable from '../resources/Invulnerable';
+import Active from '../resources/Active';
+import Passive from '../resources/Passive';
+import NoProgress from '../resources/NoProgress';
+import BasicPlayerProgress from '../resources/BasicPlayerProgress';
 
 const pixelsPerSecond = 200;
 
-class PlayerMover extends BasicPlayerMover {
+class PlayerProgress extends BasicPlayerProgress {
   constructor() {
     super(pixelsPerSecond);
   }
@@ -15,13 +21,19 @@ class PlayerMover extends BasicPlayerMover {
 
 export default {
   'player': {
-    mover: PlayerMover,
-    hurtable: Benevolent,
-    active: Active
+    progress: PlayerProgress,
+    movable: Immovable,
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
   'box': {
-    mover: Unmovable,
-    hurtable: Benevolent,
-    active: Passive
+    progress: NoProgress,
+    movable: Movable,
+    threat: Harmless,
+    volition: Benevolent,
+    vulnerable: Vulnerable,
+    actionable: Active
   },
 }

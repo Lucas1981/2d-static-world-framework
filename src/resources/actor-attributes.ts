@@ -1,3 +1,5 @@
+import Movable from './Movable';
+import Immovable from './Immovable';
 import Harmful from './Harmful';
 import Harmless from './Harmless';
 import Active from './Active';
@@ -6,9 +8,17 @@ import Benevolent from './Benevolent';
 import Malevolent from './Malevolent';
 import Vulnerable from './Vulnerable';
 import Invulnerable from './Invulnerable';
-import BasicMover from './BasicMover';
-import DiagonalMover from './DiagonalMover';
-import CircularMover from './CircularMover';
+import BasicProgress from './BasicProgress';
+import DiagonalProgress from './DiagonalProgress';
+import CircularProgress from './CircularProgress';
+
+const defaultAttributes = {
+  movable: Immovable,
+  threat: Harmless,
+  volition: Benevolent,
+  vulnerable: Vulnerable,
+  actionable: Active
+};
 
 const up = 0;
 const upperRight = 1;
@@ -55,15 +65,15 @@ const allContingencies = {
   }
 }
 
-function moveFactory(contingencies: any = allContingencies.ninetyDegrees, startingPosition = up) {
-  return class extends BasicMover {
+function progressFactory(contingencies: any = allContingencies.ninetyDegrees, startingPosition = up) {
+  return class extends BasicProgress {
     constructor() {
         super(contingencies, startingPosition);
     };
   };
 }
 
-function circularMoveFactory(
+function circularProgressFactory(
     horizontal: number = 1,
     vertical: number = 1,
     radius: number = 32,
@@ -71,7 +81,7 @@ function circularMoveFactory(
     speed: number = 300,
     direction: number = 1
   ) {
-  return class extends CircularMover {
+  return class extends CircularProgress {
     constructor() {
       super(horizontal, vertical, radius, angle, speed, direction);
     }
@@ -80,110 +90,65 @@ function circularMoveFactory(
 
 export default {
   'red': {
-    mover: moveFactory(),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(),
   },
   'green': {
-    mover: moveFactory(allContingencies.ninetyDegreesCounterClockwise, left),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.ninetyDegreesCounterClockwise, left),
   },
   'blue': {
-    mover: moveFactory(),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(),
   },
   'yellow': {
-    mover: moveFactory(),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(),
   },
 
   'purple': {
-    mover: moveFactory(allContingencies.oneEightyDegrees, left),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.oneEightyDegrees, left),
   },
   'brown': {
-    mover: DiagonalMover,
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: DiagonalProgress,
   },
   'grey': {
-    mover: moveFactory(allContingencies.oneEightyDegrees, right),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.oneEightyDegrees, right),
   },
   'cyaan': {
-    mover: moveFactory(allContingencies.oneEightyDegrees, up),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.oneEightyDegrees, up),
   },
   'magenta': {
-    mover: moveFactory(allContingencies.oneEightyDegrees, down),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.oneEightyDegrees, down),
   },
   'black': {
-    mover: moveFactory(allContingencies.ninetyDegreesCounterClockwise, right),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.ninetyDegreesCounterClockwise, right),
   },
   'orange': {
-    mover: moveFactory(allContingencies.wallHugger, right),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.wallHugger, right),
   },
   'pink': {
-    mover: moveFactory(allContingencies.stageFright, left),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: progressFactory(allContingencies.stageFright, left),
   },
 
   'teal': {
-    mover: circularMoveFactory(1, 0),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: circularProgressFactory(1, 0),
   },
   'navy': {
-    mover: circularMoveFactory(1, 1, 32, 0, 100),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: circularProgressFactory(1, 1, 32, 0, 100),
   },
   'burlywood': {
-    mover: circularMoveFactory(0, 1, 32, 0, 200, -1),
-    threat: Harmless,
-    volition: Benevolent,
-    vulnerable: Vulnerable,
-    actionable: Active
+    ...defaultAttributes,
+    progress: circularProgressFactory(0, 1, 32, 0, 200, -1),
   }
 };

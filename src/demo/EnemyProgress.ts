@@ -1,4 +1,4 @@
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import Actor from '../lib/Actor';
 import Grid from '../lib/Grid';
 import { DirectionTypes } from '../resources/DirectionTypes';
@@ -7,7 +7,7 @@ import global from '../lib/Global';
 const pixelsPerSecond = 100;
 const directions = [ 'up', 'down', 'left', 'right' ];
 
-export default class EnemyMover implements IMovable {
+export default class EnemyProgress implements IProgress {
 
   private direction: any;
   private directionChange: any;

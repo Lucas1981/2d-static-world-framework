@@ -1,9 +1,10 @@
 import Actor from '../lib/Actor';
+import Immovable from '../resources/Immovable';
 import Harmful from '../resources/Harmful';
 import Malevolent from '../resources/Malevolent';
 import Invulnerable from '../resources/Invulnerable';
 import Active from '../resources/Active';
-import BulletMover from './BulletMover';
+import BulletProgress from './BulletProgress';
 import global from '../lib/Global';
 
 const directions = ['up', 'right', 'down', 'left'];
@@ -11,7 +12,7 @@ const directions = ['up', 'right', 'down', 'left'];
 const pixelsPerSecond = 200;
 const timeToNextShot = 500;
 
-export default class Enemy1Mover {
+export default class Enemy1Progress {
   public direction;
   private lastShotFired: number;
 
@@ -31,7 +32,8 @@ export default class Enemy1Mover {
         actor.x,
         actor.y,
         actorType.states,
-        new BulletMover(this.direction),
+        new BulletProgress(this.direction),
+        new Immovable(),
         new Harmful(),
         new Malevolent(),
         new Invulnerable(),

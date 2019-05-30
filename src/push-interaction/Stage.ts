@@ -16,12 +16,9 @@ export default class Stage implements IStage {
     for (const collider of colliders) {
       // Are we dealing with a box?
       if (
-        // Exclude the markers
-        !actor.element.canHurt() &&
-        !collider.element.canHurt() &&
-        // Check for the rest
-        !actor.element.isActive() &&
-        collider.element.isActive()
+        // Make sure this is the player pushing a box
+        actor.element.isMovable() &&
+        !collider.element.isMovable()
       ) {
         // Let's try to move the box
 
@@ -60,6 +57,7 @@ export default class Stage implements IStage {
 
         // Is our move otherwise legitimate?
         } else if (!grid.checkGrid(actor.element.x, actor.element.y)) {
+
           // If not, push everything as far as we can
 
           // Center the box on the current grid spot
@@ -95,7 +93,7 @@ export default class Stage implements IStage {
         if (map[i][j] === 2) {
           allMarks++;
           for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
-            if (!actor.element.isActive() && actor.element.hitsGrid(global.maps[global.activeMap].grid, j, i)) checkedBoxes++;
+            if (actor.element.isMovable() && actor.element.hitsGrid(global.maps[global.activeMap].grid, j, i)) checkedBoxes++;
           }
         }
       }
@@ -108,8 +106,7 @@ export default class Stage implements IStage {
       // Make sure this is not the box we are pushing or the player
       if (
         actor.element !== collider.element &&
-        !actor.element.isActive() &&
-        !actor.element.canHurt()
+        actor.element.isMovable()
       ) {
         // Is this second box colliding right now?
         const isColliding: boolean = actor.element.isCollidingWith(collider.element);

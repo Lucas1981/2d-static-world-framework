@@ -1,16 +1,17 @@
 import Actor from '../lib/Actor';
-import BasicPlayerMover from '../resources/BasicPlayerMover';
+import Immovable from '../resources/Immovable';
+import BasicPlayerProgress from '../resources/BasicPlayerProgress';
 import Harmful from '../resources/Harmful';
 import Benevolent from '../resources/Benevolent';
 import Invulnerable from '../resources/Invulnerable';
 import Active from '../resources/Active';
-import BulletMover from './BulletMover';
+import BulletProgress from './BulletProgress';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 200;
 const timeToNextShot = 500;
 
-export default class PlayerMover extends BasicPlayerMover {
+export default class PlayerProgress extends BasicPlayerProgress {
   private lastShotFired: number;
   constructor() {
     super(pixelsPerSecond);
@@ -27,7 +28,8 @@ export default class PlayerMover extends BasicPlayerMover {
         actor.x,
         actor.y,
         actorType.states,
-        new BulletMover(this.direction),
+        new BulletProgress(this.direction),
+        new Immovable(),
         new Harmful(),
         new Benevolent(),
         new Invulnerable(),

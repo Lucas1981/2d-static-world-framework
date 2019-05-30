@@ -1,4 +1,4 @@
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import Actor from '../lib/Actor';
 import global from '../lib/Global';
 
@@ -12,7 +12,7 @@ const directions = {
   left: { x: -1, y: 0 }
 }
 
-export default class BulletMover implements IMovable {
+export default class BulletProgress implements IProgress {
   private timeCreated: number;
 
   constructor(

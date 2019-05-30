@@ -1,7 +1,7 @@
 import Actor from '../lib/Actor';
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 
-export default class ItemMover implements IMovable {
+export default class NoProgress implements IProgress {
   constructor() {}
 
   public progress(actor: Actor) {

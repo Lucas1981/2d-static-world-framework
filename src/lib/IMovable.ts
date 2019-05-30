@@ -1,5 +1,5 @@
 import Actor from './Actor';
 
-export default interface IMovabel {
-  progress(actor: Actor): void;
+export default interface IMovable {
+  isMovable(actor: Actor): Boolean;
 }

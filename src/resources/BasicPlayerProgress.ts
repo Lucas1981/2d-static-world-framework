@@ -1,18 +1,19 @@
-import IMovable from '../lib/IMovable';
+import IProgress from '../lib/IProgress';
 import Actor from '../lib/Actor';
-import Grid from '../lib/Grid';
-import { DirectionTypes } from '../resources/DirectionTypes';
-import { StateTypes } from '../resources/StateTypes';
+import { StateTypes } from './StateTypes';
+import { DirectionTypes } from './DirectionTypes';
 import { GameState } from '../lib/GameState';
 import global from '../lib/Global';
 
-const pixelsPerSecond = 150;
+const defaultPixelsPerSecond = 150;
 
-export default class PlayerMover implements IMovable {
-  private state: StateTypes;
-  private direction: DirectionTypes;
+export default class BasicPlayerProgress implements IProgress {
+  public state: StateTypes;
+  public direction: DirectionTypes;
 
-  constructor() {
+  constructor(
+    private pixelsPerSecond = defaultPixelsPerSecond
+  ) {
     this.state = StateTypes.Standing;
     this.direction = DirectionTypes.Up;
   }
@@ -20,9 +21,9 @@ export default class PlayerMover implements IMovable {
   public progress(actor: Actor): void {
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
-    const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
+    const grid = global.maps[global.activeMap].grid;
+    const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const state: any = global.keyboard.state;
-    const grid: Grid = global.maps[global.activeMap].grid;
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
 
@@ -64,7 +65,12 @@ export default class PlayerMover implements IMovable {
       global.gameState = GameState.ResetGame;
     }
 
-    actor.updateAnimationKey(`${this.state}-${this.direction}`);
+    this.updateAnimationKey(actor);
 
   }
-};
+
+  public updateAnimationKey(actor: Actor) {
+    // Default behaviour
+    actor.updateAnimationKey(`${this.state}-${this.direction}`);
+  }
+}
