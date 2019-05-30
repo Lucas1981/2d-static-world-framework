@@ -5,6 +5,7 @@ import Canvas from './Canvas';
 import Grid from './Grid';
 import Actor from './Actor';
 import Sound from './Sound';
+import actorOptions from './actor-options';
 
 export default class Generator {
   constructor() {}
@@ -29,17 +30,18 @@ export default class Generator {
     const result: LinkedList = new LinkedList();
     for (let actor of actors) {
       const actorType = data.actors[actor.type];
+      const customAttributes = actorAttributes[actorType.name];
       result.push(new Actor(
         // Make sure to correct for the offset of half a unit
         actor.x + Math.floor(data.config.unit / 2),
         actor.y + Math.floor(data.config.unit / 2),
         actorType.states,
         new actorAttributes[actorType.name].progress(),
-        new actorAttributes[actorType.name].movable(),
-        new actorAttributes[actorType.name].threat(),
-        new actorAttributes[actorType.name].volition(),
-        new actorAttributes[actorType.name].vulnerable(),
-        new actorAttributes[actorType.name].actionable(),
+        new ('movable' in customAttributes ? customAttributes.movable : actorOptions[actorType.movable])(),
+        new ('threat' in customAttributes ? customAttributes.threat : actorOptions[actorType.threat])(),
+        new ('volition' in customAttributes ? customAttributes.volition : actorOptions[actorType.volition])(),
+        new ('vulnerable' in customAttributes ? customAttributes.vulnerable : actorOptions[actorType.vulnerable])(),
+        new ('actionable' in customAttributes ? customAttributes.actionable : actorOptions[actorType.actionable])()
       ));
     }
     return result;
