@@ -1,9 +1,9 @@
 /* This bootstraps and starts off everything */
 
-import Game from './fighting-interaction/Game';
-import actorAttributes from './fighting-interaction/actor-attributes';
-import Stage from './fighting-interaction/Stage';
-import data from './fighting-interaction/data';
+import Game from './capture-the-flag/Game';
+import actorAttributes from './capture-the-flag/actor-attributes';
+import Stage from './capture-the-flag/Stage';
+import data from './capture-the-flag/data';
 
 (function(Game, Stage, actorAttributes, data) {
   const stage = new Stage();

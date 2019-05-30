@@ -8,5 +8,4 @@ Export the file you make with the editor, turn it into a TypeScript `.ts` file (
 
 To do:
 - Data files should really be json files, now those are .ts because I can't figure out how to feed .json files to TypeScript
-- The progress method in the Actor should accept an array of IProgress implementations in stead of just one, so it can stack behaviour so you can make the behaviours smaller, easier to combine and more reusable
-- A default direction should be handled by the Generator and should be specifiable in the world editor
+- The one updating the animation frame is now an IProgress instance. The problem with that is that it prevents the progress from being an array, because updating the animationkey can require information that is in the IProgress instance so only the IProgress instance can update it. But if you want several IProgress instances to run, who can determine the new value for the animationKey?

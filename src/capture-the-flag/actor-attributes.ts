@@ -20,7 +20,8 @@ const left = 6;
 const upperLeft = 7;
 
 class EnemyProgress extends BasicProgress {
-  constructor() {
+  constructor(data) {
+    console.log('direction' in data);
     super({
       conditions: {
         directions: [ 2 ],
@@ -28,7 +29,7 @@ class EnemyProgress extends BasicProgress {
         all: false
       },
       default: counterClockwise * ninetyDegrees
-    }, down);
+    }, data.direction !== '' ? parseInt(data.direction) : down);
   }
 }
 

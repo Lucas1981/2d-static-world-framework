@@ -36,7 +36,7 @@ export default class Generator {
         actor.x + Math.floor(data.config.unit / 2),
         actor.y + Math.floor(data.config.unit / 2),
         actorType.states,
-        new actorAttributes[actorType.name].progress(),
+        new actorAttributes[actorType.name].progress(actor),
         new ('movable' in customAttributes ? customAttributes.movable : actorOptions[actorType.movable])(),
         new ('threat' in customAttributes ? customAttributes.threat : actorOptions[actorType.threat])(),
         new ('volition' in customAttributes ? customAttributes.volition : actorOptions[actorType.volition])(),
