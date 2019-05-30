@@ -1,9 +1,9 @@
 import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
+import TextWriter from '../resources/TextWriter';
 import { IStage } from '../lib/IStage';
 import global from '../lib/Global';
 
-const statusBarColor = "#FFFFFF";
 const target = 2;
 
 export default class Stage implements IStage {
@@ -119,20 +119,6 @@ export default class Stage implements IStage {
   }
 
   private drawScore(totalBoxes, checkedBoxes) {
-    global.canvas.clearRect(
-      0,
-      global.config.unit * global.config.gridHeight,
-      global.config.unit * global.config.gridWidth,
-      (global.config.unit * 3) * global.config.gridHeight,
-    )
-    global.canvas.write(
-      `Checked boxes: ${checkedBoxes} / ${totalBoxes}`,
-      statusBarColor,
-      statusBarColor,
-      24,
-      global.config.unit * global.config.gridHeight + 20,
-      (global.config.gridWidth * global.config.unit),
-      'right'
-    );
+    TextWriter.writeStatusBar(`Checked boxes: ${checkedBoxes} / ${totalBoxes}`, 'right');
   }
 }

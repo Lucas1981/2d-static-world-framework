@@ -2,6 +2,7 @@ import { IStage } from '../lib/IStage';
 import { IGame } from '../lib/IGame';
 import { GameState } from '../lib/GameState';
 import AbstractGame from '../lib/AbstractGame';
+import TextWriter from '../resources/TextWriter';
 
 const waitingTime = 1500;
 const textFillColor = "#FFCF40";
@@ -36,7 +37,7 @@ export default class Game extends AbstractGame implements IGame {
   public stageCompleted(): void {
     if (this.global.getTimeSinceLastStateChange() < waitingTime) {
       this.drawStageAndStatusBar(false);
-      this.writeMainMessage('Stage clear!');
+      TextWriter.writeMainMessage('Stage clear!');
     } else {
       this.global.gameState = GameState.ResetStage;
     }
@@ -48,7 +49,7 @@ export default class Game extends AbstractGame implements IGame {
   public dead(): void {
     if (this.global.getTimeSinceLastStateChange() < waitingTime) {
       this.drawStageAndStatusBar(false);
-      this.writeMainMessage('You dead!');
+      TextWriter.writeMainMessage('You dead!');
     } else {
       this.global.gameState = GameState.ResetStage;
     }
@@ -58,16 +59,6 @@ export default class Game extends AbstractGame implements IGame {
   }
 
   public gameOver(): void {
-  }
-
-  private writeMainMessage(message) {
-    const x = (this.global.config.unit * this.global.config.gridWidth) / 2;
-    const y = (this.global.config.unit * this.global.config.gridHeight) / 2;
-    this.global.canvas.write(
-      message,
-      textFillColor, textStrokeColor,
-      40, y, x
-    );
   }
 
   private drawStageAndStatusBar(progress: boolean = true, animate: boolean = true, actors: boolean = true) {

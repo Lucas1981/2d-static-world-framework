@@ -10,6 +10,5 @@ To do:
 - Data files should really be json files, now those are .ts because I can't figure out how to feed .json files to TypeScript
 - The text written to the bottom of the screen takes up a lot of repetitive code. A standard and reusable implementation can be added to the resources folder.
 - The text written to the bottom of the screen should perhaps be the responsibility of the Game loop and not of the State handler. The Game handler might not know what to display though, so perhaps there should be a communication channel established between the Game and the mainLoop implementation.
-- The lib folder might become quite bloated. Could be nice to actually group certain files in folders.
 - The progress method in the Actor should accept an array of IProgress implementations in stead of just one, so it can stack behaviour so you can make the behaviours smaller, easier to combine and more reusable
 - A default direction should be handled by the Generator.
