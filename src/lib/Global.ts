@@ -4,6 +4,7 @@ import KeyboardInput from './KeyboardInput';
 import Grid from './Grid';
 import LinkedList from './LinkedList';
 import Sound from './Sound';
+import PubSub from './PubSub';
 import { GameState } from './GameState';
 
 class Global {
@@ -22,10 +23,16 @@ class Global {
     private _actorAttributes: any = null;
     private lastGameStateChange: any = null;
     private _sound: Sound = null;
+    private _pubsub: PubSub = null;
 
     constructor() {
       // We need to do this immediately
       this._clock = new Clock();
+      this._pubsub = new PubSub();
+    }
+
+    public get pubsub(): PubSub {
+      return this._pubsub;
     }
 
     public set gameState(gameState: GameState) {

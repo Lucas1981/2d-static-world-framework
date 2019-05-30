@@ -20,7 +20,7 @@ export default class TextWriter {
       statusBarColor,
       24,
       global.config.unit * global.config.gridHeight + 20,
-      (global.config.gridWidth * global.config.unit),
+      horizontalAlignment === 'left' ? 0 : (global.config.gridWidth * global.config.unit),
       horizontalAlignment
     );
   }
@@ -42,5 +42,14 @@ export default class TextWriter {
       textStrokeColor,
       20, 320
     );
+  }
+
+  public static clearStatusBar() {
+    global.canvas.clearRect(
+      0,
+      global.config.unit * global.config.gridHeight,
+      global.config.unit * global.config.gridWidth,
+      (global.config.unit * 3) * global.config.gridHeight,
+    )
   }
 };
