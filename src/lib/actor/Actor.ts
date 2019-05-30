@@ -4,10 +4,10 @@ import IThreat from './IThreat';
 import IVolition from './IVolition';
 import IVulnerable from './IVulnerable';
 import IActionable from './IActionable';
-import Collision from './Collision';
-import Frame from './Frame';
-import Grid from './Grid';
-import global from './Global';
+import Collision from '../Collision';
+import Frame from '../Frame';
+import Grid from '../Grid';
+import global from '../Global';
 
 export default class Actor {
   private _state: any;

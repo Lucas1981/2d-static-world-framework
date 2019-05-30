@@ -1,4 +1,4 @@
-import Actor from './Actor';
+import Actor from './actor/Actor';
 import { IStage } from './IStage';
 import global from './Global';
 

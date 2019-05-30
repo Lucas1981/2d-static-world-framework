@@ -1,5 +1,5 @@
-import Actor from '../lib/Actor';
-import IActionable from '../lib/IActionable';
+import Actor from './Actor';
+import IActionable from './IActionable';
 
 export default class Passive implements IActionable {
   constructor() {}

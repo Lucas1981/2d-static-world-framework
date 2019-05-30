@@ -1,4 +1,4 @@
-import Actor from './Actor';
+import Actor from './actor/Actor';
 import Frame from './Frame';
 import global from './Global';
 

@@ -1,4 +1,4 @@
-import Actor from '../lib/Actor';
+import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
 import { IStage } from '../lib/IStage';
 import global from '../lib/Global';

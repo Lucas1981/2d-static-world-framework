@@ -1,5 +1,5 @@
-import Actor from '../lib/Actor';
-import IThreat from '../lib/IThreat';
+import Actor from './Actor';
+import IThreat from './IThreat';
 
 export default class Harmless implements IThreat {
   constructor() {}

@@ -1,5 +1,5 @@
-import IProgress from '../lib/IProgress';
-import Actor from '../lib/Actor';
+import IProgress from '../lib/actor/IProgress';
+import Actor from '../lib/actor/Actor';
 import { StateTypes } from './StateTypes';
 import { DirectionTypes } from './DirectionTypes';
 import { GameState } from '../lib/GameState';

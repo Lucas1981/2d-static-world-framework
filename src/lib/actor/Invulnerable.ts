@@ -1,5 +1,5 @@
-import Actor from '../lib/Actor';
-import IVulnerable from '../lib/IVulnerable';
+import Actor from './Actor';
+import IVulnerable from './IVulnerable';
 
 export default class Invulnerable implements IVulnerable {
   constructor() {}

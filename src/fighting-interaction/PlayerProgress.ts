@@ -1,4 +1,4 @@
-import Actor from '../lib/Actor';
+import Actor from '../lib/actor/Actor';
 import BasicPlayerProgress from '../resources/BasicPlayerProgress';
 import global from '../lib/Global';
 

@@ -3,8 +3,8 @@
 * 180 degrees, coming from a diagonal direction.
 */
 
-import Actor from '../lib/Actor';
-import IProgress from '../lib/IProgress';
+import Actor from '../lib/actor/Actor';
+import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 export default abstract class CircularProgress implements IProgress {

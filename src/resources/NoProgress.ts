@@ -1,5 +1,5 @@
-import Actor from '../lib/Actor';
-import IProgress from '../lib/IProgress';
+import Actor from '../lib/actor/Actor';
+import IProgress from '../lib/actor/IProgress';
 
 export default class NoProgress implements IProgress {
   constructor() {}

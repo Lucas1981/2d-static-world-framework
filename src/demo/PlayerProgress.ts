@@ -1,5 +1,5 @@
-import IProgress from '../lib/IProgress';
-import Actor from '../lib/Actor';
+import IProgress from '../lib/actor/IProgress';
+import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
 import { DirectionTypes } from '../resources/DirectionTypes';
 import { StateTypes } from '../resources/StateTypes';

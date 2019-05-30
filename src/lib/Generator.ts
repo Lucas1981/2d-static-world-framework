@@ -3,9 +3,9 @@ import Animation from './Animation';
 import LinkedList from './LinkedList';
 import Canvas from './Canvas';
 import Grid from './Grid';
-import Actor from './Actor';
+import Actor from './actor/Actor';
 import Sound from './Sound';
-import actorOptions from './actor-options';
+import actorOptions from './actor/actor-options';
 
 export default class Generator {
   constructor() {}

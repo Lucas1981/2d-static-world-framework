@@ -1,7 +1,5 @@
-import Actor from '../lib/Actor';
-import Malevolent from '../resources/Malevolent';
-import Active from '../resources/Active';
-import IProgress from '../lib/IProgress';
+import Actor from '../lib/actor/Actor';
+import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 const states = [ 'good', 'bad' ];

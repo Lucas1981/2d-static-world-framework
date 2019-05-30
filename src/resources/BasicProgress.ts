@@ -4,9 +4,9 @@
 * any direction
 */
 
-import Actor from '../lib/Actor';
+import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
-import IProgress from '../lib/IProgress';
+import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 100;

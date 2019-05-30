@@ -1,9 +1,9 @@
-import Actor from '../lib/Actor';
-import Immovable from '../resources/Immovable';
-import Harmful from '../resources/Harmful';
-import Malevolent from '../resources/Malevolent';
-import Invulnerable from '../resources/Invulnerable';
-import Active from '../resources/Active';
+import Actor from '../lib/actor/Actor';
+import Immovable from '../lib/actor/Immovable';
+import Harmful from '../lib/actor/Harmful';
+import Malevolent from '../lib/actor/Malevolent';
+import Invulnerable from '../lib/actor/Invulnerable';
+import Active from '../lib/actor/Active';
 import BulletProgress from './BulletProgress';
 import global from '../lib/Global';
 
