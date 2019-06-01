@@ -5,18 +5,14 @@ import { DirectionTypes } from '../resources/DirectionTypes';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 100;
-const directions = [ 'up', 'down', 'left', 'right' ];
 
 export default class EnemyProgress implements IProgress {
-
-  private direction: any;
   private directionChange: any;
   private directionChangeCutoff: number;
 
   constructor() {
     this.directionChangeCutoff = Math.floor(Math.random() * 500) + 150;
     this.directionChange = global.clock.getTime();
-    this.direction = directions[0];
   }
 
   public progress(actor: Actor): void {
@@ -30,16 +26,16 @@ export default class EnemyProgress implements IProgress {
     let probeX: number;
 
     if(global.clock.getTime() - this.directionChange >= this.directionChangeCutoff) {
-      this.direction = this.changeDirection();
+      actor.direction = this.changeDirection();
     }
 
-    switch(this.direction) {
+    switch(actor.direction) {
       case DirectionTypes.Up:
         probeY = actor.y - movement;
         if(grid.checkGrid(actor.x, probeY)) actor.y -= movement;
         else {
           actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
-          this.direction = this.changeDirection();
+          actor.direction = this.changeDirection();
         }
         break;
       case DirectionTypes.Down:
@@ -47,7 +43,7 @@ export default class EnemyProgress implements IProgress {
         if(grid.checkGrid(actor.x, probeY)) actor.y += movement;
         else {
           actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
-          this.direction = this.changeDirection();
+          actor.direction = this.changeDirection();
         }
         break;
       case DirectionTypes.Left:
@@ -55,7 +51,7 @@ export default class EnemyProgress implements IProgress {
         if(grid.checkGrid(probeX, actor.y)) actor.x -= movement;
         else {
           actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
-          this.direction = this.changeDirection();
+          actor.direction = this.changeDirection();
         }
         break;
       case DirectionTypes.Right:
@@ -63,19 +59,16 @@ export default class EnemyProgress implements IProgress {
         if(grid.checkGrid(probeX, actor.y)) actor.x += movement;
         else {
           actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
-          this.direction = this.changeDirection();
+          actor.direction = this.changeDirection();
         }
         break;
       default:
         throw "Unknown direction type";
     }
-
-    actor.updateAnimationKey(`walk-${this.direction}`);
   }
 
   private changeDirection() {
-    const index: number = Math.floor(Math.random() * 4);
-    const direction: string = directions[index];
+    const direction: number = Math.floor(Math.random() * 4);
     this.directionChange = global.clock.getTime();
     this.directionChangeCutoff = Math.floor(Math.random() * 300) + 150;
     return direction;

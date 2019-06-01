@@ -1,9 +1,10 @@
 import NoProgress from '../resources/NoProgress';
-import BasicPlayerProgress from '../resources/BasicPlayerProgress';
+import BasicPlayerDirectionProgress from '../resources/BasicPlayerDirectionProgress';
+import NoStateChange from '../resources/NoStateChange';
 
 const pixelsPerSecond = 200;
 
-class PlayerProgress extends BasicPlayerProgress {
+class PlayerProgress extends BasicPlayerDirectionProgress {
   constructor() {
     super(pixelsPerSecond);
   }
@@ -11,9 +12,11 @@ class PlayerProgress extends BasicPlayerProgress {
 
 export default {
   'player': {
-    progress: PlayerProgress,
+    progress: [PlayerProgress],
+    stateChanger: NoStateChange
   },
   'box': {
-    progress: NoProgress,
+    progress: [NoProgress],
+    stateChanger: NoStateChange
   },
 }

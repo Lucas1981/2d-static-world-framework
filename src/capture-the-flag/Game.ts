@@ -39,7 +39,11 @@ export default class Game extends AbstractGame implements IGame {
   }
 
   public stage(): void {
-    this.drawStageAndStatusBar();
+    if (this.global.keyboard.state.escape) {
+      this.global.gameState = GameState.ResetGame;
+    } else {
+      this.drawStageAndStatusBar();
+    }
   }
 
   public stageCompleted(): void {

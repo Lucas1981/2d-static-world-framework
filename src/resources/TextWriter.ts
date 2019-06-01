@@ -25,7 +25,7 @@ export default class TextWriter {
     );
   }
 
-  public static writeMainMessage(message) {
+  public static writeMainMessage(message: string) {
     const x = (global.config.unit * global.config.gridWidth) / 2;
     const y = (global.config.unit * global.config.gridHeight) / 2;
     global.canvas.write(
@@ -35,7 +35,7 @@ export default class TextWriter {
     );
   }
 
-  public static writeSubMessage(message) {
+  public static writeSubMessage(message: string) {
     global.canvas.write(
       message,
       textFillColor,

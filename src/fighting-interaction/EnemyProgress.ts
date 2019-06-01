@@ -1,16 +1,14 @@
 import Actor from '../lib/actor/Actor';
 import IProgress from '../lib/actor/IProgress';
+import { enemyStates } from './states';
 import global from '../lib/Global';
 
-const states = [ 'good', 'bad' ];
 const timeToNextStateChange = 1000;
 
 export default class Enemy2Progress implements IProgress {
-  public state;
   private lastStateChange: number;
 
   constructor() {
-    this.state = states[0];
     this.lastStateChange = global.clock.getTime();
   }
 
@@ -18,13 +16,8 @@ export default class Enemy2Progress implements IProgress {
     const now = global.clock.getTime();
     if (now - this.lastStateChange > timeToNextStateChange) {
       this.lastStateChange = now;
-      this.state = states[(states.indexOf(this.state) + 1) % states.length];
-      this.updateAnimationKey(actor);
+      actor.condition = (actor.condition + 1) % enemyStates.length;
     }
-  }
-
-  public updateAnimationKey(actor: Actor) {
-    actor.updateAnimationKey(this.state);
   }
 
 }

@@ -1,4 +1,5 @@
 import IProgress from './IProgress';
+import IStateChange from './IStateChange';
 import IMovable from './IMovable';
 import IThreat from './IThreat';
 import IVolition from './IVolition';
@@ -11,8 +12,8 @@ import global from '../Global';
 
 export default class Actor {
   private _state: any;
-  private animationKeyName: string;
-  private animationKeyNames: string[];
+  private stateName: string;
+  private stateNames: string[];
   private stateChange: any;
   private alive: Boolean;
   private context: any;
@@ -24,17 +25,20 @@ export default class Actor {
   constructor(
     private _x: number,
     private _y: number,
-    private states: any[],
-    private _progress: IProgress,
+    private _condition: number,
+    private _direction: number,
+    private states: string[],
+    private _progress: IProgress[],
+    private stateChanger: IStateChange,
     private movable: IMovable,
     private threat: IThreat,
     private volition: IVolition,
     private vulnerable: IVulnerable,
     private actionable: IActionable,
   ) {
-    this.animationKeyNames = Object.keys(this.states);
-    this.animationKeyName = this.animationKeyNames[0];
-    this._state = this.states[this.animationKeyName];
+    this.stateNames = Object.keys(this.states);
+    this.stateName = this.stateNames[0];
+    this._state = this.states[this.stateName];
     this.stateChange = global.clock.getTime();
     this.alive = true;
     this.context = global.canvas.getContext();
@@ -42,10 +46,17 @@ export default class Actor {
     this._originY = this._y;
   }
 
-  public updateAnimationKey(animationKeyName) {
-    if (this.animationKeyName !== animationKeyName && this.animationKeyNames.indexOf(animationKeyName) !== -1) {
-      this._state = this.states[animationKeyName];
-      this.animationKeyName = animationKeyName;
+  public progress(): void {
+    for (const progress of this._progress) {
+      progress.progress(this);
+    }
+    this.stateChanger.changeState(this);
+  }
+
+  public updateState(stateName: string) {
+    if (this.stateName !== stateName && this.stateNames.indexOf(stateName) !== -1) {
+      this._state = this.states[stateName];
+      this.stateName = stateName;
       this.stateChange = global.clock.getTime();
     }
   }
@@ -56,6 +67,22 @@ export default class Actor {
 
   public get state(): any {
     return this._state;
+  }
+
+  public get direction(): number {
+    return this._direction;
+  }
+
+  public set direction(direction: number) {
+    this._direction = direction;
+  }
+
+  public get condition(): number {
+    return this._condition;
+  }
+
+  public set condition(condition: number) {
+    this._condition = condition;
   }
 
   public get x(): number {
@@ -98,10 +125,6 @@ export default class Actor {
 
   public get originY() {
     return this._originY;
-  }
-
-  public progress(): void {
-    this._progress.progress(this);
   }
 
   public isMovable(): Boolean {

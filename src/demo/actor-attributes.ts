@@ -1,18 +1,33 @@
 import EnemyProgress from './EnemyProgress';
-import ItemProgress from './ItemProgress';
+import NoProgress from '../resources/NoProgress';
 import PlayerProgress from './PlayerProgress';
+import EnemyStateChanger from './EnemyStateChanger';
+import PlayerStateChanger from './PlayerStateChanger';
+import NoStateChange from '../resources/NoStateChange';
 
 export default {
   'player': {
-    progress: PlayerProgress,
+    progress: [
+      PlayerProgress
+    ],
+    stateChanger: PlayerStateChanger
   },
   'coin': {
-    progress: ItemProgress,
+    progress: [
+      NoProgress
+    ],
+    stateChanger: NoStateChange
   },
   'baddy': {
-    progress: EnemyProgress,
+    progress: [
+      EnemyProgress
+    ],
+    stateChanger: EnemyStateChanger
   },
   'thug': {
-    progress: EnemyProgress,
+    progress: [
+      EnemyProgress
+    ],
+    stateChanger: EnemyStateChanger
   }
 };

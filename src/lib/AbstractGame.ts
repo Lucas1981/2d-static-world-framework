@@ -27,7 +27,7 @@ export default abstract class AbstractGame implements IGame {
     this.Generator = Generator;
   }
 
-  public async run(data, actorAttributes) {
+  public async run(data: any, actorAttributes: any) {
     await this.initiate(data, actorAttributes);
     global.clock.setTime();
     this.loop(); // Kick it into gear
@@ -82,7 +82,7 @@ export default abstract class AbstractGame implements IGame {
     this.request.call(window, this.loop.bind(this));
   }
 
-  public async initiate(data, actorAttributes) {
+  public async initiate(data: any, actorAttributes: any) {
     global.gameData = data;
     // global.gameState = GameState.Stage;
     global.actorAttributes = actorAttributes;

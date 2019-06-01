@@ -9,18 +9,17 @@ import global from '../lib/Global';
 
 export default abstract class CircularProgress implements IProgress {
   constructor(
-    private horizontal,
-    private vertical,
-    private radius,
-    private angle,
-    private speed, // in degrees per second
-    private direction
+    private horizontal: number,
+    private vertical: number,
+    private radius: number,
+    private angle: number,
+    private speed: number, // in degrees per second
   ) {}
 
   public progress(actor: Actor) {
       const elapsedTime: number = global.clock.elapsedTime;
       const movement: number = Math.min(this.speed * elapsedTime / 1000, global.config.unit - 1);
-      const angle = this.direction === 1 ? this.angle : (360 - this.angle) % 360;
+      const angle: number = actor.direction === 1 ? this.angle : (360 - this.angle) % 360;
       this.angle = (this.angle + movement) % 360;
       actor.x = actor.originX + Math.ceil(Math.sin(angle * Math.PI / 180) * this.radius * this.horizontal);
       actor.y = actor.originY + Math.ceil(Math.cos(angle * Math.PI / 180) * this.radius * this.vertical);

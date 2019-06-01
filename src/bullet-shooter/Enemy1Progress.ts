@@ -5,19 +5,18 @@ import Malevolent from '../lib/actor/Malevolent';
 import Invulnerable from '../lib/actor/Invulnerable';
 import Active from '../lib/actor/Active';
 import BulletProgress from './BulletProgress';
+import NoStateChange from '../resources/NoStateChange';
+import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
-
-const directions = ['up', 'right', 'down', 'left'];
 
 const pixelsPerSecond = 200;
 const timeToNextShot = 500;
+const numberOfDirections = 4;
 
-export default class Enemy1Progress {
-  public direction;
+export default class Enemy1Progress implements IProgress {
   private lastShotFired: number;
 
   constructor() {
-    this.direction = directions[0];
     this.lastShotFired = global.clock.getTime();
   }
 
@@ -26,13 +25,15 @@ export default class Enemy1Progress {
     const actorType = global.gameData.actors.find(e => e.name === 'enemyBullet');
     if (now - this.lastShotFired > timeToNextShot) {
       this.lastShotFired = global.clock.getTime();
-      this.direction = directions[((directions.indexOf(this.direction) + 1) % directions.length)];
+      actor.direction = ((actor.direction) + 1) % numberOfDirections;
       global.maps[global.activeMap].actors.push(new Actor(
         // Make sure to correct for the offset of half a unit
         actor.x,
         actor.y,
+        0, actor.direction,
         actorType.states,
-        new BulletProgress(this.direction),
+        [new BulletProgress()],
+        new NoStateChange(),
         new Immovable(),
         new Harmful(),
         new Malevolent(),
@@ -40,11 +41,5 @@ export default class Enemy1Progress {
         new Active()
       ));
     }
-
-    this.updateAnimationKey(actor);
-  }
-
-  public updateAnimationKey(actor: Actor) {
-    actor.updateAnimationKey(this.direction);
   }
 }

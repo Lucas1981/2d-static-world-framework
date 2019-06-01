@@ -19,22 +19,18 @@ const directions = [
 ]
 
 export default class DiagonalProgress implements IProgress {
-  private direction: any;
 
-  constructor(
-    private directionIndex = 0
-  ) {
-    this.direction = directions[this.directionIndex];
-  }
+  constructor() {}
 
   public progress(actor: Actor) {
+    const direction = directions[actor.direction];
     const elapsedTime: number = global.clock.elapsedTime;
     const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
     const grid: Grid = global.maps[global.activeMap].grid;
-    const probeY: number = actor.y + (movement * this.direction.y);
-    const probeX: number = actor.x + (movement * this.direction.x);
+    const probeY: number = actor.y + (movement * direction.y);
+    const probeX: number = actor.x + (movement * direction.x);
 
     if (grid.checkGrid(probeX, probeY)) {
       actor.x = probeX;
@@ -45,9 +41,9 @@ export default class DiagonalProgress implements IProgress {
 
       // Pick out the proper values we need (the environment report rotated)
       const v = [
-        report[(this.directionIndex - 1 + report.length) % report.length],
-        report[(this.directionIndex + report.length) % report.length],
-        report[(this.directionIndex + 1 + report.length) % report.length]
+        report[(actor.direction - 1 + report.length) % report.length],
+        report[(actor.direction + report.length) % report.length],
+        report[(actor.direction + 1 + report.length) % report.length]
       ];
 
       // Determine what to do
@@ -67,15 +63,15 @@ export default class DiagonalProgress implements IProgress {
     }
   }
 
-  private centerActorAndChangeDirection(actor, gridX, gridY, direction) {
+  private centerActorAndChangeDirection(actor: Actor, gridX: number, gridY: number, newDirection: number) {
     // Make sure the actor is as close to the wall as he can get
-    if(this.direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
-    if(this.direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
-    if(this.direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
-    if(this.direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
+    const direction = directions[actor.direction];
+    if(direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
+    if(direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
+    if(direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
+    if(direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
 
     // And change the direction in the way specified
-    this.directionIndex = (this.directionIndex + direction + directions.length) % directions.length;
-    this.direction = directions[this.directionIndex];
+    actor.direction = (actor.direction + newDirection + directions.length) % directions.length;
   }
 }

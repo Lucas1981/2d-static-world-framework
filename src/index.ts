@@ -1,9 +1,9 @@
 /* This bootstraps and starts off everything */
 
-import Game from './capture-the-flag/Game';
-import actorAttributes from './capture-the-flag/actor-attributes';
-import Stage from './capture-the-flag/Stage';
-import data from './capture-the-flag/data';
+import Game from './demo/Game';
+import actorAttributes from './demo/actor-attributes';
+import Stage from './demo/Stage';
+import data from './demo/data';
 
 (function(Game, Stage, actorAttributes, data) {
   const stage = new Stage();

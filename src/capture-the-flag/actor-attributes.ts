@@ -1,6 +1,7 @@
 import BasicProgress from '../resources/BasicProgress';
 import ItemProgress from './ItemProgress';
 import PlayerProgress from './PlayerProgress';
+import NoStateChange from '../resources/NoStateChange';
 
 const fourtyFiveDegrees = 1;
 const ninetyDegrees = 2;
@@ -21,7 +22,6 @@ const upperLeft = 7;
 
 class EnemyProgress extends BasicProgress {
   constructor(data) {
-    console.log('direction' in data);
     super({
       conditions: {
         directions: [ 2 ],
@@ -29,18 +29,21 @@ class EnemyProgress extends BasicProgress {
         all: false
       },
       default: counterClockwise * ninetyDegrees
-    }, data.direction !== '' ? parseInt(data.direction) : down);
+    });
   }
 }
 
 export default {
   'player': {
-    progress: PlayerProgress,
+    progress: [PlayerProgress],
+    stateChanger: NoStateChange
   },
   'coin': {
-    progress: ItemProgress,
+    progress: [ItemProgress],
+    stateChanger: NoStateChange
   },
   'enemy': {
-    progress: EnemyProgress,
+    progress: [EnemyProgress],
+    stateChanger: NoStateChange
   },
 };

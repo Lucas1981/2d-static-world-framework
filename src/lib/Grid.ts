@@ -32,7 +32,7 @@ export default class Grid {
     return this.grid;
   }
 
-  public isSafe(x, y) {
+  public isSafe(x: number, y: number) {
     const tile = this.grid[y + 1][x + 1];
     return tile !== null && this.tiles[tile].type === 'background';
   }
@@ -84,7 +84,7 @@ export default class Grid {
     ];
   }
 
-  private playerToGrid(value): number {
+  private playerToGrid(value: number): number {
     return Math.floor(value / global.config.unit);
   }
 }

@@ -16,32 +16,32 @@ export default class LinkedList {
     return this._head.next;
   }
 
-  public find(item) {
-    let currNode = this._head;
+  public find(item: any) {
+    let currNode: Node = this._head;
     while(currNode.element != item) {
       currNode = currNode.next;
     }
     return currNode;
   }
 
-  public insert(newElement, item) {
-    let newNode = new Node(newElement);
-    let current = this.find(item);
+  public insert(newElement: any, item: any) {
+    let newNode: Node = new Node(newElement);
+    let current: Node = this.find(item);
     newNode.next = current.next;
     current.next = newNode;
   }
 
-  public push(newElement) {
-    let newNode = new Node(newElement);
-    let currNode = this._head;
+  public push(newElement: any) {
+    let newNode: Node = new Node(newElement);
+    let currNode: Node = this._head;
     while(currNode.next != null) {
       currNode = currNode.next;
     }
     currNode.next = newNode;
   }
 
-  public findPrevious(item) {
-    let currNode = this._head;
+  public findPrevious(item: any) {
+    let currNode: Node = this._head;
     while(
       currNode.next !== null &&
       currNode.next.element != item
@@ -51,15 +51,15 @@ export default class LinkedList {
     return currNode;
   }
 
-  public remove(item) {
-    let prevNode = this.findPrevious(item);
+  public remove(item: any) {
+    let prevNode: Node = this.findPrevious(item);
     if(prevNode !== null) {
       prevNode.next = prevNode.next.next;
     }
   }
 
   public display() {
-    let currNode = this._head;
+    let currNode: Node = this._head;
     while(currNode.next !== null) {
       currNode = currNode.next;
     }

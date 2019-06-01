@@ -9,9 +9,9 @@ import Grid from '../lib/Grid';
 import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
-const pixelsPerSecond = 100;
+const pixelsPerSecond: number = 100;
 
-const directions = [
+const directions: any[] = [
   // The directions in clockwise fashion
   { x: 0, y: -1 }, // up
   { x: 1, y: -1 }, // upper-right
@@ -24,15 +24,12 @@ const directions = [
 ]
 
 export default abstract class BasicProgress implements IProgress {
-  private direction: any;
   private elapsedTime: number;
   private timer: any;
 
   constructor(
     private contingencies: any,
-    private directionIndex: number = 0
   ) {
-    this.direction = directions[this.directionIndex];
     this.elapsedTime = 0;
   }
 
@@ -51,16 +48,17 @@ export default abstract class BasicProgress implements IProgress {
     const conditions = this.contingencies.conditions;
     const halfUnit = global.config.unit / 2;
     const allFlags = new Array(conditions.directions.length).fill(false);
+    const direction = directions[actor.direction];
 
     // What is the position of the current tip? It starts with the actor location, and then move half a unit in the current direction
-    const currTipX = actor.x + (this.direction.x * halfUnit);
-    const currTipY = actor.y + (this.direction.y * halfUnit);
+    const currTipX = actor.x + (direction.x * halfUnit);
+    const currTipY = actor.y + (direction.y * halfUnit);
     // What are the grid spots of the current tip?
     const gridX = Math.floor(currTipX / global.config.unit);
     const gridY = Math.floor(currTipY / global.config.unit);
     // What is the position of the next tip?
-    const probeY = actor.y + (movement * this.direction.y) + (this.direction.y * halfUnit);
-    const probeX = actor.x + (movement * this.direction.x) + (this.direction.x * halfUnit);
+    const probeY = actor.y + (movement * direction.y) + (direction.y * halfUnit);
+    const probeX = actor.x + (movement * direction.x) + (direction.x * halfUnit);
     // What are the grid spots of the next tip?
     const nextGridX = Math.floor(probeX / global.config.unit);
     const nextGridY = Math.floor(probeY / global.config.unit);
@@ -71,7 +69,7 @@ export default abstract class BasicProgress implements IProgress {
       for (let i = 0; i < conditions.directions.length; i++) {
         // For each of these conditions, we have to find the tile that we want to probe
         const conditionDirection = conditions.directions[i];
-        const directionIndex = (this.directionIndex + conditionDirection + directions.length) % directions.length;
+        const directionIndex = (actor.direction + conditionDirection + directions.length) % directions.length;
         const direction = directions[directionIndex];
         const targetTileX = gridX + direction.x;
         const targetTileY = gridY + direction.y;
@@ -95,8 +93,9 @@ export default abstract class BasicProgress implements IProgress {
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
     const grid: Grid = global.maps[global.activeMap].grid;
-    const probeY = actor.y + (movement * this.direction.y);
-    const probeX = actor.x + (movement * this.direction.x);
+    const direction = directions[actor.direction];
+    const probeY = actor.y + (movement * direction.y);
+    const probeX = actor.x + (movement * direction.x);
 
     this.elapsedTime += elapsedTime;
     const timeIsUp = 'timer' in this.contingencies ? this.elapsedTime > this.contingencies.timer : false;
@@ -112,15 +111,15 @@ export default abstract class BasicProgress implements IProgress {
     }
   }
 
-  private centerActorAndChangeDirection(actor, gridX, gridY, direction) {
+  private centerActorAndChangeDirection(actor: Actor, gridX: number, gridY: number, newDirection: number) {
     // Make sure the actor is as close to the wall as he can get
-    if(this.direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
-    if(this.direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
-    if(this.direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
-    if(this.direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
+    const direction = directions[actor.direction];
+    if(direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
+    if(direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
+    if(direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
+    if(direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
 
     // And change the direction in the way specified
-    this.directionIndex = (this.directionIndex + direction + directions.length) % directions.length;
-    this.direction = directions[this.directionIndex];
+    actor.direction = (actor.direction + newDirection + directions.length) % directions.length;
   }
 }

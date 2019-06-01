@@ -1,6 +1,7 @@
 import BasicProgress from './BasicProgress';
 import DiagonalProgress from './DiagonalProgress';
 import CircularProgress from './CircularProgress';
+import NoStateChange from './NoStateChange';
 
 const up = 0;
 const upperRight = 1;
@@ -47,10 +48,10 @@ const allContingencies = {
   }
 }
 
-function progressFactory(contingencies: any = allContingencies.ninetyDegrees, startingPosition = up) {
+function progressFactory(contingencies: any = allContingencies.ninetyDegrees) {
   return class extends BasicProgress {
     constructor() {
-        super(contingencies, startingPosition);
+        super(contingencies);
     };
   };
 }
@@ -61,61 +62,75 @@ function circularProgressFactory(
     radius: number = 32,
     angle: number = 0,
     speed: number = 300,
-    direction: number = 1
   ) {
   return class extends CircularProgress {
     constructor() {
-      super(horizontal, vertical, radius, angle, speed, direction);
+      super(horizontal, vertical, radius, angle, speed);
     }
   }
 }
 
 export default {
   'red': {
-    progress: progressFactory(),
+    progress: [progressFactory()],
+    stateChanger: NoStateChange
   },
   'green': {
-    progress: progressFactory(allContingencies.ninetyDegreesCounterClockwise, left),
+    progress: [progressFactory(allContingencies.ninetyDegreesCounterClockwise)],
+    stateChanger: NoStateChange
   },
   'blue': {
-    progress: progressFactory(),
+    progress: [progressFactory()],
+    stateChanger: NoStateChange
   },
   'yellow': {
-    progress: progressFactory(),
+    progress: [progressFactory()],
+    stateChanger: NoStateChange
   },
 
   'purple': {
-    progress: progressFactory(allContingencies.oneEightyDegrees, left),
+    progress: [progressFactory(allContingencies.oneEightyDegrees)],
+    stateChanger: NoStateChange
   },
   'brown': {
-    progress: DiagonalProgress,
+    progress: [DiagonalProgress],
+    stateChanger: NoStateChange
   },
   'grey': {
-    progress: progressFactory(allContingencies.oneEightyDegrees, right),
+    progress: [progressFactory(allContingencies.oneEightyDegrees)],
+    stateChanger: NoStateChange
   },
   'cyaan': {
-    progress: progressFactory(allContingencies.oneEightyDegrees, up),
+    progress: [progressFactory(allContingencies.oneEightyDegrees)],
+    stateChanger: NoStateChange
   },
   'magenta': {
-    progress: progressFactory(allContingencies.oneEightyDegrees, down),
+    progress: [progressFactory(allContingencies.oneEightyDegrees)],
+    stateChanger: NoStateChange
   },
   'black': {
-    progress: progressFactory(allContingencies.ninetyDegreesCounterClockwise, right),
+    progress: [progressFactory(allContingencies.ninetyDegreesCounterClockwise)],
+    stateChanger: NoStateChange
   },
   'orange': {
-    progress: progressFactory(allContingencies.wallHugger, right),
+    progress: [progressFactory(allContingencies.wallHugger)],
+    stateChanger: NoStateChange
   },
   'pink': {
-    progress: progressFactory(allContingencies.stageFright, left),
+    progress: [progressFactory(allContingencies.stageFright)],
+    stateChanger: NoStateChange
   },
 
   'teal': {
-    progress: circularProgressFactory(1, 0),
+    progress: [circularProgressFactory(1, 0)],
+    stateChanger: NoStateChange
   },
   'navy': {
-    progress: circularProgressFactory(1, 1, 32, 0, 100),
+    progress: [circularProgressFactory(1, 1, 32, 0, 100)],
+    stateChanger: NoStateChange
   },
   'burlywood': {
-    progress: circularProgressFactory(0, 1, 32, 0, 200, -1),
+    progress: [circularProgressFactory(0, 1, 32, 0, 200)],
+    stateChanger: NoStateChange
   }
 };

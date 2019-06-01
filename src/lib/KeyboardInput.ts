@@ -1,22 +1,22 @@
-const keyLeft = 37;
-const keyUp = 38;
-const keyRight = 39;
-const keyDown = 40;
-const keySpace = 32; // space
+const keyLeft: number = 37;
+const keyUp: number = 38;
+const keyRight: number = 39;
+const keyDown: number = 40;
+const keySpace: number = 32; // space
 
-const a = 65; // a
-const d = 68; // d
-const w = 87; // w
-const s = 83; // s
-const y = 89; // y
-const n = 78; // n
-const enter = 13; // enter
-const escape = 27; // escape
-const zero = 48; // 0
+const a: number = 65; // a
+const d: number = 68; // d
+const w: number = 87; // w
+const s: number = 83; // s
+const y: number = 89; // y
+const n: number = 78; // n
+const enter: number = 13; // enter
+const escape: number = 27; // escape
+const zero: number = 48; // 0
 
-const myTimer = 40; // 40 ms
+const myTimer: number = 40; // 40 ms
 
-const state = {
+const state: any = {
   up: false,
   down: false,
   left: false,
@@ -57,9 +57,9 @@ export default class KeyboardInput {
     document.removeEventListener('keyup', KeyboardInput.keyUpFunction);
   }
 
-  private static keyDownFunction(e) {
+  private static keyDownFunction(e: any) {
 
-    const release = e;
+    const release: any = e;
 
     switch(release.keyCode) {
       case keyUp:
@@ -109,9 +109,9 @@ export default class KeyboardInput {
     }
   }
 
-  private static keyUpFunction(e) {
+  private static keyUpFunction(e: any) {
 
-    const release = e;
+    const release: any = e;
 
     switch(release.keyCode) {
       case keyUp:
@@ -160,5 +160,4 @@ export default class KeyboardInput {
         break;
     }
   }
-
 };

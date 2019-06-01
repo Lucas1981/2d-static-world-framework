@@ -1,3 +1,4 @@
+import IProgress from './actor/IProgress';
 import Frame from './Frame';
 import Animation from './Animation';
 import LinkedList from './LinkedList';
@@ -10,33 +11,40 @@ import actorOptions from './actor/actor-options';
 export default class Generator {
   constructor() {}
 
-  public static getMaps(data, actorAttributes): any {
+  public static getMaps(data: any, actorAttributes: any): any {
     const result: any = [];
     for(const map of data.maps) {
-      const grid = Generator.getGrid(map, data);
-      const actors = Generator.getActors(map.actors, data, actorAttributes);
+      const grid: Grid = Generator.getGrid(map, data);
+      const actors: LinkedList = Generator.getActors(map.actors, data, actorAttributes);
       result.push({ grid, actors });
     }
     return result;
   }
 
-  public static reloadMap(map, data, actorAttributes) {
-    const grid = Generator.getGrid(map, data);
-    const actors = Generator.getActors(map.actors, data, actorAttributes);
+  public static reloadMap(map: any, data: any, actorAttributes: any) {
+    const grid: Grid = Generator.getGrid(map, data);
+    const actors: LinkedList = Generator.getActors(map.actors, data, actorAttributes);
     return { grid, actors };
   }
 
-  public static getActors(actors, data, actorAttributes): LinkedList {
+  public static getActors(actors: any, data: any, actorAttributes: any): LinkedList {
     const result: LinkedList = new LinkedList();
     for (let actor of actors) {
-      const actorType = data.actors[actor.type];
-      const customAttributes = actorAttributes[actorType.name];
+      const actorType: any = data.actors[actor.type];
+      const customAttributes: any = actorAttributes[actorType.name];
+      const progress: IProgress[] = [];
+      for (let i = 0; i < actorAttributes[actorType.name].progress.length; i++) {
+        progress.push(new actorAttributes[actorType.name].progress[i]());
+      }
       result.push(new Actor(
         // Make sure to correct for the offset of half a unit
         actor.x + Math.floor(data.config.unit / 2),
         actor.y + Math.floor(data.config.unit / 2),
+        actor.condition,
+        actor.direction,
         actorType.states,
-        new actorAttributes[actorType.name].progress(actor),
+        progress,
+        new actorAttributes[actorType.name].stateChanger(),
         new ('movable' in customAttributes ? customAttributes.movable : actorOptions[actorType.movable])(),
         new ('threat' in customAttributes ? customAttributes.threat : actorOptions[actorType.threat])(),
         new ('volition' in customAttributes ? customAttributes.volition : actorOptions[actorType.volition])(),
@@ -47,8 +55,8 @@ export default class Generator {
     return result;
   }
 
-  public static getGrid(map, data): Grid {
-    const grid = new Grid(
+  public static getGrid(map: any, data: any): Grid {
+    const grid: Grid = new Grid(
       data.config.gridWidth,
       data.config.gridHeight,
       data.config.unit,
@@ -58,8 +66,8 @@ export default class Generator {
     return grid;
   }
 
-  public static async getSounds(data): Promise<any> {
-    const sound = new Sound();
+  public static async getSounds(data: any): Promise<any> {
+    const sound: Sound = new Sound();
     return new Promise((resolve, reject) => {
       for (const key in data.sounds) {
         const value = data.sounds[key];
@@ -69,7 +77,7 @@ export default class Generator {
     });
   }
 
-  public static async getAnimations(data): Promise<any> {
+  public static async getAnimations(data: any): Promise<any> {
     const promise: any = new Promise((resolve, reject) => {
       const image: any = new Image();
       let canvas: Canvas;

@@ -6,6 +6,6 @@ export default class Stage implements IStage {
   public checkStage() {
   }
 
-  public handleCollision(collider, actor) {
+  public handleCollision(colliders: any, actor: any) {
   }
 }

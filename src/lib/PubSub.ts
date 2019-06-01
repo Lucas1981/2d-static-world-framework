@@ -7,10 +7,10 @@ export default class PubSub {
     this.subUid = -1;
   }
 
-  publish(topic, args): PubSub {
+  publish(topic: any, args: any): PubSub {
     if (!this.topics[topic]) return null;
 
-    const subscribers = this.topics[topic];
+    const subscribers: any = this.topics[topic];
     let len = subscribers.length || 0;
 
     while (len--) {
@@ -20,18 +20,18 @@ export default class PubSub {
     return this;
   }
 
-  subscribe(topic, func) {
+  subscribe(topic: any, func: any): string {
     if (!this.topics[topic]) {
       this.topics[topic] = [];
     }
 
-    const token = (++this.subUid).toString();
+    const token: string = (++this.subUid).toString();
     this.topics[topic].push({ token, func });
 
     return token;
   }
 
-  unsubscribe(token) {
+  unsubscribe(token: string) {
     for (const topic in this.topics) {
       if (this.topics[topic]) {
         for (let i = 0; i < this.topics[topic].length; i++) {

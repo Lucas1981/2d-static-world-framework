@@ -5,7 +5,7 @@ export default class Canvas {
   private canvasPointer: any;
   private context: any;
 
-  constructor(maxWidth, maxHeight, offsite = false, id = 'canvas', background = BACKGROUND) {
+  constructor(maxWidth: number, maxHeight: number, offsite: Boolean = false, id: string = 'canvas', background: string = BACKGROUND) {
     this.canvasPointer = offsite ? document.createElement('canvas') : document.getElementById(id);
     this.context = this.canvasPointer.getContext("2d");
     this.canvasPointer.width = maxWidth;
@@ -20,7 +20,7 @@ export default class Canvas {
     return this.canvasPointer.height;
   }
 
-  public drawCircle(x, y, radius = 10, color = 'red') {
+  public drawCircle(x: number, y: number, radius: number = 10, color: any = 'red') {
     this.context.beginPath();
     this.context.arc(x, y, radius, 0, 2 * Math.PI);
     this.context.fillStyle = color;
@@ -30,8 +30,8 @@ export default class Canvas {
 
   public write(
     text: string,
-    textFillColor,
-    textStrokeColor,
+    textFillColor: any,
+    textStrokeColor: any,
     size: number = 40,
     y: number = this.height / 2,
     x: number = this.width / 2,
@@ -55,12 +55,12 @@ export default class Canvas {
     return this.context.getImageData(0, 0, this.canvasPointer.width, this.canvasPointer.height);
   }
 
-  public clearRect(sx, sy, dx, dy, color = BACKGROUND) {
+  public clearRect(sx: number, sy: number, dx: number, dy: number, color: any = BACKGROUND) {
     this.context.fillStyle = color;
     this.context.fillRect(sx, sy, dx, dy);
   }
 
-  public clearCanvas(backgroundColor = BACKGROUND): any {
+  public clearCanvas(backgroundColor: any = BACKGROUND): any {
     this.context.fillStyle = backgroundColor;
     this.context.fillRect(0, 0, this.canvasPointer.width, this.canvasPointer.height);
   }

@@ -7,7 +7,7 @@ export default class Stage implements IStage {
 
   public checkStage() {
     // Calculate the total number of coins left
-    let remainingCoins = 0;
+    let remainingCoins: number = 0;
     for (let coinActor = global.maps[global.activeMap].actors.first(); coinActor !== null; coinActor = coinActor.next) {
       if (!coinActor.element.isActive()) {
         remainingCoins++;
@@ -22,8 +22,8 @@ export default class Stage implements IStage {
     }
   }
 
-  public handleCollision(colliders, actor) {
-    const collider = colliders[0]; // We only need the first collider
+  public handleCollision(colliders: any[], actor: any) {
+    const collider: any = colliders[0]; // We only need the first collider
 
     if (actor.element.isActive()) {
       // If the collider can't move and the actor can move and is benevolent, then the player hit a coin

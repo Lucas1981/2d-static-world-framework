@@ -5,6 +5,8 @@ import Malevolent from '../lib/actor/Malevolent';
 import Invulnerable from '../lib/actor/Invulnerable';
 import Active from '../lib/actor/Active';
 import BulletProgress from './BulletProgress';
+import NoStateChange from '../resources/NoStateChange';
+import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 const directions = ['up', 'right', 'down', 'left'];
@@ -12,11 +14,9 @@ const directions = ['up', 'right', 'down', 'left'];
 const timeToNextShot = 1000;
 
 export default class Enemy2Progress {
-  public direction;
   private lastShotFired: number;
 
   constructor() {
-    this.direction = directions[0];
     this.lastShotFired = global.clock.getTime();
   }
 
@@ -29,8 +29,10 @@ export default class Enemy2Progress {
         // Make sure to correct for the offset of half a unit
         actor.x,
         actor.y,
+        0, actor.direction,
         actorType.states,
-        new BulletProgress(this.direction),
+        [new BulletProgress()],
+        new NoStateChange(),
         new Immovable(),
         new Harmful(),
         new Malevolent(),
@@ -39,5 +41,4 @@ export default class Enemy2Progress {
       ));
     }
   }
-
 }

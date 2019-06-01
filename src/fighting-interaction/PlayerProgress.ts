@@ -1,30 +1,24 @@
 import Actor from '../lib/actor/Actor';
-import BasicPlayerProgress from '../resources/BasicPlayerProgress';
+import IProgress from '../lib/actor/IProgress';
+import { playerStates } from './states';
 import global from '../lib/Global';
 
-const qualities = [ 'vulnerable', 'invincible' ]
-
-export default class PlayerProgress extends BasicPlayerProgress {
+export default class PlayerProgress implements IProgress {
   private lock: boolean;
-  private quality: string;
   constructor() {
-    super();
-    this.quality = qualities[0];
+    console.log(playerStates);
     this.lock = false;
   }
 
   progress(actor: Actor) {
     if (global.keyboard.state.space && !this.lock) {
+      console.log('changing condition');
       this.lock = true;
-      this.quality = qualities[(qualities.indexOf(this.quality) + 1) % qualities.length];
+      console.log(actor.condition);
+      actor.condition = (actor.condition + 1) % playerStates.length;
+      console.log(actor.condition);
     }
 
     if (!global.keyboard.state.space) this.lock = false;
-
-    super.progress(actor);
-  }
-
-  public updateAnimationKey(actor: Actor) {
-    actor.updateAnimationKey(this.quality);
   }
 }
