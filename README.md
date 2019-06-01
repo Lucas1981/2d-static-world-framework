@@ -8,4 +8,3 @@ Export the file you make with the editor, turn it into a TypeScript `.ts` file (
 
 To do:
 - Data files should really be json files, now those are .ts because I can't figure out how to feed .json files to TypeScript
-- The one updating the animation frame is now an IProgress instance. The problem with that is that it prevents the progress from being an array, because updating the animationkey can require information that is in the IProgress instance so only the IProgress instance can update it. But if you want several IProgress instances to run, who can determine the new value for the animationKey?
