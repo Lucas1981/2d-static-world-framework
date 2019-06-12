@@ -6,7 +6,14 @@ import Canvas from './Canvas';
 import Grid from './Grid';
 import Actor from './actor/Actor';
 import Sound from './Sound';
+import IThreat from './actor/IThreat';
+import IMovable from './actor/IMovable';
+import IActionable from './actor/IActionable';
+import IVolition from './actor/IVolition';
+import IVulnerable from './actor/IVulnerable';
+import IStateChange from './actor/IStateChange';
 import actorOptions from './actor/actor-options';
+import global from './Global';
 
 export default class Generator {
   constructor() {}
@@ -53,6 +60,20 @@ export default class Generator {
       ));
     }
     return result;
+  }
+
+  public static addActor(
+    x: number, y: number, state: number, direction: number, states: any[],
+    progress: IProgress[], stateChanger: IStateChange, movable: IMovable,
+    harmful: IThreat, malevolent: IVolition, vulnerable: IVulnerable,
+    active: IActionable
+  ) {
+    global.maps[global.activeMap].actors.push(new Actor(
+      // Make sure to correct for the offset of half a unit
+      x, y, state, direction, states,
+      progress, stateChanger, movable, harmful,
+      malevolent, vulnerable, active
+    ));
   }
 
   public static getGrid(map: any, data: any): Grid {
