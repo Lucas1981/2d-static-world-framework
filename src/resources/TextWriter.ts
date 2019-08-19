@@ -1,13 +1,13 @@
 import global from '../lib/Global';
 
-const statusBarColor = "#FFFFFF";
-const textFillColor = "#FFCF40";
-const textStrokeColor = "#A67C00";
+const defaultStatusBarColor = "#FFFFFF";
+const defaultTextFillColor = "#FFCF40";
+const defaultTextStrokeColor = "#A67C00";
 
 export default class TextWriter {
   constructor() {}
 
-  public static writeStatusBar(text: string, horizontalAlignment: string = 'left') {
+  public static writeStatusBar(text: string, horizontalAlignment: string = 'left', statusBarColor: string = defaultStatusBarColor) {
     global.canvas.clearRect(
       0,
       global.config.unit * global.config.gridHeight,
@@ -25,7 +25,7 @@ export default class TextWriter {
     );
   }
 
-  public static writeMainMessage(message: string) {
+  public static writeMainMessage(message: string, textFillColor: string = defaultTextFillColor, textStrokeColor: string = defaultTextStrokeColor) {
     const x = (global.config.unit * global.config.gridWidth) / 2;
     const y = (global.config.unit * global.config.gridHeight) / 2;
     global.canvas.write(
@@ -35,7 +35,7 @@ export default class TextWriter {
     );
   }
 
-  public static writeSubMessage(message: string) {
+  public static writeSubMessage(message: string, textFillColor: string = defaultTextFillColor, textStrokeColor: string = defaultTextStrokeColor) {
     global.canvas.write(
       message,
       textFillColor,

@@ -9,7 +9,7 @@ import Grid from '../lib/Grid';
 import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
-const pixelsPerSecond: number = 100;
+const defaultPixelsPerSecond: number = 100;
 
 const directions: any[] = [
   // The directions in clockwise fashion
@@ -29,6 +29,7 @@ export default abstract class BasicProgress implements IProgress {
 
   constructor(
     private contingencies: any,
+    private pixelsPerSecond: number = defaultPixelsPerSecond
   ) {
     this.elapsedTime = 0;
   }
@@ -36,7 +37,7 @@ export default abstract class BasicProgress implements IProgress {
   public progress(actor: Actor) {
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
-    const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
+    const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
 
     this.checkForDirectionChange(elapsedTime, movement, actor);
     this.checkForCollision(elapsedTime, movement, actor);
