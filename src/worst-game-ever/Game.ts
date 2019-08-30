@@ -12,12 +12,18 @@ const colorNames = [
 ];
 
 export default class Game extends AbstractGame implements IGame {
+  private first = true;
+
   constructor(stage: IStage) {
     super(stage);
     this.global.gameState = GameState.TitleScreen;
   }
 
   public titleScreen(): void {
+    if (this.first) {
+      this.first = false;
+      this.global.sound.play('title-screen');
+    }
     this.global.canvas.clearCanvas();
     const color = colorNames[Math.floor(Math.random() * colorNames.length)];
     TextWriter.writeMainMessage("WORST. GAME. EVVVERRR!!!", color);
@@ -54,18 +60,20 @@ export default class Game extends AbstractGame implements IGame {
       this.global.activeMap++;
       this.global.gameState = GameState.ResetStage;
       if (this.global.activeMap === this.global.maps.length) {
+        this.global.sound.play('finished-game');
         this.global.gameState = GameState.GameCompleted;
       }
     }
   }
 
   public gameCompleted(): void {
-    if (this.global.getTimeSinceLastStateChange() < waitingTime) {
+    if (this.global.getTimeSinceLastStateChange() < waitingTime * 1.6) {
       this.global.canvas.clearCanvas();
       const color = colorNames[Math.floor(Math.random() * colorNames.length)];
       TextWriter.writeMainMessage('You finished the game!', color);
     } else {
       this.newGame();
+      this.global.sound.play('title-screen');
       this.global.gameState = GameState.TitleScreen;
     }
   }
@@ -86,6 +94,7 @@ export default class Game extends AbstractGame implements IGame {
     TextWriter.writeMainMessage('Reset game?', color);
     if (this.global.keyboard.state.yes) {
       this.newGame();
+      this.global.sound.play('title-screen');
       this.global.gameState = GameState.TitleScreen;
     }
     if(this.global.keyboard.state.no) {
@@ -104,6 +113,7 @@ export default class Game extends AbstractGame implements IGame {
       this.global.gameData,
       this.global.actorAttributes
     );
+    this.global.sound.play('start-level')
     this.global.gameState = GameState.BeforeStage;
   }
 

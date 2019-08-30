@@ -90,11 +90,12 @@ export default class Generator {
   public static async getSounds(data: any): Promise<any> {
     const sound: Sound = new Sound();
     return new Promise((resolve, reject) => {
+      let promises = []
       for (const key in data.sounds) {
         const value = data.sounds[key];
-        sound.registerSample(key, value);
+        promises.push(sound.registerSample(key, value));
       }
-      resolve(sound);
+      Promise.all(promises).then(() => resolve(sound));
     });
   }
 
@@ -128,6 +129,7 @@ export default class Generator {
             data.animations[i].data,
             data.animations[i].loopType,
             data.config.framesPerSecond || 8,
+            'boundingBox' in data.animations[i] ? data.animations[i].boundingBox : null,
           ));
         }
 

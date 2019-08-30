@@ -1,5 +1,7 @@
 import global from './Global';
 
+const defaultBandMargin = 3;
+
 export default class Grid {
 
   private grid: Array<Array<number>>;
@@ -53,8 +55,16 @@ export default class Grid {
 
   public checkGrid(probeX: number, probeY: number): Boolean {
     const coordinates = this.getProbeCoordinates(probeX, probeY);
-    for (const key in coordinates) {
-      const coordinate = coordinates[key];
+    return this.checkGridCoordinates(coordinates);
+  }
+
+  public checkBandGrid(probeX: number, probeY: number, bandMargin: number = defaultBandMargin): Boolean {
+    const coordinates = this.getBandProbeCoordinates(probeX, probeY, bandMargin);
+    return this.checkGridCoordinates(coordinates);
+  }
+
+  private checkGridCoordinates(coordinates) {
+    for (const coordinate of coordinates) {
       if (coordinate === false) return false;
     }
     return true;
@@ -69,7 +79,21 @@ export default class Grid {
       probeLeft: this.playerToGrid(probeX - (global.config.unit / 2)),
       probeRight: this.playerToGrid(probeX + (global.config.unit / 2) - 1),
       probeTop: this.playerToGrid(probeY - (global.config.unit / 2)),
-      probeBottom: this.playerToGrid(probeY + (global.config.unit / 2) - 1)
+      probeBottom: this.playerToGrid(probeY + (global.config.unit / 2) - 1),
+    }
+  }
+
+  public getBandProbes(probeX: number, probeY: number, bandMargin: number = defaultBandMargin): any {
+    return {
+      probeLeftHorizontalBand: this.playerToGrid(probeX - (global.config.unit / 2)),
+      probeRightHorizontalBand: this.playerToGrid(probeX + (global.config.unit / 2) - 1),
+      probeTopHorizontalBand: this.playerToGrid(probeY - (global.config.unit / 2) + bandMargin),
+      probeBottomHorizontalBand: this.playerToGrid(probeY + (global.config.unit / 2) - 1 - bandMargin),
+
+      probeLeftVerticalBand: this.playerToGrid(probeX - (global.config.unit / 2) + bandMargin),
+      probeRightVerticalBand: this.playerToGrid(probeX + (global.config.unit / 2) - 1 - bandMargin),
+      probeTopVerticalBand: this.playerToGrid(probeY - (global.config.unit / 2)),
+      probeBottomVerticalBand: this.playerToGrid(probeY + (global.config.unit / 2) - 1)
     }
   }
 
@@ -81,6 +105,25 @@ export default class Grid {
       global.maps[global.activeMap].grid.isSafe(probeRight, probeTop),
       global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom),
       global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom)
+    ];
+  }
+
+  private getBandProbeCoordinates(probeX: number, probeY: number, bandMargin: number): any {
+    const {
+      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
+      probeLeftVerticalBand, probeRightVerticalBand, probeTopVerticalBand, probeBottomVerticalBand,
+    } = this.getBandProbes(probeX, probeY, bandMargin);
+
+    return [
+      global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeTopHorizontalBand),
+      global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeTopHorizontalBand),
+      global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeBottomHorizontalBand),
+      global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeBottomHorizontalBand),
+
+      global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeTopVerticalBand),
+      global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeTopVerticalBand),
+      global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeBottomVerticalBand),
+      global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeBottomVerticalBand),
     ];
   }
 

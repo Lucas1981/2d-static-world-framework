@@ -8,7 +8,8 @@ export default class Animation {
     private frames: Array<Frame>,
     private indices: Array<number>,
     private loopType: number,
-    private framesPerSecond: number
+    private framesPerSecond: number,
+    private boundingBox: any
   ) {
     this.numberOfFrames = this.indices.length;
   }
