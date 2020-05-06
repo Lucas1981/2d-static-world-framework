@@ -7,6 +7,8 @@ import Sound from './Sound';
 import PubSub from './PubSub';
 import { GameState } from './GameState';
 
+const debug = false;
+
 class Global {
     private static singleton: Global = null
     private _config: any = null;
@@ -24,11 +26,16 @@ class Global {
     private lastGameStateChange: any = null;
     private _sound: Sound = null;
     private _pubsub: PubSub = null;
+    private _debug: Boolean = debug;
 
     constructor() {
       // We need to do this immediately
       this._clock = new Clock();
       this._pubsub = new PubSub();
+    }
+
+    public get debug(): Boolean {
+      return this._debug;
     }
 
     public get pubsub(): PubSub {
