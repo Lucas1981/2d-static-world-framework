@@ -5,7 +5,7 @@ import { GameState } from '../lib/GameState';
 import global from '../lib/Global';
 
 const defaultPixelsPerSecond = 150;
-const defaultBandMargin = 7;
+const defaultBandMargin = 4;
 const defaultBoundingBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
 export default class BasicPlayerDirectionProgress implements IProgress {
@@ -24,57 +24,96 @@ export default class BasicPlayerDirectionProgress implements IProgress {
     const gridX: number = Math.floor(actor.x / global.config.unit);
     const gridY: number = Math.floor(actor.y / global.config.unit);
 
-    const normalizedActorX = actor.x - halfUnit;
-    const tendencyX = normalizedActorX - ((Math.floor(normalizedActorX) / global.config.unit) * global.config.unit);
+    const animationKey: number = actor.state.animationKey;
+    const animation: any = global.animations.data[animationKey];
+    const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
+
+    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
+    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+
+    const altXLeft: number = (gridX * global.config.unit) + halfUnit - boundingBox.left;
+    const altXRight: number = ((gridX + 1) * global.config.unit) - halfUnit + boundingBox.right;
+    const altYUp: number = (gridY * global.config.unit) + halfUnit - boundingBox.top;
+    const altYDown: number = ((gridY + 1) * global.config.unit) - halfUnit + boundingBox.bottom;
+
+    const tendencyX = actor.x - (Math.floor(actor.x / global.config.unit) * global.config.unit);
     const sideX = tendencyX > 32 ? -1 : 1;
+    const bandX =
+      // Get grid pos
+      ((gridX + (sideX === 1 ? 0 : 1)) * global.config.unit) +
+      // Center the grid
+      (halfUnit * sideX) +
+      // Properly correct for boundingBox
+      (sideX === -1 ? boundingBox.right : boundingBox.left * -1);
 
-    const normalizedActorY = actor.y - halfUnit;
-    const tendencyY = normalizedActorY - ((Math.floor(normalizedActorY) / global.config.unit) * global.config.unit);
+    const tendencyY = actor.y - (Math.floor(actor.y / global.config.unit) * global.config.unit);
     const sideY = tendencyY > 32 ? -1 : 1;
-    const animationKey = actor.state.animationKey;
-    const animation = global.animations.data[animationKey]
-    const boundingBox = 'boundingBox' in animation ? animation.boundingBox : defaultBoundingBox;
+    const bandY =
+      // Get grid pos
+      ((gridY + (sideY === 1 ? 0 : 1)) * global.config.unit) +
+      // Center the grid
+      (halfUnit * sideY) +
+      // Properly correct for boundingBox
+      (sideY === -1 ? boundingBox.bottom : boundingBox.top);
 
+    // First, make sure we are not stuck in a wall
+    const preCheck = grid.checkGrid(actor.x + boundingBox.left, actor.y + boundingBox.top, width, height, 0, true)
+    if (preCheck.left && !preCheck.right) actor.x = altXRight;
+    if (!preCheck.left && preCheck.right) actor.x = altXLeft;
+    if (preCheck.up && !preCheck.down) actor.y = altYDown;
+    if (!preCheck.up && preCheck.down) actor.y = altYUp;
+
+    // Then process any movements
     if (state.up) {
-      const probeX: number = actor.x;
-      const probeY: number = actor.y - movement + boundingBox.top;
-      if (grid.checkGrid(probeX, probeY)) actor.y -= movement;
-      else if (grid.checkBandGrid(probeX, probeY, this.bandMargin)) {
+      const probeY: number = actor.y - movement;
+      const checkGrid: any = grid.checkGrid(actor.x + boundingBox.left, probeY + boundingBox.top, width, height, 0, true);
+      const checkGridBand: any = grid.checkGrid(actor.x + boundingBox.left, probeY + boundingBox.top, width, height, this.bandMargin, true);
+      if (checkGrid.all) actor.y -= movement;
+      else if (checkGridBand.all) {
         actor.y -= movement + this.bandMargin;
-        actor.x = ((gridX + (sideX === 1 ? 0 : 1)) * global.config.unit) + (halfUnit * sideX);
-      } else actor.y = (gridY * global.config.unit) + halfUnit - boundingBox.top;
+        actor.x = bandX;
+      } else {
+        actor.y = altYUp;
+      }
       actor.direction = DirectionTypes.Up;
     }
     if (state.down) {
-      const probeX: number = actor.x;
-      const probeY: number = actor.y + movement - boundingBox.bottom;
-      if (grid.checkGrid(probeX, probeY)) actor.y += movement;
-      else if (grid.checkBandGrid(probeX, probeY, this.bandMargin)) {
+      const probeY: number = actor.y + movement;
+      const checkGrid: any = grid.checkGrid(actor.x + boundingBox.left, probeY + boundingBox.top, width, height, 0, true);
+      const checkGridBand: any = grid.checkGrid(actor.x + boundingBox.left, probeY + boundingBox.top, width, height, this.bandMargin, true);
+      if (checkGrid.all) actor.y += movement;
+      else if (checkGridBand.all) {
         actor.y += movement + this.bandMargin;
-        actor.x = ((gridX + (sideX === 1 ? 0 : 1)) * global.config.unit) + (halfUnit * sideX);
-      } else actor.y = ((gridY + 1) * global.config.unit) - halfUnit + boundingBox.bottom;
+        actor.x = bandX;
+      } else {
+        actor.y = altYDown;
+      }
       actor.direction = DirectionTypes.Down;
     }
     if (state.left) {
-      const probeX: number = actor.x - movement + boundingBox.left;
-      const probeY: number = actor.y;
-      if (grid.checkGrid(probeX, probeY)) actor.x -= movement;
-      else if (grid.checkBandGrid(probeX, probeY, this.bandMargin)) {
+      const probeX: number = actor.x - movement;
+      const checkGrid: any = grid.checkGrid(probeX + boundingBox.left, actor.y + boundingBox.top, width, height, 0, true);
+      const checkGridBand: any = grid.checkGrid(probeX + boundingBox.left, actor.y + boundingBox.top, width, height, this.bandMargin, true);
+      if (checkGrid.all) actor.x -= movement;
+      else if (checkGridBand.all) {
         actor.x -= movement + this.bandMargin;
-        actor.y = ((gridY + (sideY === 1 ? 0 : 1)) * global.config.unit) + (halfUnit * sideY);
+        actor.y = bandY;
+      } else {
+        actor.x = altXLeft;
       }
-      else actor.x = (gridX * global.config.unit) + halfUnit - boundingBox.left;
       actor.direction = DirectionTypes.Left;
     }
     if (state.right) {
-      const probeX: number = actor.x + movement - boundingBox.right;
-      const probeY: number = actor.y;
-      if (grid.checkGrid(probeX, probeY)) actor.x += movement;
-      else if (grid.checkBandGrid(probeX, probeY, this.bandMargin)) {
+      const probeX: number = actor.x + movement;
+      const checkGrid: any = grid.checkGrid(probeX + boundingBox.left, actor.y + boundingBox.top, width, height, 0, true);
+      const checkGridBand: any = grid.checkGrid(probeX + boundingBox.left, actor.y + boundingBox.top, width, height, this.bandMargin, true);
+      if (checkGrid.all) actor.x += movement;
+      else if (checkGridBand.all) {
         actor.x += movement + this.bandMargin;
-        actor.y = ((gridY + (sideY === 1 ? 0 : 1)) * global.config.unit) + (halfUnit * sideY);
+        actor.y = bandY;
+      } else {
+        actor.x = altXRight;
       }
-      else actor.x = ((gridX + 1) * global.config.unit) - halfUnit + boundingBox.right;
       actor.direction = DirectionTypes.Right;
     }
   }

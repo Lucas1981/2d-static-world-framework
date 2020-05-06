@@ -180,13 +180,18 @@ export default class Actor {
   }
 
   public hitsGrid(grid: Grid, gridX: number, gridY: number): Boolean {
+    const boundingBox = global.animations.data[this._state.animationKey].boundingBox;
+    const halfUnit = global.config.unit / 2;
+    const width = global.config.unit - (boundingBox.left + boundingBox.right);
+    const height = global.config.unit - (boundingBox.top + boundingBox.bottom);
     const {
-      probeLeft, probeRight, probeTop, probeBottom
-    } = grid.getProbes(this._x, this._y);
-    if (probeLeft == gridX && probeTop == gridY) return true;
-    if (probeRight == gridX && probeTop == gridY) return true;
-    if (probeLeft == gridX && probeBottom == gridY) return true;
-    if (probeRight == gridX && probeBottom == gridY) return true;
+      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand
+    } = grid.getProbes(this._x + boundingBox.left, this._y + boundingBox.top, width, height);
+    if (probeLeftHorizontalBand == gridX && probeTopHorizontalBand == gridY) return true;
+    if (probeRightHorizontalBand == gridX && probeTopHorizontalBand == gridY) return true;
+    if (probeLeftHorizontalBand == gridX && probeBottomHorizontalBand == gridY) return true;
+    if (probeRightHorizontalBand == gridX && probeBottomHorizontalBand == gridY) return true;
+
     return false;
   }
 

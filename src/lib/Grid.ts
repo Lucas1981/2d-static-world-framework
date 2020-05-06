@@ -1,6 +1,6 @@
 import global from './Global';
 
-const defaultBandMargin = 3;
+const defaultBandMargin = 0;
 
 export default class Grid {
 
@@ -53,34 +53,73 @@ export default class Grid {
     }
   }
 
-  public checkGrid(probeX: number, probeY: number): Boolean {
-    const coordinates = this.getProbeCoordinates(probeX, probeY);
-    return this.checkGridCoordinates(coordinates);
-  }
+  public checkGrid(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin, showTiles = false): any {
+    const unit = global.config.unit;
+    const probes = this.getProbes(probeX, probeY, width, height, bandMargin);
+    const {
+      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
+      probeLeftVerticalBand, probeRightVerticalBand, probeTopVerticalBand, probeBottomVerticalBand,
+    } = probes;
 
-  public checkBandGrid(probeX: number, probeY: number, bandMargin: number = defaultBandMargin): Boolean {
-    const coordinates = this.getBandProbeCoordinates(probeX, probeY, bandMargin);
-    return this.checkGridCoordinates(coordinates);
-  }
+    const corners = {
+      topLeft:
+        global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeTopHorizontalBand) &&
+        global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeTopVerticalBand),
+      bottomLeft:
+        global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeBottomHorizontalBand) &&
+        global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeBottomVerticalBand),
+      topRight:
+        global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeTopHorizontalBand) &&
+        global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeTopVerticalBand),
+      bottomRight:
+        global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeBottomHorizontalBand) &&
+        global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeBottomVerticalBand),
+    };
 
-  private checkGridCoordinates(coordinates) {
-    for (const coordinate of coordinates) {
-      if (coordinate === false) return false;
+    // Make the probing tiles visible
+    if (global.debug && showTiles) {
+      const ctx = global.canvas.getContext();
+      const directions = [
+        { key: 'topLeft', components: ['Top', 'Left'] },
+        { key: 'topRight', components: ['Top', 'Right'] },
+        { key: 'bottomLeft', components: ['Bottom', 'Left'] },
+        { key: 'bottomRight', components: ['Bottom', 'Right']}
+      ];
+      for (let i = 0; i < directions.length; i++) {
+        ctx.beginPath();
+        ctx.fillStyle = corners[directions[i].key] ? 'green' : 'red';
+        ctx.rect(
+          probes[`probe${directions[i].components[1]}HorizontalBand`] * unit,
+          probes[`probe${directions[i].components[0]}HorizontalBand`] * unit,
+          unit, unit
+        );
+        ctx.fill();
+        ctx.closePath();
+      }
     }
-    return true;
-  }
 
-  public gridReport(probeX: number, probeY: number): any {
-    return this.getProbeCoordinates(probeX, probeY);
-  }
-
-  public getProbes(probeX: number, probeY: number): any {
     return {
-      probeLeft: this.playerToGrid(probeX - (global.config.unit / 2)),
-      probeRight: this.playerToGrid(probeX + (global.config.unit / 2) - 1),
-      probeTop: this.playerToGrid(probeY - (global.config.unit / 2)),
-      probeBottom: this.playerToGrid(probeY + (global.config.unit / 2) - 1),
-    }
+      topLeft: corners.topLeft,
+      topRight: corners.topRight,
+      bottomLeft: corners.bottomLeft,
+      bottomRight: corners.bottomRight,
+      top: corners.topLeft && corners.topRight,
+      bottom: corners.bottomLeft && corners.bottomRight,
+      left: corners.topLeft && corners.bottomLeft,
+      right: corners.topRight && corners.bottomRight,
+      all: corners.topRight && corners.bottomRight && corners.topLeft && corners.bottomLeft
+    };
+  }
+
+  public gridReport(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin): any {
+    const { topLeft, bottomLeft, topRight, bottomRight } = this.checkGrid(probeX, probeY, width, height, bandMargin);
+
+    return [
+      topLeft,
+      topRight,
+      bottomRight,
+      bottomLeft
+    ];
   }
 
   public getBandProbes(probeX: number, probeY: number, bandMargin: number = defaultBandMargin): any {
@@ -108,23 +147,19 @@ export default class Grid {
     ];
   }
 
-  private getBandProbeCoordinates(probeX: number, probeY: number, bandMargin: number): any {
-    const {
-      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
-      probeLeftVerticalBand, probeRightVerticalBand, probeTopVerticalBand, probeBottomVerticalBand,
-    } = this.getBandProbes(probeX, probeY, bandMargin);
+  public getProbes(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin): any {
+    const halfUnit = global.config.unit / 2;
 
-    return [
-      global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeTopHorizontalBand),
-      global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeTopHorizontalBand),
-      global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeBottomHorizontalBand),
-      global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeBottomHorizontalBand),
-
-      global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeTopVerticalBand),
-      global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeTopVerticalBand),
-      global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeBottomVerticalBand),
-      global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeBottomVerticalBand),
-    ];
+    return {
+      probeLeftHorizontalBand: this.playerToGrid(probeX - halfUnit),
+      probeRightHorizontalBand: this.playerToGrid(probeX - halfUnit + width - 1),
+      probeTopHorizontalBand: this.playerToGrid(probeY - halfUnit + bandMargin),
+      probeBottomHorizontalBand: this.playerToGrid(probeY - halfUnit + height - 1 - bandMargin),
+      probeLeftVerticalBand: this.playerToGrid(probeX - halfUnit + bandMargin),
+      probeRightVerticalBand: this.playerToGrid(probeX - halfUnit + width - 1 - bandMargin),
+      probeTopVerticalBand: this.playerToGrid(probeY - halfUnit),
+      probeBottomVerticalBand: this.playerToGrid(probeY - halfUnit + height - 1)
+    }
   }
 
   private playerToGrid(value: number): number {
