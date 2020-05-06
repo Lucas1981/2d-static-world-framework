@@ -19,8 +19,11 @@ export default class Sound {
   }
 
   registerSample(key, data) {
-    const audio = new Audio();
-    audio.src = data;
-    this.sources[key] = audio;
+    return new Promise((resolve, reject) => {
+      const audio = new Audio();
+      audio.src = data;
+      this.sources[key] = audio;
+      audio.oncanplaythrough = resolve;
+    });
   }
 }
