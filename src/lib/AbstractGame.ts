@@ -84,11 +84,14 @@ export default abstract class AbstractGame implements IGame {
 
   public async initiate(data: any, actorAttributes: any) {
     global.gameData = data;
-    // global.gameState = GameState.Stage;
+    global.gameState = GameState.Stage;
     global.actorAttributes = actorAttributes;
     global.config = data.config;
+    global.config.cameraWidth = global.config.cameraWidth || global.config.unit * global.config.gridWidth;
+    global.config.cameraHeight = global.config.cameraHeight || global.config.unit * global.config.gridHeight;
     global.tiles = data.tiles;
-    global.canvas = new Canvas(data.config.unit * data.config.gridWidth, (data.config.unit + 3) * data.config.gridHeight);
+    global.canvas = new Canvas(data.config.unit * data.config.gridWidth, (data.config.unit + 3) * data.config.gridHeight, true);
+    global.finalCanvas = new Canvas(data.config.cameraWidth, data.config.cameraHeight);
     global.sound = await Generator.getSounds(data);
     global.animations = await Generator.getAnimations(data);
     global.keyboard = new KeyboardInput();

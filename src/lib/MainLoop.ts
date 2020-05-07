@@ -20,6 +20,9 @@ export default class MainLoop {
     if (handleActors) {
       this.drawObjects(animate);
     }
+    global.finalCanvas.copyToCanvas(
+      global.canvas, global.config.unit, global.config.unit, global.config.cameraWidth, global.config.cameraHeight
+    );
   }
 
   private moveObjects(progress: boolean): void {

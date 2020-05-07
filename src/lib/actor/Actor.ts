@@ -199,10 +199,12 @@ export default class Actor {
     const now: any = global.clock.getTime();
     const elapsedTime: number = now - this.stateChange;
     const animationKey = this._state.animationKey;
+    const cameraX = global.cameraX;
+    const cameraY = global.cameraY;
     global.animations.data[animationKey].draw(
       this.context,
-      Math.floor(this._x - (global.config.unit / 2)),
-      Math.floor(this._y - (global.config.unit / 2)),
+      Math.floor(this._x - cameraX - (global.config.unit / 2)),
+      Math.floor(this._y - cameraY - (global.config.unit / 2)),
       elapsedTime,
       animate
     );

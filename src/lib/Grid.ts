@@ -17,9 +17,9 @@ export default class Grid {
     this.context = global.canvas.getContext();
 
     // First, initiate with solid null values
-    this.grid = new Array(this.height + 2);
+    this.grid = new Array(this.height + 3);
     for(let i = 0; i < this.grid.length; i++) {
-      this.grid[i] = new Array(this.width + 2).fill(null);
+      this.grid[i] = new Array(this.width + 3).fill(null);
     }
 
     // Then add the actual maps
@@ -40,13 +40,20 @@ export default class Grid {
   }
 
   public draw() {
-    for(let x = 0; x < this.width; x++) {
-      for(let y = 0; y < this.height; y++) {
+    const cameraGridX = this.playerToGrid(global.cameraX);
+    const cameraGridY = this.playerToGrid(global.cameraY);
+    const widthInUnits = Math.floor(global.config.cameraWidth / global.config.unit);
+    const heightInUnits = Math.floor(global.config.cameraHeight / global.config.unit);
+    const restX = global.cameraX - (global.config.unit * cameraGridX);
+    const restY = global.cameraY - (global.config.unit * cameraGridY);
+    for(let x = cameraGridX; x <= widthInUnits + cameraGridX; x++) {
+      for(let y = cameraGridY; y <= heightInUnits + cameraGridY; y++) {
         const tile = this.grid[y + 1][x + 1];
+        if (tile === null) continue;
         global.animations.data[this.tiles[tile].animation].draw(
           this.context,
-          x * this.unit,
-          y * this.unit,
+          ((x - cameraGridX) * this.unit) - Math.floor(restX),
+          ((y - cameraGridY) * this.unit) - Math.floor(restY),
           global.clock.elapsedTime
         );
       }

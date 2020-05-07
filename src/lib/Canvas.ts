@@ -47,6 +47,10 @@ export default class Canvas {
     if (stroke) this.context.strokeText(text, x, y);
   }
 
+  public getCanvas(): any {
+    return this.canvasPointer;
+  }
+
   public getContext(): any {
     return this.context;
   }
@@ -63,5 +67,9 @@ export default class Canvas {
   public clearCanvas(backgroundColor: any = BACKGROUND): any {
     this.context.fillStyle = backgroundColor;
     this.context.fillRect(0, 0, this.canvasPointer.width, this.canvasPointer.height);
+  }
+
+  public copyToCanvas(canvas: Canvas, x, y, w, h) {
+    this.context.drawImage(canvas.getCanvas(), 0, 0, this.width, this.height, 0, 0, this.width, this.height);
   }
 };

@@ -14,6 +14,7 @@ class Global {
     private _config: any = null;
     private _clock: Clock = null;
     private _canvas: Canvas = null;
+    private _finalCanvas: Canvas = null;
     private _animations: any = null;
     private _keyboard: KeyboardInput = null;
     private _maps: any[] = null;
@@ -27,12 +28,19 @@ class Global {
     private _sound: Sound = null;
     private _pubsub: PubSub = null;
     private _debug: Boolean = debug;
+    private _cameraX: number = 0;
+    private _cameraY: number = 0;
 
     constructor() {
       // We need to do this immediately
       this._clock = new Clock();
       this._pubsub = new PubSub();
     }
+
+    public get cameraX() { return this._cameraX; }
+    public get cameraY() { return this._cameraY; }
+    public set cameraX(x: number) { this._cameraX = x; }
+    public set cameraY(y: number) { this._cameraY = y; }
 
     public get debug(): Boolean {
       return this._debug;
@@ -78,6 +86,14 @@ class Global {
 
     public get canvas(): Canvas {
       return this._canvas;
+    }
+
+    public get finalCanvas(): Canvas {
+      return this._finalCanvas;
+    }
+
+    public set finalCanvas(canvas) {
+      this._finalCanvas = canvas;
     }
 
     public get tiles(): any[] {
