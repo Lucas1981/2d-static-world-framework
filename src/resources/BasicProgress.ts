@@ -10,6 +10,7 @@ import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 const defaultPixelsPerSecond: number = 100;
+const defaultBoundingBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
 const directions: any[] = [
   // The directions in clockwise fashion
@@ -101,8 +102,15 @@ export default abstract class BasicProgress implements IProgress {
     this.elapsedTime += elapsedTime;
     const timeIsUp = 'timer' in this.contingencies ? this.elapsedTime > this.contingencies.timer : false;
 
+    const animationKey: number = actor.state.animationKey;
+    const animation: any = global.animations.data[animationKey];
+    const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
+
+    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
+    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+
     // Do we hit a wall if we are trying this or is it time to move on?
-    if (grid.checkGrid(probeX, probeY) && !timeIsUp) {
+    if (grid.checkGrid(probeX, probeY, width, height).all && !timeIsUp) {
       // If not, do the usual
       actor.x = probeX;
       actor.y = probeY;
