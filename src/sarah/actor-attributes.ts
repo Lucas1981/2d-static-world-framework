@@ -3,6 +3,7 @@ import BasicPlayerDirectionProgress from '../resources/BasicPlayerDirectionProgr
 import NoStateChange from '../resources/NoStateChange';
 import SarahStateChanger from './SarahStateChanger';
 import BasicPlayerConditionProgress from '../resources/BasicPlayerConditionProgress'
+import PositionCamera from '../resources/PositionCamera';
 
 const pixelsPerSecond = 200;
 
@@ -16,7 +17,8 @@ export default {
   'Sarah': {
     progress: [
       PlayerProgress,
-      BasicPlayerConditionProgress
+      BasicPlayerConditionProgress,
+      PositionCamera
     ],
     stateChanger: SarahStateChanger
   },

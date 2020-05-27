@@ -70,6 +70,6 @@ export default class Canvas {
   }
 
   public copyToCanvas(canvas: Canvas, x, y, w, h) {
-    this.context.drawImage(canvas.getCanvas(), 0, 0, this.width, this.height, 0, 0, this.width, this.height);
+    this.context.drawImage(canvas.getCanvas(), x, y, w, h, 0, 0, w, h);
   }
 };

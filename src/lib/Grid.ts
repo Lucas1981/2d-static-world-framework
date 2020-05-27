@@ -46,9 +46,9 @@ export default class Grid {
     const heightInUnits = Math.floor(global.config.cameraHeight / global.config.unit);
     const restX = global.cameraX - (global.config.unit * cameraGridX);
     const restY = global.cameraY - (global.config.unit * cameraGridY);
-    for(let x = cameraGridX; x <= widthInUnits + cameraGridX; x++) {
-      for(let y = cameraGridY; y <= heightInUnits + cameraGridY; y++) {
-        const tile = this.grid[y + 1][x + 1];
+    for(let x = cameraGridX; x <= widthInUnits + cameraGridX + 1; x++) {
+      for(let y = cameraGridY; y <= heightInUnits + cameraGridY + 1; y++) {
+        const tile = this.grid[y][x];
         if (tile === null) continue;
         global.animations.data[this.tiles[tile].animation].draw(
           this.context,

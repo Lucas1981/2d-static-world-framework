@@ -90,8 +90,8 @@ export default abstract class AbstractGame implements IGame {
     global.config.cameraWidth = global.config.cameraWidth || global.config.unit * global.config.gridWidth;
     global.config.cameraHeight = global.config.cameraHeight || global.config.unit * global.config.gridHeight;
     global.tiles = data.tiles;
-    global.canvas = new Canvas(data.config.unit * data.config.gridWidth, (data.config.unit + 3) * data.config.gridHeight, true);
-    global.finalCanvas = new Canvas(data.config.cameraWidth, data.config.cameraHeight);
+    global.canvas = new Canvas(data.config.unit * (data.config.gridWidth + 2), data.config.unit * (data.config.gridHeight + 2), true);
+    global.finalCanvas = new Canvas(data.config.cameraWidth, data.config.cameraHeight + data.config.unit);
     global.sound = await Generator.getSounds(data);
     global.animations = await Generator.getAnimations(data);
     global.keyboard = new KeyboardInput();

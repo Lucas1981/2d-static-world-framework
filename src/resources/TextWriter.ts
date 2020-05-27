@@ -8,27 +8,22 @@ export default class TextWriter {
   constructor() {}
 
   public static writeStatusBar(text: string, horizontalAlignment: string = 'left', statusBarColor: string = defaultStatusBarColor) {
-    global.canvas.clearRect(
-      0,
-      global.config.unit * global.config.gridHeight,
-      global.config.unit * global.config.gridWidth,
-      (global.config.unit * 3) * global.config.gridHeight,
-    )
-    global.canvas.write(
+    this.clearStatusBar();
+    global.finalCanvas.write(
       text,
       statusBarColor,
       statusBarColor,
       24,
-      global.config.unit * global.config.gridHeight + 20,
-      horizontalAlignment === 'left' ? 0 : (global.config.gridWidth * global.config.unit),
+      global.config.cameraHeight + 20,
+      horizontalAlignment === 'left' ? 0 : global.config.cameraWidth,
       horizontalAlignment
     );
   }
 
   public static writeMainMessage(message: string, textFillColor: string = defaultTextFillColor, textStrokeColor: string = defaultTextStrokeColor) {
-    const x = (global.config.unit * global.config.gridWidth) / 2;
-    const y = (global.config.unit * global.config.gridHeight) / 2;
-    global.canvas.write(
+    const x = global.config.cameraWidth / 2;
+    const y = global.config.cameraHeight / 2;
+    global.finalCanvas.write(
       message,
       textFillColor, textStrokeColor,
       40, y, x
@@ -36,7 +31,7 @@ export default class TextWriter {
   }
 
   public static writeSubMessage(message: string, textFillColor: string = defaultTextFillColor, textStrokeColor: string = defaultTextStrokeColor) {
-    global.canvas.write(
+    global.finalCanvas.write(
       message,
       textFillColor,
       textStrokeColor,
@@ -45,11 +40,11 @@ export default class TextWriter {
   }
 
   public static clearStatusBar() {
-    global.canvas.clearRect(
+    global.finalCanvas.clearRect(
       0,
-      global.config.unit * global.config.gridHeight,
-      global.config.unit * global.config.gridWidth,
-      (global.config.unit * 3) * global.config.gridHeight,
+      global.config.cameraHeight,
+      global.config.cameraWidth,
+      global.config.unit + global.config.cameraHeight,
     )
   }
 };
