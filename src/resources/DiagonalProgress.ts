@@ -9,6 +9,7 @@ import IProgress from '../lib/actor/IProgress';
 import global from '../lib/Global';
 
 const pixelsPerSecond = 100;
+const defaultBoundingBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
 const directions = [
   // The directions in clockwise fashion
@@ -32,12 +33,18 @@ export default class DiagonalProgress implements IProgress {
     const probeY: number = actor.y + (movement * direction.y);
     const probeX: number = actor.x + (movement * direction.x);
 
-    if (grid.checkGrid(probeX, probeY)) {
+    const animationKey: number = actor.state.animationKey;
+    const animation: any = global.animations.data[animationKey];
+    const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
+    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
+    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+
+    if (grid.checkGrid(probeX, probeY, width, height).all) {
       actor.x = probeX;
       actor.y = probeY;
     } else {
       // Get the report on all the surrounding grid spots
-      const report = grid.gridReport(probeX, probeY);
+      const report = grid.gridReport(probeX, probeY, width, height);
 
       // Pick out the proper values we need (the environment report rotated)
       const v = [
