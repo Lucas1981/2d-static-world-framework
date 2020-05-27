@@ -84,7 +84,7 @@ export default abstract class AbstractGame implements IGame {
 
   public async initiate(data: any, actorAttributes: any) {
     global.gameData = data;
-    global.gameState = GameState.Stage;
+    global.gameState = GameState.TitleScreen;
     global.actorAttributes = actorAttributes;
     global.config = data.config;
     global.config.cameraWidth = global.config.cameraWidth || global.config.unit * global.config.gridWidth;

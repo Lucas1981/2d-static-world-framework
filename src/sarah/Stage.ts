@@ -2,6 +2,7 @@ import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
 import TextWriter from '../resources/TextWriter';
 import { IStage } from '../lib/IStage';
+import { GameState } from '../lib/GameState';
 import global from '../lib/Global';
 
 const target = 2;
@@ -109,6 +110,10 @@ export default class Stage implements IStage {
       }
     }
     this.drawScore(allMarks, checkedBoxes);
+
+    if (allMarks === checkedBoxes) {
+      global.gameState = GameState.StageCompleted;
+    }
   }
 
   private checkGrid(actor: Actor) {
