@@ -37,7 +37,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
     const altYDown: number = ((gridY + 1) * global.config.unit) - halfUnit + boundingBox.bottom;
 
     const tendencyX = actor.x - (Math.floor(actor.x / global.config.unit) * global.config.unit);
-    const sideX = tendencyX > 32 ? -1 : 1;
+    const sideX = tendencyX > halfUnit ? -1 : 1;
     const bandX =
       // Get grid pos
       ((gridX + (sideX === 1 ? 0 : 1)) * global.config.unit) +
@@ -47,7 +47,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
       (sideX === -1 ? boundingBox.right : boundingBox.left * -1);
 
     const tendencyY = actor.y - (Math.floor(actor.y / global.config.unit) * global.config.unit);
-    const sideY = tendencyY > 32 ? -1 : 1;
+    const sideY = tendencyY > halfUnit ? -1 : 1;
     const bandY =
       // Get grid pos
       ((gridY + (sideY === 1 ? 0 : 1)) * global.config.unit) +
