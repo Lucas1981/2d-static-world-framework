@@ -15,7 +15,7 @@ export default class Game extends AbstractGame implements IGame {
 
   public titleScreen(): void {
     this.global.finalCanvas.clearCanvas();
-    TextWriter.writeMainMessage("Sarah", 'white');
+    TextWriter.writeMainMessage("Sarah's Platforms", 'white');
     TextWriter.writeSubMessage("Press space to begin", 'white');
     if (this.global.keyboard.state.space) {
       this.global.gameState = GameState.ResetStage;

@@ -1,5 +1,7 @@
 export enum ConditionTypes {
   Standing = 0,
   Walking,
-  Dying
+  Dying,
+  Jumping,
+  Falling
 }
