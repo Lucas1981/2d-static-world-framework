@@ -50,12 +50,18 @@ export default class Grid {
       for(let y = cameraGridY; y <= heightInUnits + cameraGridY + 1; y++) {
         const tile = this.grid[y][x];
         if (tile === null) continue;
+
+        const finalX = ((x - cameraGridX) * this.unit) - Math.floor(restX);
+        const finalY = ((y - cameraGridY) * this.unit) - Math.floor(restY);
         global.animations.data[this.tiles[tile].animation].draw(
-          this.context,
-          ((x - cameraGridX) * this.unit) - Math.floor(restX),
-          ((y - cameraGridY) * this.unit) - Math.floor(restY),
-          global.clock.elapsedTime
+          this.context, finalX, finalY, global.clock.elapsedTime
         );
+
+        if (global.debug) {
+          global.canvas.drawRubberBand(
+            finalX, finalY, this.unit, this.unit, 'red'
+          );
+        }
       }
     }
   }

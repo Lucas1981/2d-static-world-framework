@@ -202,10 +202,10 @@ export default class Actor {
     const cameraX = global.cameraX;
     const cameraY = global.cameraY;
     if (
-      this._x < cameraX - (global.config.unit * 2) ||
-      this._x > cameraX + global.config.cameraWidth + (global.config.unit * 2)||
-      this._y < cameraY - (global.config.unit * 2) ||
-      this._y > cameraY + global.config.cameraHeight + (global.config.unit * 2)
+      this._x < cameraX - global.config.unit ||
+      this._x > cameraX + global.config.cameraWidth + global.config.unit ||
+      this._y < cameraY - global.config.unit ||
+      this._y > cameraY + global.config.cameraHeight + global.config.unit
     ) return;
     global.animations.data[animationKey].draw(
       this.context,

@@ -28,6 +28,13 @@ export default class Canvas {
     this.context.closePath();
   }
 
+  public drawRubberBand(x, y, width, height, strokeColor = 'orange') {
+    this.context.beginPath();
+    this.context.strokeStyle = strokeColor;
+    this.context.rect(x, y, width, height);
+    this.context.stroke();
+  }
+
   public write(
     text: string,
     textFillColor: any,
