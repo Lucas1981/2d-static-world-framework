@@ -17,9 +17,13 @@ export default {
   'actor-1': {
     progress: [
       PlayerProgress,
-      BasicPlatformPlayerConditionProgress,
+      // BasicPlatformPlayerConditionProgress,
       PositionCamera
     ],
     stateChanger: SarahStateChanger
   },
+  'actor-2': {
+    progress: [],
+    stateChanger: NoStateChange
+  }
 }
