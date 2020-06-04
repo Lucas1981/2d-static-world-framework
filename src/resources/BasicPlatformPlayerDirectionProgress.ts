@@ -108,9 +108,8 @@ export default class BasicPlatformPlayerDirectionProgress implements IProgress {
       unit, grid, boundingBox, width, height
     } = this.getShared(actor);
     const checkGrid: any = grid.checkGrid(actor.x + boundingBox.left, actor.y + boundingBox.top, width, height + 1, 0, true);
-    const checkGridBand: any = grid.checkGrid(actor.x + boundingBox.left, actor.y + boundingBox.top, width, height + 1, this.bandMargin, true);
 
-    if (!checkGrid.all && !checkGridBand.all) {
+    if (!checkGrid.bottom) {
       return false;
     }
     return true;
