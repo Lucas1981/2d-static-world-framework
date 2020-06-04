@@ -105,7 +105,7 @@ export default class BasicPlatformPlayerDirectionProgress implements IProgress {
 
   private canFall(actor) : boolean {
     const {
-      unit, grid, boundingBox, width, height
+      grid, boundingBox, width, height
     } = this.getShared(actor);
     const checkGrid: any = grid.checkGrid(actor.x + boundingBox.left, actor.y + boundingBox.top, width, height + 1, 0, true);
 
