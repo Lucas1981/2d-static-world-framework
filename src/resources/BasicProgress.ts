@@ -48,22 +48,23 @@ export default abstract class BasicProgress implements IProgress {
     // Don't bother with this if we don't have any conditions
     if (!('conditions' in this.contingencies)) return;
     const conditions = this.contingencies.conditions;
-    const halfUnit = global.config.unit / 2;
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
     const allFlags = new Array(conditions.directions.length).fill(false);
     const direction = directions[actor.direction];
 
     // What is the position of the current tip? It starts with the actor location, and then move half a unit in the current direction
-    const currTipX = actor.x + (direction.x * halfUnit);
-    const currTipY = actor.y + (direction.y * halfUnit);
+    const currTipX = actor.x + direction.x * halfUnit;
+    const currTipY = actor.y + direction.y * halfUnit;
     // What are the grid spots of the current tip?
-    const gridX = Math.floor(currTipX / global.config.unit);
-    const gridY = Math.floor(currTipY / global.config.unit);
+    const gridX = Math.floor(currTipX / unit);
+    const gridY = Math.floor(currTipY / unit);
     // What is the position of the next tip?
-    const probeY = actor.y + (movement * direction.y) + (direction.y * halfUnit);
-    const probeX = actor.x + (movement * direction.x) + (direction.x * halfUnit);
+    const probeY = actor.y + movement * direction.y + direction.y * halfUnit;
+    const probeX = actor.x + movement * direction.x + direction.x * halfUnit;
     // What are the grid spots of the next tip?
-    const nextGridX = Math.floor(probeX / global.config.unit);
-    const nextGridY = Math.floor(probeY / global.config.unit);
+    const nextGridX = Math.floor(probeX / unit);
+    const nextGridY = Math.floor(probeY / unit);
 
     // Are we about to hit a new tile? That is the most important part of this
     if (gridX !== nextGridX || gridY !== nextGridY) {
@@ -92,12 +93,13 @@ export default abstract class BasicProgress implements IProgress {
   }
 
   private checkForCollision(elapsedTime: number, movement: number, actor: Actor) {
-    const gridX: number = Math.floor(actor.x / global.config.unit);
-    const gridY: number = Math.floor(actor.y / global.config.unit);
+    const unit = global.config.unit;
+    const gridX: number = Math.floor(actor.x / unit);
+    const gridY: number = Math.floor(actor.y / unit);
     const grid: Grid = global.maps[global.activeMap].grid;
     const direction = directions[actor.direction];
-    const probeY = actor.y + (movement * direction.y);
-    const probeX = actor.x + (movement * direction.x);
+    const probeY = actor.y + movement * direction.y;
+    const probeX = actor.x + movement * direction.x;
 
     this.elapsedTime += elapsedTime;
     const timeIsUp = 'timer' in this.contingencies ? this.elapsedTime > this.contingencies.timer : false;
@@ -106,8 +108,8 @@ export default abstract class BasicProgress implements IProgress {
     const animation: any = global.animations.data[animationKey];
     const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
 
-    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
-    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+    const width: number = unit - (boundingBox.left + boundingBox.right);
+    const height: number = unit - (boundingBox.top + boundingBox.bottom);
 
     // Do we hit a wall if we are trying this or is it time to move on?
     if (grid.checkGrid(probeX, probeY, width, height).all && !timeIsUp) {
@@ -123,10 +125,11 @@ export default abstract class BasicProgress implements IProgress {
   private centerActorAndChangeDirection(actor: Actor, gridX: number, gridY: number, newDirection: number) {
     // Make sure the actor is as close to the wall as he can get
     const direction = directions[actor.direction];
-    if(direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
-    if(direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
-    if(direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
-    if(direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+
+    if(direction.x !== 0) actor.x = gridX * unit + halfUnit;
+    if(direction.y !== 0) actor.y = gridY * unit + halfUnit;
 
     // And change the direction in the way specified
     actor.direction = (actor.direction + newDirection + directions.length) % directions.length;
