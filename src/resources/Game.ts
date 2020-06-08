@@ -7,10 +7,10 @@ export default class Game extends AbstractGame implements IGame {
   constructor(stage: IStage) {
     super(stage);
     this.global.activeMap = 0;
-    this.global.gameState = GameState.Stage;
   }
 
   public titleScreen(): void {
+    this.global.gameState = GameState.Stage;
   }
 
   public beforeStage(): void {
