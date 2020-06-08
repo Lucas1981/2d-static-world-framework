@@ -24,11 +24,12 @@ export default class DiagonalProgress implements IProgress {
   constructor() {}
 
   public progress(actor: Actor) {
+    const unit = global.config.unit;
     const direction = directions[actor.direction];
     const elapsedTime: number = global.clock.elapsedTime;
-    const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
-    const gridX: number = Math.floor(actor.x / global.config.unit);
-    const gridY: number = Math.floor(actor.y / global.config.unit);
+    const movement: number = Math.min(pixelsPerSecond * elapsedTime / 1000, unit - 1);
+    const gridX: number = Math.floor(actor.x / unit);
+    const gridY: number = Math.floor(actor.y / unit);
     const grid: Grid = global.maps[global.activeMap].grid;
     const probeY: number = actor.y + (movement * direction.y);
     const probeX: number = actor.x + (movement * direction.x);
@@ -36,8 +37,8 @@ export default class DiagonalProgress implements IProgress {
     const animationKey: number = actor.state.animationKey;
     const animation: any = global.animations.data[animationKey];
     const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
-    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
-    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+    const width: number = unit - (boundingBox.left + boundingBox.right);
+    const height: number = unit - (boundingBox.top + boundingBox.bottom);
 
     if (grid.checkGrid(probeX, probeY, width, height).all) {
       actor.x = probeX;
@@ -73,10 +74,11 @@ export default class DiagonalProgress implements IProgress {
   private centerActorAndChangeDirection(actor: Actor, gridX: number, gridY: number, newDirection: number) {
     // Make sure the actor is as close to the wall as he can get
     const direction = directions[actor.direction];
-    if(direction.x === 1) actor.x = ((gridX + 1) * global.config.unit) - (global.config.unit / 2);
-    if(direction.x === -1) actor.x = (gridX * global.config.unit) + (global.config.unit / 2);
-    if(direction.y === 1) actor.y = ((gridY + 1) * global.config.unit) - (global.config.unit / 2);
-    if(direction.y === -1) actor.y = (gridY * global.config.unit) + (global.config.unit / 2);
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+
+    if(direction.x !== 0) actor.x = gridX * unit + halfUnit;
+    if(direction.y !== 0) actor.y = gridY * unit + halfUnit;
 
     // And change the direction in the way specified
     actor.direction = (actor.direction + newDirection + directions.length) % directions.length;
