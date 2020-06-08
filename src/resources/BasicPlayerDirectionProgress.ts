@@ -18,53 +18,33 @@ export default class BasicPlayerDirectionProgress implements IProgress {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const elapsedTime: number = global.clock.elapsedTime;
-    // Limit the possible movement to a unit - 1 max
     const grid = global.maps[global.activeMap].grid;
     const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, unit - 1);
     const state: any = global.keyboard.state;
     const gridX: number = Math.floor(actor.x / unit);
     const gridY: number = Math.floor(actor.y / unit);
-
     const animationKey: number = actor.state.animationKey;
     const animation: any = global.animations.data[animationKey];
     const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
-
     const width: number = unit - (boundingBox.left + boundingBox.right);
     const height: number = unit - (boundingBox.top + boundingBox.bottom);
-
     const altXLeft: number = gridX * unit + halfUnit - boundingBox.left;
     const altXRight: number = (gridX + 1) * unit - halfUnit + boundingBox.right;
     const altYUp: number = gridY * unit + halfUnit - boundingBox.top;
     const altYDown: number = (gridY + 1) * unit - halfUnit + boundingBox.bottom;
-
-    const tendencyX = actor.x - Math.floor(actor.x / unit) * unit;
-    const sideX = tendencyX > halfUnit ? -1 : 1;
-    const bandX =
-      // Get grid pos
-      ((gridX + (sideX === 1 ? 0 : 1)) * unit) +
-      // Center the grid
-      halfUnit * sideX +
-      // Properly correct for boundingBox
-      (sideX === -1 ? boundingBox.right : boundingBox.left * -1);
-
-    const tendencyY = actor.y - Math.floor(actor.y / unit) * unit;
-    const sideY = tendencyY > halfUnit ? -1 : 1;
-    const bandY =
-      // Get grid pos
-      ((gridY + (sideY === 1 ? 0 : 1)) * unit) +
-      // Center the grid
-      halfUnit * sideY +
-      // Properly correct for boundingBox
-      (sideY === -1 ? boundingBox.bottom : boundingBox.top);
-
-    // First, make sure we are not stuck in a wall
+    const correctionX: number = actor.x - Math.floor(actor.x / unit) * unit > halfUnit ? boundingBox.right : boundingBox.left * -1;
+    const correctionY: number = actor.y - Math.floor(actor.y / unit) * unit > halfUnit ? boundingBox.bottom : boundingBox.top * -1;
     const preCheck = grid.checkGrid(actor.x + boundingBox.left, actor.y + boundingBox.top, width, height, 0, true)
+
+    // 1. make sure we are not stuck in a wall
+
     if (preCheck.left && !preCheck.right) actor.x = altXRight;
     if (!preCheck.left && preCheck.right) actor.x = altXLeft;
     if (preCheck.up && !preCheck.down) actor.y = altYDown;
     if (!preCheck.up && preCheck.down) actor.y = altYUp;
 
-    // Then process any movements
+    // 2. Then process any movements
+
     if (state.up) {
       const probeY: number = actor.y - movement;
       const checkGrid: any = grid.checkGrid(actor.x + boundingBox.left, probeY + boundingBox.top, width, height, 0, true);
@@ -72,7 +52,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
       if (checkGrid.all) actor.y -= movement;
       else if (checkGridBand.all) {
         actor.y -= movement + this.bandMargin;
-        actor.x = bandX;
+        actor.x = gridX * unit + halfUnit + correctionX; // Get grid pos, center and correct for boundingBox;
       } else {
         actor.y = altYUp;
       }
@@ -85,7 +65,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
       if (checkGrid.all) actor.y += movement;
       else if (checkGridBand.all) {
         actor.y += movement + this.bandMargin;
-        actor.x = bandX;
+        actor.x = gridX * unit + halfUnit + correctionX; // Get grid pos, center and correct for boundingBox;
       } else {
         actor.y = altYDown;
       }
@@ -98,7 +78,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
       if (checkGrid.all) actor.x -= movement;
       else if (checkGridBand.all) {
         actor.x -= movement + this.bandMargin;
-        actor.y = bandY;
+        actor.y = gridY * unit + halfUnit + correctionY; // Get grid pos, center grid and correct for boundingBox
       } else {
         actor.x = altXLeft;
       }
@@ -111,7 +91,7 @@ export default class BasicPlayerDirectionProgress implements IProgress {
       if (checkGrid.all) actor.x += movement;
       else if (checkGridBand.all) {
         actor.x += movement + this.bandMargin;
-        actor.y = bandY;
+        actor.y = gridY * unit + halfUnit + correctionY; // Get grid pos, center grid and correct for boundingBox
       } else {
         actor.x = altXRight;
       }
