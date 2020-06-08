@@ -15,44 +15,45 @@ export default class BasicPlayerDirectionProgress implements IProgress {
   ) {}
 
   public progress(actor: Actor): void {
-    const halfUnit = global.config.unit / 2;
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
     const elapsedTime: number = global.clock.elapsedTime;
     // Limit the possible movement to a unit - 1 max
     const grid = global.maps[global.activeMap].grid;
-    const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, global.config.unit - 1);
+    const movement: number = Math.min(this.pixelsPerSecond * elapsedTime / 1000, unit - 1);
     const state: any = global.keyboard.state;
-    const gridX: number = Math.floor(actor.x / global.config.unit);
-    const gridY: number = Math.floor(actor.y / global.config.unit);
+    const gridX: number = Math.floor(actor.x / unit);
+    const gridY: number = Math.floor(actor.y / unit);
 
     const animationKey: number = actor.state.animationKey;
     const animation: any = global.animations.data[animationKey];
     const boundingBox: any = 'boundingBox' in animation && animation.boundingBox ? animation.boundingBox : defaultBoundingBox;
 
-    const width: number = global.config.unit - (boundingBox.left + boundingBox.right);
-    const height: number = global.config.unit - (boundingBox.top + boundingBox.bottom);
+    const width: number = unit - (boundingBox.left + boundingBox.right);
+    const height: number = unit - (boundingBox.top + boundingBox.bottom);
 
-    const altXLeft: number = (gridX * global.config.unit) + halfUnit - boundingBox.left;
-    const altXRight: number = ((gridX + 1) * global.config.unit) - halfUnit + boundingBox.right;
-    const altYUp: number = (gridY * global.config.unit) + halfUnit - boundingBox.top;
-    const altYDown: number = ((gridY + 1) * global.config.unit) - halfUnit + boundingBox.bottom;
+    const altXLeft: number = gridX * unit + halfUnit - boundingBox.left;
+    const altXRight: number = (gridX + 1) * unit - halfUnit + boundingBox.right;
+    const altYUp: number = gridY * unit + halfUnit - boundingBox.top;
+    const altYDown: number = (gridY + 1) * unit - halfUnit + boundingBox.bottom;
 
-    const tendencyX = actor.x - (Math.floor(actor.x / global.config.unit) * global.config.unit);
+    const tendencyX = actor.x - Math.floor(actor.x / unit) * unit;
     const sideX = tendencyX > halfUnit ? -1 : 1;
     const bandX =
       // Get grid pos
-      ((gridX + (sideX === 1 ? 0 : 1)) * global.config.unit) +
+      ((gridX + (sideX === 1 ? 0 : 1)) * unit) +
       // Center the grid
-      (halfUnit * sideX) +
+      halfUnit * sideX +
       // Properly correct for boundingBox
       (sideX === -1 ? boundingBox.right : boundingBox.left * -1);
 
-    const tendencyY = actor.y - (Math.floor(actor.y / global.config.unit) * global.config.unit);
+    const tendencyY = actor.y - Math.floor(actor.y / unit) * unit;
     const sideY = tendencyY > halfUnit ? -1 : 1;
     const bandY =
       // Get grid pos
-      ((gridY + (sideY === 1 ? 0 : 1)) * global.config.unit) +
+      ((gridY + (sideY === 1 ? 0 : 1)) * unit) +
       // Center the grid
-      (halfUnit * sideY) +
+      halfUnit * sideY +
       // Properly correct for boundingBox
       (sideY === -1 ? boundingBox.bottom : boundingBox.top);
 
