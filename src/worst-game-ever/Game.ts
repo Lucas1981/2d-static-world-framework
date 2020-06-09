@@ -24,7 +24,7 @@ export default class Game extends AbstractGame implements IGame {
       this.first = false;
       this.global.sound.play('title-screen');
     }
-    this.global.canvas.clearCanvas();
+    this.global.finalCanvas.clearCanvas();
     const color = colorNames[Math.floor(Math.random() * colorNames.length)];
     TextWriter.writeMainMessage("WORST. GAME. EVVVERRR!!!", color);
     TextWriter.writeSubMessage("Press space to begin", color);
