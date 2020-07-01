@@ -9,7 +9,12 @@ export default class MainLoop {
   ) {}
 
   public run(progress: boolean = true, animate: boolean = true, handleActors: boolean = true): void {
+    if ('backgroundColor' in global.maps[global.activeMap].grid) {
+      global.canvas.clearCanvas(global.maps[global.activeMap].grid.backgroundColor);
+    }
+
     global.maps[global.activeMap].grid.draw();
+
     if (handleActors) {
       this.moveObjects(progress);
     }
@@ -20,6 +25,7 @@ export default class MainLoop {
     if (handleActors) {
       this.drawObjects(animate);
     }
+
     global.finalCanvas.copyToCanvas(
       global.canvas, global.config.unit, global.config.unit, global.config.cameraWidth, global.config.cameraHeight
     );

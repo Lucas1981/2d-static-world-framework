@@ -82,7 +82,8 @@ export default class Generator {
       data.config.gridHeight,
       data.config.unit,
       data.tiles,
-      map.grid
+      map.grid,
+      map.backgroundColor || null
     );
     return grid;
   }

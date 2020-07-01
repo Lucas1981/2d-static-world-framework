@@ -13,6 +13,7 @@ export default class Grid {
     private unit: number,
     private tiles: Array<any>,
     private map: Array<Array<number>>,
+    private backgroundColor: String = null
   ) {
     this.context = global.canvas.getContext();
 
@@ -49,7 +50,7 @@ export default class Grid {
     for(let x = cameraGridX; x <= widthInUnits + cameraGridX + 1; x++) {
       for(let y = cameraGridY; y <= heightInUnits + cameraGridY + 1; y++) {
         const tile = this.grid[y][x];
-        if (tile === null) continue;
+        if (tile === null || !('animation' in this.tiles[tile])) continue;
 
         const finalX = ((x - cameraGridX) * this.unit) - Math.floor(restX);
         const finalY = ((y - cameraGridY) * this.unit) - Math.floor(restY);
