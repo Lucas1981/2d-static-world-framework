@@ -40,6 +40,12 @@ export default class Grid {
     return tile !== null && this.tiles[tile].type === 'background';
   }
 
+  public getAnimation(x: number, y: number) {
+    const tile = this.grid[y][x];
+    if (tile === null || !('animation' in this.tiles[tile])) return null;
+    return this.tiles[tile].animation;
+  }
+
   public draw() {
     const cameraGridX = this.playerToGrid(global.cameraX);
     const cameraGridY = this.playerToGrid(global.cameraY);
@@ -67,64 +73,6 @@ export default class Grid {
     }
   }
 
-  public checkGrid(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin, showTiles = false): any {
-    const unit = global.config.unit;
-    const probes = this.getProbes(probeX, probeY, width, height, bandMargin);
-    const {
-      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
-      probeLeftVerticalBand, probeRightVerticalBand, probeTopVerticalBand, probeBottomVerticalBand,
-    } = probes;
-
-    const corners = {
-      topLeft:
-        global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeTopHorizontalBand) &&
-        global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeTopVerticalBand),
-      bottomLeft:
-        global.maps[global.activeMap].grid.isSafe(probeLeftHorizontalBand, probeBottomHorizontalBand) &&
-        global.maps[global.activeMap].grid.isSafe(probeLeftVerticalBand, probeBottomVerticalBand),
-      topRight:
-        global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeTopHorizontalBand) &&
-        global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeTopVerticalBand),
-      bottomRight:
-        global.maps[global.activeMap].grid.isSafe(probeRightHorizontalBand, probeBottomHorizontalBand) &&
-        global.maps[global.activeMap].grid.isSafe(probeRightVerticalBand, probeBottomVerticalBand),
-    };
-
-    // Make the probing tiles visible
-    if (global.debug && showTiles) {
-      const ctx = global.canvas.getContext();
-      const directions = [
-        { key: 'topLeft', components: ['Top', 'Left'] },
-        { key: 'topRight', components: ['Top', 'Right'] },
-        { key: 'bottomLeft', components: ['Bottom', 'Left'] },
-        { key: 'bottomRight', components: ['Bottom', 'Right']}
-      ];
-      for (let i = 0; i < directions.length; i++) {
-        ctx.beginPath();
-        ctx.fillStyle = corners[directions[i].key] ? 'green' : 'red';
-        ctx.rect(
-          probes[`probe${directions[i].components[1]}HorizontalBand`] * unit,
-          probes[`probe${directions[i].components[0]}HorizontalBand`] * unit,
-          unit, unit
-        );
-        ctx.fill();
-        ctx.closePath();
-      }
-    }
-
-    return {
-      topLeft: corners.topLeft,
-      topRight: corners.topRight,
-      bottomLeft: corners.bottomLeft,
-      bottomRight: corners.bottomRight,
-      top: corners.topLeft && corners.topRight,
-      bottom: corners.bottomLeft && corners.bottomRight,
-      left: corners.topLeft && corners.bottomLeft,
-      right: corners.topRight && corners.bottomRight,
-      all: corners.topRight && corners.bottomRight && corners.topLeft && corners.bottomLeft
-    };
-  }
-
   public gridReport(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin): any {
     const { topLeft, bottomLeft, topRight, bottomRight } = this.checkGrid(probeX, probeY, width, height, bandMargin);
 
@@ -136,29 +84,41 @@ export default class Grid {
     ];
   }
 
-  public getBandProbes(probeX: number, probeY: number, bandMargin: number = defaultBandMargin): any {
+  public checkGrid(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin, showTiles = false): any {
+    const unit = global.config.unit;
+    const grid = global.maps[global.activeMap].grid;
+    const probes = this.getProbes(probeX, probeY, width, height, bandMargin);
+    const {
+      probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
+      probeLeftVerticalBand, probeRightVerticalBand, probeTopVerticalBand, probeBottomVerticalBand,
+    } = probes;
+
+    const corners = {
+      topLeft:
+        grid.isSafe(probeLeftHorizontalBand, probeTopHorizontalBand) &&
+        grid.isSafe(probeLeftVerticalBand, probeTopVerticalBand),
+      bottomLeft:
+        grid.isSafe(probeLeftHorizontalBand, probeBottomHorizontalBand) &&
+        grid.isSafe(probeLeftVerticalBand, probeBottomVerticalBand),
+      topRight:
+        grid.isSafe(probeRightHorizontalBand, probeTopHorizontalBand) &&
+        grid.isSafe(probeRightVerticalBand, probeTopVerticalBand),
+      bottomRight:
+        grid.isSafe(probeRightHorizontalBand, probeBottomHorizontalBand) &&
+        grid.isSafe(probeRightVerticalBand, probeBottomVerticalBand),
+    };
+
+    // Make the probing tiles visible
+    if (global.debug && showTiles) { this.showDebugOverlay(probes, corners); }
+
     return {
-      probeLeftHorizontalBand: this.playerToGrid(probeX - (global.config.unit / 2)),
-      probeRightHorizontalBand: this.playerToGrid(probeX + (global.config.unit / 2) - 1),
-      probeTopHorizontalBand: this.playerToGrid(probeY - (global.config.unit / 2) + bandMargin),
-      probeBottomHorizontalBand: this.playerToGrid(probeY + (global.config.unit / 2) - 1 - bandMargin),
-
-      probeLeftVerticalBand: this.playerToGrid(probeX - (global.config.unit / 2) + bandMargin),
-      probeRightVerticalBand: this.playerToGrid(probeX + (global.config.unit / 2) - 1 - bandMargin),
-      probeTopVerticalBand: this.playerToGrid(probeY - (global.config.unit / 2)),
-      probeBottomVerticalBand: this.playerToGrid(probeY + (global.config.unit / 2) - 1)
-    }
-  }
-
-  private getProbeCoordinates(probeX: number, probeY: number): any {
-    const { probeLeft, probeRight, probeTop, probeBottom } = this.getProbes(probeX, probeY);
-
-    return [
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeTop),
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeTop),
-      global.maps[global.activeMap].grid.isSafe(probeRight, probeBottom),
-      global.maps[global.activeMap].grid.isSafe(probeLeft, probeBottom)
-    ];
+      ...corners,
+      top: corners.topLeft && corners.topRight,
+      bottom: corners.bottomLeft && corners.bottomRight,
+      left: corners.topLeft && corners.bottomLeft,
+      right: corners.topRight && corners.bottomRight,
+      all: corners.topRight && corners.bottomRight && corners.topLeft && corners.bottomLeft
+    };
   }
 
   public getProbes(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin): any {
@@ -178,5 +138,27 @@ export default class Grid {
 
   private playerToGrid(value: number): number {
     return Math.floor(value / global.config.unit);
+  }
+
+  private showDebugOverlay(probes, corners) {
+    const ctx = global.canvas.getContext();
+    const unit = this.unit;
+    const directions = [
+      { key: 'topLeft', components: ['Top', 'Left'] },
+      { key: 'topRight', components: ['Top', 'Right'] },
+      { key: 'bottomLeft', components: ['Bottom', 'Left'] },
+      { key: 'bottomRight', components: ['Bottom', 'Right']}
+    ];
+    for (let i = 0; i < directions.length; i++) {
+      ctx.beginPath();
+      ctx.fillStyle = corners[directions[i].key] ? 'green' : 'red';
+      ctx.rect(
+        probes[`probe${directions[i].components[1]}HorizontalBand`] * unit,
+        probes[`probe${directions[i].components[0]}HorizontalBand`] * unit,
+        unit, unit
+      );
+      ctx.fill();
+      ctx.closePath();
+    }
   }
 }
