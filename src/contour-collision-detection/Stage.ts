@@ -1,6 +1,7 @@
 import Actor from '../lib/actor/Actor';
 import Grid from '../lib/Grid';
 import TextWriter from '../resources/TextWriter';
+import { GameState } from '../lib/GameState';
 import { IStage } from '../lib/IStage';
 import global from '../lib/Global';
 
@@ -12,7 +13,6 @@ export default class Stage implements IStage {
   }
 
   public handleCollision(colliders, actor) {
-
   }
 
   public afterDetectCollision() {}

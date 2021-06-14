@@ -18,7 +18,7 @@ export default class Game extends AbstractGame implements IGame {
   }
 
   public stage(): void {
-    this.mainLoop.run();
+    this.mainLoop.run(); // Run this only once
   }
 
   public stageCompleted(): void {
