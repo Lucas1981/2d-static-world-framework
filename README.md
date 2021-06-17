@@ -42,7 +42,7 @@ Those are a lot of things to manage though.
 - Good to know for myself: this engine + level editor took me two months to make in the off-hours, which seems reasonable.
 
 To do:
-- Simplify the BandGrid method in the Grid class. Calculate the corrections in getBandProbeCoordinates and you won't need getBandProbes but you can just use getProbes.
+X - Simplify the BandGrid method in the Grid class. Calculate the corrections in getBandProbeCoordinates and you won't need getBandProbes but you can just use getProbes.
 - Data files should really be json files, now those are .ts because I can't figure out how to feed .json files to TypeScript
 X - Create the rect box handler for the animations mentioned above. Think about how this can still be backwards-compatible or just refactor everything. Be sure to test thoroughly before doing that refactor.
 X - Have a mechanism that applies an alpha-mask analysis on the frames, so you can see if lingering pixels got in

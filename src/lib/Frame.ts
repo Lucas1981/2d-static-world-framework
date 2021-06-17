@@ -8,6 +8,12 @@ export default class Frame {
     public offsetY: number,
     public width: number,
     public height: number,
+    public contour: any = {
+      top: [],
+      left: [],
+      bottom: [],
+      right: []
+    },
   ) {}
 
   public draw(ctx: any, x: number, y: number): void {

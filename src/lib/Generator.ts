@@ -118,7 +118,8 @@ export default class Generator {
         for (const frame of data.frames) {
           frames.push(new Frame(
             image,
-            frame.x, frame.y, frame.width, frame.height
+            frame.x, frame.y, frame.width, frame.height,
+            frame.contour || null
           ));
         }
 

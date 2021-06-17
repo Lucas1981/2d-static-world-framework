@@ -41,7 +41,7 @@ export default class Grid {
   }
 
   public getAnimation(x: number, y: number) {
-    const tile = this.grid[y][x];
+    const tile = this.grid[y + 1][x + 1];
     if (tile === null || !('animation' in this.tiles[tile])) return null;
     return this.tiles[tile].animation;
   }
@@ -123,20 +123,27 @@ export default class Grid {
 
   public getProbes(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin): any {
     const halfUnit = global.config.unit / 2;
-
+    const left = this.playerToGrid(probeX - halfUnit);
+    const right = this.playerToGrid(probeX - halfUnit + width - 1);
+    const top = this.playerToGrid(probeY - halfUnit);
+    const bottom = this.playerToGrid(probeY - halfUnit + height - 1);
     return {
-      probeLeftHorizontalBand: this.playerToGrid(probeX - halfUnit),
-      probeRightHorizontalBand: this.playerToGrid(probeX - halfUnit + width - 1),
+      left,
+      right,
+      top,
+      bottom,
+      probeLeftHorizontalBand: left,
+      probeRightHorizontalBand: right,
       probeTopHorizontalBand: this.playerToGrid(probeY - halfUnit + bandMargin),
       probeBottomHorizontalBand: this.playerToGrid(probeY - halfUnit + height - 1 - bandMargin),
       probeLeftVerticalBand: this.playerToGrid(probeX - halfUnit + bandMargin),
       probeRightVerticalBand: this.playerToGrid(probeX - halfUnit + width - 1 - bandMargin),
-      probeTopVerticalBand: this.playerToGrid(probeY - halfUnit),
-      probeBottomVerticalBand: this.playerToGrid(probeY - halfUnit + height - 1)
+      probeTopVerticalBand: top,
+      probeBottomVerticalBand: bottom
     }
   }
 
-  private playerToGrid(value: number): number {
+  public playerToGrid(value: number): number {
     return Math.floor(value / global.config.unit);
   }
 
