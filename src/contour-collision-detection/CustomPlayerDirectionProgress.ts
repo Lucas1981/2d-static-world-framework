@@ -23,59 +23,46 @@ export default class CustomPlayerDirectionProgress implements IProgress {
     const state: any = global.keyboard.state;
     const grid = global.maps[global.activeMap].grid;
 
+    // const now = new Date();
+    // if (+now - +this.start > 2000) {
+    //   console.log('Applying time based change');
+    //   const probeX: number = actor.x + 70;
+    //   console.log(actor.x);
+    //   console.log(probeX)
+    //   const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, 0);
+    //   console.log(`Received: ${JSON.stringify(result)}`);
+    //   actor.x += result.x;
+    //   actor.y += result.y;
+    //   actor.direction = DirectionTypes.Left;
+    //   this.start = new Date('01-01-2040');
+    // }
     if (state.up) {
       const probeY: number = actor.y - movement;
-      const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY });
-      actor.y = probeY - result.top;
+      const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY }, defaultBandMargin);
+      actor.y += result.y;
+      actor.x += result.x;
       actor.direction = DirectionTypes.Up;
-      this.checkVerticalBand(probeY, actor, grid, result);
     }
     if (state.down) {
       const probeY: number = actor.y + movement;
-      const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY });
-      actor.y = probeY + result.bottom;
+      const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY }, defaultBandMargin);
+      actor.y += result.y;
+      actor.x += result.x;
       actor.direction = DirectionTypes.Down;
-      this.checkVerticalBand(probeY, actor, grid, result);
     }
     if (state.left) {
       const probeX: number = actor.x - movement;
-      const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y });
-      actor.x = probeX - result.left;
+      const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, defaultBandMargin);
+      actor.x += result.x;
+      actor.y += result.y;
       actor.direction = DirectionTypes.Left;
-      this.checkHorizontalBand(probeX, actor, grid, result);
     }
     if (state.right) {
       const probeX: number = actor.x + movement;
-      const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y });
-      actor.x = probeX + result.right;
-      actor.direction = DirectionTypes.Up;
-      this.checkHorizontalBand(probeX, actor, grid, result);
-    }
-  }
-
-  private checkVerticalBand(probeY, actor, grid, result) {
-    console.log(result);
-    const left = Math.abs(result.left);
-    const right = Math.abs(result.right);
-    if (right > 0 && right < this.bandMargin) {
-      actor.x = actor.x - right;
-      actor.y = probeY;
-    } else if (left > 0 && left < this.bandMargin) {
-      actor.x = actor.x + left;
-      actor.y = probeY;
-    }
-  }
-
-  private checkHorizontalBand(probeX, actor, grid, result) {
-    console.log(result);
-    const top = Math.abs(result.top);
-    const bottom = Math.abs(result.bottom);
-    if (top > 0 && top < this.bandMargin) {
-      actor.y = actor.y + top;
-      actor.x = probeX;
-    } else if (bottom > 0 && bottom < this.bandMargin) {
-      actor.y = actor.y - bottom;
-      actor.x = probeX;
+      const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, defaultBandMargin);
+      actor.x += result.x;
+      actor.y += result.y;
+      actor.direction = DirectionTypes.Right;
     }
   }
 }

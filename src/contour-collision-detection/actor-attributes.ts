@@ -1,6 +1,6 @@
 import CustomPlayerDirectionProgress from './CustomPlayerDirectionProgress';
 import NoStateChange from '../resources/NoStateChange';
-import BasicPlayerConditionProgress from '../resources/BasicPlayerConditionProgress'
+import BasicPlayerConditionProgress from '../resources/BasicPlayerConditionProgress';
 import PositionCamera from '../resources/PositionCamera';
 
 const pixelsPerSecond = 200;
