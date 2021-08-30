@@ -8,27 +8,52 @@ export default class ContourCollision {
   }
 
   public static correctActor(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number = 0): any {
+    const unit = global.config.unit;
+
     // Determine the direction the actor is trying to go in
     if (actor.x > nextPosition.x) {
-      return { y: 0, x: this.checkLeft(grid, actor, nextPosition, bandMargin) };
+      const { margins, collides, x } = this.checkLeft(grid, actor, nextPosition, bandMargin);
+      if (collides) {
+        if (margins.top < bandMargin) return { y: margins.top + 1, x };
+        if (margins.bottom >= unit - bandMargin) return { y: -1 * (unit - margins.bottom), x };
+      }
+      return { y: 0, x };
     }
     if (actor.x < nextPosition.x) {
-      return { y: 0, x: this.checkRight(grid, actor, nextPosition, bandMargin) };
+      const { margins, collides, x } = this.checkRight(grid, actor, nextPosition, bandMargin);
+      if (collides) {
+        if (margins.top < bandMargin) return { y: margins.top + 1, x };
+        if (margins.bottom >= unit - bandMargin) return { y: -1 * (unit - margins.bottom), x };
+      }
+      return { y: 0, x };
     }
     if (actor.y > nextPosition.y) {
-      return { x: 0, y: this.checkTop(grid, actor, nextPosition, bandMargin) };
+      const { margins, collides, y } = this.checkTop(grid, actor, nextPosition, bandMargin);
+      console.log(margins);
+      if (collides) {
+        if (margins.left < bandMargin) return { y, x: margins.left + 1};
+        if (margins.right >= unit - bandMargin) return { y, x: -1 * (unit - margins.right) };
+      }
+      return { x: 0, y };
     }
     if (actor.y < nextPosition.y) {
-      return { x: 0, y: this.checkBottom(grid, actor, nextPosition, bandMargin) };
+      const { margins, collides, y } = this.checkBottom(grid, actor, nextPosition, bandMargin);
+      if (collides) {
+        if (margins.left < bandMargin) return { y, x: margins.left + 1 };
+        if (margins.right >= unit - bandMargin) return { y, x: -1 * (unit - margins.right) };
+      }
+      return { x: 0, y };
     }
     return nextPosition;
   }
 
-  private static checkRight(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): Number {
+  private static checkRight(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.x - actor.x;
+    const margins = { top: -1, bottom: unit };
+    let collides = false;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorY = Math.floor(actor.y - halfUnit);
@@ -48,19 +73,24 @@ export default class ContourCollision {
           // If we are, calculate the maximum distance we can still make on this row
           const correctedDistance = distance + (tileDomain[0] - rest);
           if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          if (row > margins.top) margins.top = row;
+          if (row < margins.bottom) margins.bottom = row;
+          collides = true;
           break;
         }
         distance += stop - rest;
       }
     }
-    return finalDistance;
+    return { margins, collides, x: finalDistance };
   }
 
-  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): Number {
+  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, margin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = actor.x - nextPosition.x;
+    const margins = { top: -1, bottom: unit };
+    let collides = false;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorY = Math.floor(actor.y - halfUnit);
@@ -80,19 +110,24 @@ export default class ContourCollision {
           // If we are, calculate the maximum distance we can still make on this row
           const correctedDistance = distance + (rest - tileDomain[1]);
           if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          if (row > margins.top) margins.top = row;
+          if (row < margins.bottom) margins.bottom = row;
+          collides = true;
           break;
         }
         distance += rest - stop;
       }
     }
-    return -finalDistance;
+    return { margins, collides, x: -finalDistance };
   }
 
-  private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): Number {
+  private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = actor.y - nextPosition.y;
+    const margins = { left: -1, right: unit };
+    let collides = false;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorX = Math.floor(actor.x - halfUnit);
@@ -111,19 +146,24 @@ export default class ContourCollision {
           // If we are, calculate the maximum distance we can still make on this row
           const correctedDistance = distance + (rest - tileDomain[1]);
           if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          if (column > margins.left) margins.left = column;
+          if (column < margins.right) margins.right = column;
+          collides = true;
           break;
         }
         distance += rest - stop;
       }
     }
-    return -finalDistance;
+    return { margins, collides, y: -finalDistance };
   }
 
-  private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): Number {
+  private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.y - actor.y;
+    const margins = { left: -1, right: unit };
+    let collides = false;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorX = Math.floor(actor.x - halfUnit);
@@ -142,12 +182,15 @@ export default class ContourCollision {
           // If we are, calculate the maximum distance we can still make on this row
           const correctedDistance = distance + (tileDomain[0] - rest);
           if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          if (column > margins.left) margins.left = column;
+          if (column < margins.right) margins.right = column;
+          collides = true;
           break;
         }
         distance += stop - rest;
       }
     }
-    return finalDistance;
+    return { margins, collides, y: finalDistance };
   }
 
   private static getTileDomainRow(grid, start, actorY, row) {
