@@ -58,6 +58,7 @@ export default class ContourCollision {
     // For each row, check if the distance can be traversed
     const actorY = Math.floor(actor.y - halfUnit);
     for (let row = 0; row < actorFrame.height; row++) {
+      console.log(actorFrame);
       // Make sure we are not going to probe an empty row
       if (actorFrame.contour.right[row] === -1) continue;
       const base = actor.x - halfUnit + actorFrame.contour.right[row] + 1;
@@ -224,8 +225,8 @@ export default class ContourCollision {
     const unit = global.config.unit;
     const tileX = Math.floor(x / unit);
     const tileY = Math.floor(y / unit);
-    const index = grid.getAnimation(tileX, tileY);
-    if (index === null) return index;
-    return global.animations.data[index].getCurrentFrame(global.clock.elapsedTime);
+    const tile = grid.getTile(tileX, tileY);
+    if (tile === null || tile.type === 'background') return null;
+    return global.animations.data[tile.animation].getCurrentFrame(global.clock.elapsedTime);
   }
 };

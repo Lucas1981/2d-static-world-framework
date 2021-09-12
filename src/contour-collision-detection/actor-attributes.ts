@@ -3,7 +3,7 @@ import NoStateChange from '../resources/NoStateChange';
 import BasicPlayerConditionProgress from '../resources/BasicPlayerConditionProgress';
 import PositionCamera from '../resources/PositionCamera';
 
-const pixelsPerSecond = 200;
+const pixelsPerSecond = 120;
 
 class PlayerProgress extends CustomPlayerDirectionProgress {
   constructor() {

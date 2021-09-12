@@ -5,8 +5,8 @@ import { DirectionTypes } from '../resources/DirectionTypes';
 import { GameState } from '../lib/GameState';
 import global from '../lib/Global';
 
-const defaultPixelsPerSecond = 150;
-const defaultBandMargin = 4;
+const defaultPixelsPerSecond = 1;
+const defaultBandMargin = 12;
 const defaultBoundingBox = { top: 0, bottom: 0, left: 0, right: 0 };
 
 export default class CustomPlayerDirectionProgress implements IProgress {
@@ -23,14 +23,11 @@ export default class CustomPlayerDirectionProgress implements IProgress {
     const state: any = global.keyboard.state;
     const grid = global.maps[global.activeMap].grid;
 
-    // const now = new Date();
-    // if (+now - +this.start > 2000) {
-    //   console.log('Applying time based change');
-    //   const probeX: number = actor.x + 70;
-    //   console.log(actor.x);
-    //   console.log(probeX)
-    //   const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, 0);
-    //   console.log(`Received: ${JSON.stringify(result)}`);
+    const now = new Date();
+    // if (+now - +this.start > 400) {
+    //   const probeX: number = actor.x - 200;
+    //   const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, defaultBandMargin);
+    //   console.log(result);
     //   actor.x += result.x;
     //   actor.y += result.y;
     //   actor.direction = DirectionTypes.Left;
