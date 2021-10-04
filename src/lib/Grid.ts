@@ -35,6 +35,12 @@ export default class Grid {
     return this.grid;
   }
 
+  public getTile(x: number, y: number) {
+    const tile = this.grid[y + 1][x + 1];
+    if (tile === null || !('animation' in this.tiles[tile])) return null;
+    return this.tiles[tile];
+  }
+
   public isSafe(x: number, y: number) {
     const tile = this.grid[y + 1][x + 1];
     return tile !== null && this.tiles[tile].type === 'background';

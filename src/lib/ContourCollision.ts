@@ -1,187 +1,190 @@
-import Grid from './Grid';
-import Actor from './actor/Actor';
-import global from './Global';
-
-const debug = false;
+import Grid from '../lib/Grid';
+import Actor from '../lib/actor/Actor';
+import global from '../lib/Global.ts';
 
 export default class ContourCollision {
-  constructor() {}
+  constructor() {
+
+  }
 
   public static correctActor(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number = 0): any {
-    const direction = actor.x - nextPosition.x === 0 ? 'vertical' : 'horizontal';
+    const unit = global.config.unit;
 
-    switch (direction) {
-      case 'vertical':
-        return this.correctActorVertical(grid, actor, nextPosition, bandMargin);
-      case 'horizontal':
-        return this.correctActorHorizontal(grid, actor, nextPosition, bandMargin);
-      default:
-        throw new Error('Unknown direction');
+    // Determine the direction the actor is trying to go in
+    if (actor.x > nextPosition.x) {
+      return { y: 0, x: this.checkLeft(grid, actor, nextPosition, bandMargin) };
     }
+    if (actor.x < nextPosition.x) {
+      return { y: 0, x: this.checkRight(grid, actor, nextPosition, bandMargin) };
+    }
+    if (actor.y > nextPosition.y) {
+      return { x: 0, y: this.checkTop(grid, actor, nextPosition, bandMargin) };
+    }
+    if (actor.y < nextPosition.y) {
+      return { x: 0, y: this.checkBottom(grid, actor, nextPosition, bandMargin) };
+    }
+    return nextPosition;
   }
 
-  public static correctActorVertical(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+  private static checkRight(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
-    const delta =  nextPosition.y - actor.y;
-    const direction = delta < 1 ? -1 : 1;
-    const correctedUnit = unit * direction;
-    const firstPosition = delta % unit;
-    let x = 0;
-    let y = firstPosition;
-    while(Math.abs(y) <= Math.abs(delta)) {
-      const change = this.processTile(grid, actor, { x: x + actor.x, y: y + actor.y });
-      // Did we hit something?
-      if (change.top !== 0 || change.bottom !== 0) {
-        const left = Math.abs(change.left);
-        const right = Math.abs(change.right);
-        // Are we within the left range of the allowed bandwidth?
-        if (left > 0 && left < bandMargin) {
-          // Then adjust the x and keep going
-          x += left;
-        // Are we within the right range of the allowed bandwidth?
-        } else if (right > 0 && left < bandMargin) {
-          // Then adjust the x and keep going
-          x -= right;
-        } else {
-          // If not, return the x with the difference
-          const correction = direction * (change.top || change.bottom);
-          y += correction;
-          return { x, y };
-        }
-      }
-      // Otherwise, bank the distance and move to the next tile
-      y += correctedUnit
-    }
-
-    // We didn't hit anything, which means we are one tile length over, so correct and return
-    y -= correctedUnit;
-    return { x, y };
-  }
-
-  public static correctActorHorizontal(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number) {
-    const unit = global.config.unit;
-    const halfUnit = unit / 2;
-    const delta =  nextPosition.x - actor.x;
-    const direction = delta < 1 ? -1 : 1;
-    const correctedUnit = unit * direction;
-    const firstPosition = delta % unit;
-    let y = 0;
-    let x = firstPosition;
-    while(Math.abs(x) <= Math.abs(delta)) {
-      const change = this.processTile(grid, actor, { x: x + actor.x, y: actor.y });
-      const top = Math.abs(change.top);
-      const bottom = Math.abs(change.bottom);
-      // Did we hit something?
-      if (change.left !== 0 || change.right !== 0) {
-        // Are we within the top range of the allowed bandwidth?
-        if (top > 0 && top < bandMargin) {
-          // Then adjust the y and keep going
-          y += top;
-        // Are we within the left range of the allowed bandwidth?
-        } else if (bottom > 0 && bottom < bandMargin) {
-          // Then adjust the y and keep going
-          y -= bottom;
-        } else {
-          // If not, return the x with the difference
-          const correction = direction * (change.left || change.right);
-          x += correction;
-          return { x, y };
-        }
-      }
-      // Otherwise, bank the distance and move to the next tile
-      x += correctedUnit
-    }
-
-    // We didn't hit anything, which means we are one tile length over, so correct and return
-    x -= correctedUnit;
-    return { x, y };
-  }
-
-  public static processTile(grid: Grid, actor: Actor, nextPosition: any) {
-    const unit = global.config.unit;
-    const halfUnit = unit / 2;
-    const result = {
-      top: 0, bottom: 0, left: 0, right: 0
-    };
-
-    // We must determine what four tiles we will be auditing. We can use the methods on the Grid class for that
-    const probes = grid.getProbes(nextPosition.x, nextPosition.y, unit, unit);
-    const animationIndices = {
-      topLeft: grid.getAnimation(probes.left, probes.top),
-      topRight: grid.getAnimation(probes.right, probes.top),
-      bottomLeft: grid.getAnimation(probes.left, probes.bottom),
-      bottomRight: grid.getAnimation(probes.right, probes.bottom)
-    };
-
-    const tiles = {
-      topLeft: animationIndices.topLeft !== null ? this.getCurrentFrame(animationIndices.topLeft).contour : { right: new Array(unit).fill(-1), bottom: new Array(unit).fill(-1) },
-      topRight: animationIndices.topRight !== null ? this.getCurrentFrame(animationIndices.topRight).contour : { left: new Array(unit).fill(unit), bottom: new Array(unit).fill(-1) },
-      bottomLeft: animationIndices.bottomLeft !== null ? this.getCurrentFrame(animationIndices.bottomLeft).contour : { right: new Array(unit).fill(-1), top: new Array(unit).fill(unit) },
-      bottomRight: animationIndices.bottomRight !== null ? this.getCurrentFrame(animationIndices.bottomRight).contour : { left: new Array(unit).fill(unit), top: new Array(unit).fill(unit) }
-    };
-
-    // Smash together all four cornering tiles so we have all strips in place to audit, based on actor position and size
-    const contours = {
-      right: [...tiles.topLeft.right, ...tiles.bottomLeft.right],
-      bottom: [...tiles.topLeft.bottom, ...tiles.topRight.bottom],
-      left: [...tiles.topRight.left, ...tiles.bottomRight.left],
-      top: [...tiles.bottomLeft.top, ...tiles.bottomRight.top]
-    }
-
-    // We will need to know the position of the player relative to the four tiles
-    const offsetX = (parseInt(nextPosition.x) + halfUnit) % unit;
-    const offsetY = (parseInt(nextPosition.y) + halfUnit) % unit;
     const actorFrame = actor.getCurrentFrame();
-
-    // Check x
+    const delta = nextPosition.x - actor.x;
+    let finalDistance = delta; // Assume the distance can be fully traversed
+    // For each row, check if the distance can be traversed
+    const actorY = Math.floor(actor.y - halfUnit);
     for (let row = 0; row < actorFrame.height; row++) {
-      const deltaLeft = (unit - (contours.right[row + offsetY] + 1)) + actorFrame.contour.left[row] - (unit - offsetX);
-      const deltaRight = (unit - (actorFrame.contour.right[row] + 1)) + contours.left[row + offsetY] - offsetX;
-      if (debug) {
-        this.plotPixel(actor.x + (unit / 2) + actorFrame.contour.left[row], actor.y + (unit / 2) + row, 'orange');
-        this.plotPixel(actor.x + (unit / 2) + actorFrame.contour.right[row], actor.y + (unit / 2) + row, 'red');
-      }
-      if (result.left > deltaLeft) {
-        result.left = deltaLeft;
-      }
-      if (result.right > deltaRight) {
-        result.right = deltaRight;
+      // Make sure we are not going to probe an empty row
+      if (actorFrame.contour.right[row] === -1) continue;
+      const base = actor.x - halfUnit + actorFrame.contour.right[row] + 1;
+      let distance = 0;
+      // Do this for as long as the delta has not been completely checked
+      while (distance < delta) {
+        const tileDomain = this.getTileDomainRow(grid, base + distance, actorY, row);
+        const rest = (base + distance) % unit;
+        const stop = rest + (delta - distance) > unit - 1 ? unit : rest + (delta - distance);
+        const actorDomain = [rest, stop];
+        // Are we overlapping?
+        if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
+          // If we are, calculate the maximum distance we can still make on this row
+          const correctedDistance = distance + (tileDomain[0] - rest);
+          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          break;
+        }
+        distance += stop - rest;
       }
     }
+    return finalDistance
+  }
 
-    // Check y
+  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, margin: number): any {
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+    const actorFrame = actor.getCurrentFrame();
+    const delta = actor.x - nextPosition.x;
+    let finalDistance = delta; // Assume the distance can be fully traversed
+    // For each row, check if the distance can be traversed
+    const actorY = Math.floor(actor.y - halfUnit);
+    for (let row = 0; row < actorFrame.height; row++) {
+      // Make sure we are not going to probe an empty row
+      if (actorFrame.contour.left[row] === unit) continue;
+      const base = actor.x - halfUnit + actorFrame.contour.left[row] - 1;
+      let distance = 0;
+      // Do this for as long as the delta has not been completely checked
+      while (distance < delta) {
+        const tileDomain = this.getTileDomainRow(grid, base - distance, actorY, row);
+        const rest = (base - distance) % unit;
+        const stop = rest - (delta - distance) < 0 ? -1 : rest - (delta - distance);
+        const actorDomain = [stop, rest];
+        // Are we overlapping?
+        if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
+          // If we are, calculate the maximum distance we can still make on this row
+          const correctedDistance = distance + (rest - tileDomain[1]);
+          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          break;
+        }
+        distance += rest - stop;
+      }
+    }
+    return -finalDistance;
+  }
+
+  private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+    const actorFrame = actor.getCurrentFrame();
+    const delta = actor.y - nextPosition.y;
+    let finalDistance = delta; // Assume the distance can be fully traversed
+    // For each row, check if the distance can be traversed
+    const actorX = Math.floor(actor.x - halfUnit);
     for (let column = 0; column < actorFrame.width; column++) {
-      const deltaTop = (unit - (contours.bottom[column + offsetX] + 1)) + actorFrame.contour.top[column] - (unit - offsetY);
-      const deltaBottom = (unit - (actorFrame.contour.bottom[column] + 1)) + contours.top[column + offsetX] - offsetY;
-      if (debug) {
-        this.plotPixel(actor.x + (unit / 2) + column, actor.y + (unit / 2) + actorFrame.contour.top[column], 'purple');
-        this.plotPixel(actor.x + (unit / 2) + column, actor.y + (unit / 2) + actorFrame.contour.bottom[column], 'brown');
-      }
-      if (result.top > deltaTop) {
-        result.top = deltaTop;
-      }
-      if (result.bottom > deltaBottom) {
-        result.bottom = deltaBottom;
+      if (actorFrame.contour.top[column] === unit) continue;
+      const base = actor.y - halfUnit + actorFrame.contour.top[column] - 1;
+      let distance = 0;
+      // Do this for as long as the delta has not been completely checked
+      while (distance < delta) {
+        const tileDomain = this.getTileDomainColumn(grid, base + distance, actorX, column);
+        const rest = (base + distance) % unit;
+        const stop = rest - (delta - distance) < 0 ? -1 : rest - (delta - distance);
+        const actorDomain = [stop, rest];
+        // Are we overlapping?
+        if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
+          // If we are, calculate the maximum distance we can still make on this row
+          const correctedDistance = distance + (rest - tileDomain[1]);
+          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          break;
+        }
+        distance += rest - stop;
       }
     }
-    return result;
+    return -finalDistance;
   }
 
-  private static getCurrentFrame(index) {
-    return global.animations.data[index].getCurrentFrame(global.clock.elapsedTime)
+  private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+    const actorFrame = actor.getCurrentFrame();
+    const delta = nextPosition.y - actor.y;
+    let finalDistance = delta; // Assume the distance can be fully traversed
+    // For each row, check if the distance can be traversed
+    const actorX = Math.floor(actor.x - halfUnit);
+    for (let column = 0; column < actorFrame.width; column++) {
+      if (actorFrame.contour.bottom[column] === -1) continue;
+      const base = actor.y - halfUnit + actorFrame.contour.bottom[column] + 1;
+      let distance = 0;
+      // Do this for as long as the delta has not been completely checked
+      while (distance < delta) {
+        const tileDomain = this.getTileDomainColumn(grid, base + distance, actorX, column);
+        const rest = (base + distance) % unit;
+        const stop = rest + (delta - distance) > unit - 1 ? unit : rest + (delta - distance);
+        const actorDomain = [rest, stop];
+        // Are we overlapping?
+        if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
+          // If we are, calculate the maximum distance we can still make on this row
+          const correctedDistance = distance + (tileDomain[0] - rest);
+          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+          break;
+        }
+        distance += stop - rest;
+      }
+    }
+    return finalDistance;
   }
 
-  private static playerToGrid(value: number): number {
-    return Math.floor(value / global.config.unit);
+  private static getTileDomainRow(grid, start, actorY, row) {
+    const unit = global.config.unit;
+    const halfUnit = unit / 2;
+    const tileFrame = this.getTileFrame(grid, start, actorY + row);
+    if (tileFrame === null) return tileFrame;
+    // Determine the domain of the row of the current tile
+    const { contour } = tileFrame;
+    const tileRowIndex = (actorY + row) % unit;
+    // Convert to a domain value
+    return [contour.left[tileRowIndex], contour.right[tileRowIndex]];
   }
 
-  private static plotPixel(x, y, color) {
-    const ctx = global.canvas.getContext();
-    ctx.beginPath();
-    ctx.fillStyle = color;
-    ctx.rect(x, y, 1, 1);
-    ctx.fill();
-    ctx.closePath();
+  private static getTileDomainColumn(grid, start, actorX, column) {
+    const unit = global.config.unit;
+    const tileFrame = this.getTileFrame(grid, actorX + column, start);
+    if (tileFrame === null) return tileFrame;
+    // Determine the domain of the column of the current tile
+    const { contour } = tileFrame;
+    const tileColumnIndex = (actorX + column) % unit;
+    // Convert to a domain value
+    return [contour.top[tileColumnIndex], contour.bottom[tileColumnIndex]];
   }
-}
+
+  private static overlaps(a, b) {
+    return Math.max(a[0], b[0]) <= Math.min(a[1], b[1]);
+  };
+
+  private static getTileFrame(grid, x, y) {
+    const unit = global.config.unit;
+    const tileX = Math.floor(x / unit);
+    const tileY = Math.floor(y / unit);
+    const tile = grid.getTile(tileX, tileY);
+    if (tile === null || tile.type === 'background') return null;
+    return global.animations.data[tile.animation].getCurrentFrame(global.clock.elapsedTime);
+  }
+};
