@@ -12,17 +12,18 @@ export default class ContourCollision {
 
     // Determine the direction the actor is trying to go in
     if (actor.x > nextPosition.x) {
-      return { y: 0, x: this.checkLeft(grid, actor, nextPosition, bandMargin) };
+      return this.checkLeft(grid, actor, nextPosition, bandMargin);
     }
     if (actor.x < nextPosition.x) {
-      return { y: 0, x: this.checkRight(grid, actor, nextPosition, bandMargin) };
+      return this.checkRight(grid, actor, nextPosition, bandMargin);
     }
     if (actor.y > nextPosition.y) {
-      return { x: 0, y: this.checkTop(grid, actor, nextPosition, bandMargin) };
+      return this.checkTop(grid, actor, nextPosition, bandMargin);
     }
     if (actor.y < nextPosition.y) {
-      return { x: 0, y: this.checkBottom(grid, actor, nextPosition, bandMargin) };
+      return this.checkBottom(grid, actor, nextPosition, bandMargin);
     }
+
     return nextPosition;
   }
 
@@ -31,12 +32,13 @@ export default class ContourCollision {
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.x - actor.x;
+    const topLimit = actorFrame.boundingBox.top + bandMargin;
+    const bottomLimit = actorFrame.boundingBox.bottom - bandMargin;
+    let y = 0;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorY = Math.floor(actor.y - halfUnit);
-    for (let row = 0; row < actorFrame.height; row++) {
-      // Make sure we are not going to probe an empty row
-      if (actorFrame.contour.right[row] === -1) continue;
+    for (let row = actorFrame.boundingBox.top; row < actorFrame.boundingBox.bottom; row++) {
       const base = actor.x - halfUnit + actorFrame.contour.right[row] + 1;
       let distance = 0;
       // Do this for as long as the delta has not been completely checked
@@ -47,28 +49,35 @@ export default class ContourCollision {
         const actorDomain = [rest, stop];
         // Are we overlapping?
         if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
-          // If we are, calculate the maximum distance we can still make on this row
-          const correctedDistance = distance + (tileDomain[0] - rest);
-          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
-          break;
+          if (row < topLimit) {
+            y = topLimit - row;
+          } else if (row > bottomLimit) {
+            y = -1 * (row - bottomLimit);
+          } else {
+            // If we are, calculate the maximum distance we can still make on this row
+            const correctedDistance = distance + (tileDomain[0] - rest);
+            if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+            break;
+          }
         }
         distance += stop - rest;
       }
     }
-    return finalDistance
+    return { y, x: finalDistance };
   }
 
-  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, margin: number): any {
+  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = actor.x - nextPosition.x;
+    const topLimit = actorFrame.boundingBox.top + bandMargin;
+    const bottomLimit = actorFrame.boundingBox.bottom - bandMargin;
+    let y = 0;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorY = Math.floor(actor.y - halfUnit);
-    for (let row = 0; row < actorFrame.height; row++) {
-      // Make sure we are not going to probe an empty row
-      if (actorFrame.contour.left[row] === unit) continue;
+    for (let row = actorFrame.boundingBox.top; row < actorFrame.boundingBox.bottom; row++) {
       const base = actor.x - halfUnit + actorFrame.contour.left[row] - 1;
       let distance = 0;
       // Do this for as long as the delta has not been completely checked
@@ -79,15 +88,21 @@ export default class ContourCollision {
         const actorDomain = [stop, rest];
         // Are we overlapping?
         if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
-          // If we are, calculate the maximum distance we can still make on this row
-          const correctedDistance = distance + (rest - tileDomain[1]);
-          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
-          break;
+          if (row < topLimit) {
+            y = topLimit - row;
+          } else if (row > bottomLimit) {
+            y = -1 * (row - bottomLimit);
+          } else {
+            // If we are, calculate the maximum distance we can still make on this row
+            const correctedDistance = distance + (rest - tileDomain[1]);
+            if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+            break;
+          }
         }
         distance += rest - stop;
       }
     }
-    return -finalDistance;
+    return { y, x: -finalDistance };
   }
 
   private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
@@ -95,11 +110,13 @@ export default class ContourCollision {
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = actor.y - nextPosition.y;
+    const leftLimit = actorFrame.boundingBox.left + bandMargin;
+    const rightLimit = actorFrame.boundingBox.right - bandMargin;
+    let x = 0;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorX = Math.floor(actor.x - halfUnit);
-    for (let column = 0; column < actorFrame.width; column++) {
-      if (actorFrame.contour.top[column] === unit) continue;
+    for (let column = actorFrame.boundingBox.left; column < actorFrame.boundingBox.right; column++) {
       const base = actor.y - halfUnit + actorFrame.contour.top[column] - 1;
       let distance = 0;
       // Do this for as long as the delta has not been completely checked
@@ -110,15 +127,21 @@ export default class ContourCollision {
         const actorDomain = [stop, rest];
         // Are we overlapping?
         if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
-          // If we are, calculate the maximum distance we can still make on this row
-          const correctedDistance = distance + (rest - tileDomain[1]);
-          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
-          break;
+          if (column < leftLimit) {
+            x = leftLimit - column;
+          } else if (column > rightLimit) {
+            x = -1 * (column - rightLimit);
+          } else {
+            // If we are, calculate the maximum distance we can still make on this row
+            const correctedDistance = distance + (rest - tileDomain[1]);
+            if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+            break;
+          }
         }
         distance += rest - stop;
       }
     }
-    return -finalDistance;
+    return { x, y: -finalDistance };
   }
 
   private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
@@ -126,11 +149,13 @@ export default class ContourCollision {
     const halfUnit = unit / 2;
     const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.y - actor.y;
+    const leftLimit = actorFrame.boundingBox.left + bandMargin;
+    const rightLimit = actorFrame.boundingBox.right - bandMargin;
+    let x = 0;
     let finalDistance = delta; // Assume the distance can be fully traversed
     // For each row, check if the distance can be traversed
     const actorX = Math.floor(actor.x - halfUnit);
-    for (let column = 0; column < actorFrame.width; column++) {
-      if (actorFrame.contour.bottom[column] === -1) continue;
+    for (let column = actorFrame.boundingBox.left; column < actorFrame.boundingBox.right; column++) {
       const base = actor.y - halfUnit + actorFrame.contour.bottom[column] + 1;
       let distance = 0;
       // Do this for as long as the delta has not been completely checked
@@ -141,15 +166,21 @@ export default class ContourCollision {
         const actorDomain = [rest, stop];
         // Are we overlapping?
         if (tileDomain !== null && this.overlaps(actorDomain, tileDomain)) {
-          // If we are, calculate the maximum distance we can still make on this row
-          const correctedDistance = distance + (tileDomain[0] - rest);
-          if (correctedDistance < finalDistance) finalDistance = correctedDistance;
-          break;
+          if (column < leftLimit) {
+            x = leftLimit - column;
+          } else if (column > rightLimit) {
+            x = -1 * (column - rightLimit);
+          } else {
+            // If we are, calculate the maximum distance we can still make on this row
+            const correctedDistance = distance + (tileDomain[0] - rest);
+            if (correctedDistance < finalDistance) finalDistance = correctedDistance;
+            break;
+          }
         }
         distance += stop - rest;
       }
     }
-    return finalDistance;
+    return { x, y: finalDistance };
   }
 
   private static getTileDomainRow(grid, start, actorY, row) {

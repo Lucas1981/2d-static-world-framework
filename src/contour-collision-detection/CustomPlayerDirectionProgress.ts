@@ -38,6 +38,11 @@ export default class CustomPlayerDirectionProgress implements IProgress {
       const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY }, defaultBandMargin);
       actor.y += result.y;
       actor.x += result.x;
+      if (result.x !== 0) {
+        const correction = ContourCollision.correctActor(grid, actor, { x: actor.x - result.x, y: actor.y }, 0);
+        actor.x += correction.x;
+      }
+      // actor.x += result.x;
       actor.direction = DirectionTypes.Up;
     }
     if (state.down) {
@@ -45,6 +50,10 @@ export default class CustomPlayerDirectionProgress implements IProgress {
       const result = ContourCollision.correctActor(grid, actor, { x: actor.x, y: probeY }, defaultBandMargin);
       actor.y += result.y;
       actor.x += result.x;
+      if (result.x !== 0) {
+        const correction = ContourCollision.correctActor(grid, actor, { x: actor.x - result.x, y: actor.y }, 0);
+        actor.x += correction.x;
+      }
       actor.direction = DirectionTypes.Down;
     }
     if (state.left) {
@@ -52,6 +61,10 @@ export default class CustomPlayerDirectionProgress implements IProgress {
       const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, defaultBandMargin);
       actor.x += result.x;
       actor.y += result.y;
+      if (result.y !== 0) {
+        const correction = ContourCollision.correctActor(grid, actor, { x: actor.x, y: actor.y - result.y }, 0);
+        actor.y += correction.y;
+      }
       actor.direction = DirectionTypes.Left;
     }
     if (state.right) {
@@ -59,6 +72,10 @@ export default class CustomPlayerDirectionProgress implements IProgress {
       const result = ContourCollision.correctActor(grid, actor, { x: probeX, y: actor.y }, defaultBandMargin);
       actor.x += result.x;
       actor.y += result.y;
+      if (result.y !== 0) {
+        const correction = ContourCollision.correctActor(grid, actor, { x: actor.x, y: actor.y - result.y }, 0);
+        actor.y += correction.y;
+      }
       actor.direction = DirectionTypes.Right;
     }
   }

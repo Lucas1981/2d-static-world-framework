@@ -3,7 +3,7 @@ import Canvas from './Canvas';
 const contourCollisionDebug = false;
 
 export default class Frame {
-  private _boundingBox = {};
+  private _boundingBox: any;
 
   constructor(
     private image: any,
