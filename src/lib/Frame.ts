@@ -19,10 +19,10 @@ export default class Frame {
     },
   ) {
     this._boundingBox = {
-      top: contour.top.findIndex(record => record < height),
-      bottom: height - [...contour.bottom].reverse().findIndex(record => record > -1),
-      left: contour.left.findIndex(record => record < width),
-      right: width - [...contour.right].reverse().findIndex(record => record > - 1)
+      top: contour.left.findIndex(record => record < height),
+      bottom: height - [...contour.right].reverse().findIndex(record => record > -1),
+      left: contour.top.findIndex(record => record < width),
+      right: width - [...contour.bottom].reverse().findIndex(record => record > - 1)
     }
   }
 
@@ -38,10 +38,10 @@ export default class Frame {
     if (contourCollisionDebug) {
       if (!this.contour) return;
       for (let i = 0; i < this.height; i++) {
-        // if (this.contour.top[i] === 64 && this.contour.bottom[i] === -1) continue;
+        if (this.contour.left[i] === 64 && this.contour.right[i] === -1) continue;
         ctx.beginPath();
         ctx.moveTo(x + this.contour.left[i], y + i);
-        ctx.lineTo(x + this.contour.right[i], y + i);
+        ctx.lineTo(x + this.contour.right[i], y + i + 1);
         ctx.strokeStyle = "rgba(255, 0, 0, .5)";
         ctx.closePath();
         ctx.stroke();
@@ -51,7 +51,7 @@ export default class Frame {
         if (this.contour.top[col] === 64 || this.contour.bottom[col] === -1) continue;
         ctx.beginPath();
         ctx.moveTo(x + col, y + this.contour.top[col]);
-        ctx.lineTo(x + col, y + this.contour.bottom[col]);
+        ctx.lineTo(x + col, y + this.contour.bottom[col] + 1);
         ctx.strokeStyle = "rgba(0, 0, 255, .5)";
         ctx.closePath();
         ctx.stroke();

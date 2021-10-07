@@ -20,11 +20,13 @@ export default class Generator {
 
   public static getMaps(data: any, actorAttributes: any): any {
     const result: any = [];
+
     for(const map of data.maps) {
       const grid: Grid = Generator.getGrid(map, data);
       const actors: LinkedList = Generator.getActors(map.actors, data, actorAttributes);
       result.push({ grid, actors });
     }
+
     return result;
   }
 
@@ -82,7 +84,8 @@ export default class Generator {
       data.config.gridHeight,
       data.config.unit,
       data.tiles,
-      map.grid,
+      // Keep it backwards compatible for single-layered maps
+      map.grid[0][0].length ? map.grid : [map.grid],
       map.backgroundColor || null
     );
     return grid;

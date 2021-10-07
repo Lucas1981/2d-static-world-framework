@@ -4,7 +4,7 @@ const defaultBandMargin = 0;
 
 export default class Grid {
 
-  private grid: Array<Array<number>>;
+  private grid: Array<Array<Array<number>>>;
   private context: any;
 
   constructor(
@@ -17,37 +17,40 @@ export default class Grid {
   ) {
     this.context = global.canvas.getContext();
 
-    // First, initiate with solid null values
-    this.grid = new Array(this.height + 3);
-    for(let i = 0; i < this.grid.length; i++) {
-      this.grid[i] = new Array(this.width + 3).fill(null);
-    }
+    this.grid = [];
+    for (let i = 0; i < this.map.length; i++) {
+      // First, initiate with solid null values
+      this.grid[i] = new Array(this.height + 3);
+      for(let j = 0; j < this.grid[i].length; j++) {
+        this.grid[i][j] = new Array(this.width + 3).fill(null);
+      }
 
-    // Then add the actual maps
-    for (let y = 0; y < this.height; y++) {
-      for(let x = 0; x < this.width; x++) {
-        this.grid[y + 1][x + 1] = this.map[y][x];
+      // Then add the actual maps
+      for (let y = 0; y < this.height; y++) {
+        for(let x = 0; x < this.width; x++) {
+          this.grid[i][y + 1][x + 1] = this.map[i][y][x];
+        }
       }
     }
   }
 
   public getGrid() {
-    return this.grid;
+    return this.grid[global.mainLayer];
   }
 
   public getTile(x: number, y: number) {
-    const tile = this.grid[y + 1][x + 1];
+    const tile = this.grid[global.mainLayer][y + 1][x + 1];
     if (tile === null || !('animation' in this.tiles[tile])) return null;
     return this.tiles[tile];
   }
 
   public isSafe(x: number, y: number) {
-    const tile = this.grid[y + 1][x + 1];
+    const tile = this.grid[global.mainLayer][y + 1][x + 1];
     return tile !== null && this.tiles[tile].type === 'background';
   }
 
   public getAnimation(x: number, y: number) {
-    const tile = this.grid[y + 1][x + 1];
+    const tile = this.grid[global.mainLayer][y + 1][x + 1];
     if (tile === null || !('animation' in this.tiles[tile])) return null;
     return this.tiles[tile].animation;
   }
@@ -59,21 +62,23 @@ export default class Grid {
     const heightInUnits = Math.floor(global.config.cameraHeight / global.config.unit);
     const restX = global.cameraX - (global.config.unit * cameraGridX);
     const restY = global.cameraY - (global.config.unit * cameraGridY);
-    for(let x = cameraGridX; x <= widthInUnits + cameraGridX + 1; x++) {
-      for(let y = cameraGridY; y <= heightInUnits + cameraGridY + 1; y++) {
-        const tile = this.grid[y][x];
-        if (tile === null || !('animation' in this.tiles[tile])) continue;
+    for (let i = 0; i < this.grid.length; i++) {
+      for(let x = cameraGridX; x <= widthInUnits + cameraGridX + 1; x++) {
+        for(let y = cameraGridY; y <= heightInUnits + cameraGridY + 1; y++) {
+          const tile = this.grid[i][y][x];
+          if (tile === null || !('animation' in this.tiles[tile])) continue;
 
-        const finalX = ((x - cameraGridX) * this.unit) - Math.floor(restX);
-        const finalY = ((y - cameraGridY) * this.unit) - Math.floor(restY);
-        global.animations.data[this.tiles[tile].animation].draw(
-          this.context, finalX, finalY, global.clock.elapsedTime
-        );
-
-        if (global.debug) {
-          global.canvas.drawRubberBand(
-            finalX, finalY, this.unit, this.unit, 'red'
+          const finalX = ((x - cameraGridX) * this.unit) - Math.floor(restX);
+          const finalY = ((y - cameraGridY) * this.unit) - Math.floor(restY);
+          global.animations.data[this.tiles[tile].animation].draw(
+            this.context, finalX, finalY, global.clock.elapsedTime
           );
+
+          if (global.debug) {
+            global.canvas.drawRubberBand(
+              finalX, finalY, this.unit, this.unit, 'red'
+            );
+          }
         }
       }
     }
@@ -92,7 +97,7 @@ export default class Grid {
 
   public checkGrid(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin, showTiles = false): any {
     const unit = global.config.unit;
-    const grid = global.maps[global.activeMap].grid;
+    const grid = global.maps[global.activeMap].grid[global.mainLayer];
     const probes = this.getProbes(probeX, probeY, width, height, bandMargin);
     const {
       probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,

@@ -30,6 +30,7 @@ class Global {
     private _debug: Boolean = debug;
     private _cameraX: number = 0;
     private _cameraY: number = 0;
+    private _mainLayer: number = 1;
 
     constructor() {
       // We need to do this immediately
@@ -48,6 +49,14 @@ class Global {
 
     public get pubsub(): PubSub {
       return this._pubsub;
+    }
+
+    public get mainLayer(): number {
+      return this._mainLayer;
+    }
+
+    public set mainLayer(mainLayer) {
+      this._mainLayer = mainLayer;
     }
 
     public set gameState(gameState: GameState) {
