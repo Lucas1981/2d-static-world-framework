@@ -19,11 +19,15 @@ export default class Animation {
     this.frames[this.indices[index]].draw(ctx, x, y);
   }
 
-  public getCurrentFrame(elapsedTime: any = 0) {
+  public getCurrentFrame(elapsedTime: any = 0): Frame {
     const index: number = this.determineFrame(elapsedTime);
     const frame: Frame = this.frames[this.indices[index]];
     return frame;
   }
+
+  public getFrame(index): Frame { return this.frames[index]; }
+  public getFirstFrame(): Frame { return this.frames[0]; }
+  public getLastFrame(): Frame { return this.frames[this.frames.length - 1]; }
 
   private determineFrame(elapsedTime: any): number {
     const frameNumber: number = Math.floor(elapsedTime * this.framesPerSecond / 1000)
