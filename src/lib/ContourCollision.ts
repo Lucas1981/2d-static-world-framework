@@ -1,5 +1,6 @@
 import Grid from '../lib/Grid';
 import Actor from '../lib/actor/Actor';
+import Frame from '../lib/Frame.ts';
 import global from '../lib/Global.ts';
 
 export default class ContourCollision {
@@ -7,30 +8,30 @@ export default class ContourCollision {
 
   }
 
-  public static correctActor(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number = 0): any {
+  public static correctActor(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number = 0, frameType: number = 0): any {
     const unit = global.config.unit;
+    const actorFrame: Frame = actor.getCurrentFrame();
 
     // Determine the direction the actor is trying to go in
     if (actor.x > nextPosition.x) {
-      return this.checkLeft(grid, actor, nextPosition, bandMargin);
+      return this.checkLeft(grid, actor, nextPosition, bandMargin, actorFrame);
     }
     if (actor.x < nextPosition.x) {
-      return this.checkRight(grid, actor, nextPosition, bandMargin);
+      return this.checkRight(grid, actor, nextPosition, bandMargin, actorFrame);
     }
     if (actor.y > nextPosition.y) {
-      return this.checkTop(grid, actor, nextPosition, bandMargin);
+      return this.checkTop(grid, actor, nextPosition, bandMargin, actorFrame);
     }
     if (actor.y < nextPosition.y) {
-      return this.checkBottom(grid, actor, nextPosition, bandMargin);
+      return this.checkBottom(grid, actor, nextPosition, bandMargin, actorFrame);
     }
 
     return nextPosition;
   }
 
-  private static checkRight(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+  private static checkRight(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number, actorFrame: Frame): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
-    const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.x - actor.x;
     const topLimit = actorFrame.boundingBox.top + bandMargin;
     const bottomLimit = actorFrame.boundingBox.bottom - bandMargin;
@@ -66,10 +67,9 @@ export default class ContourCollision {
     return { y, x: finalDistance };
   }
 
-  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+  private static checkLeft(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number, actorFrame: Frame): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
-    const actorFrame = actor.getCurrentFrame();
     const delta = actor.x - nextPosition.x;
     const topLimit = actorFrame.boundingBox.top + bandMargin;
     const bottomLimit = actorFrame.boundingBox.bottom - bandMargin;
@@ -105,10 +105,9 @@ export default class ContourCollision {
     return { y, x: -finalDistance };
   }
 
-  private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+  private static checkTop(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number, actorFrame: Frame): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
-    const actorFrame = actor.getCurrentFrame();
     const delta = actor.y - nextPosition.y;
     const leftLimit = actorFrame.boundingBox.left + bandMargin;
     const rightLimit = actorFrame.boundingBox.right - bandMargin;
@@ -121,7 +120,7 @@ export default class ContourCollision {
       let distance = 0;
       // Do this for as long as the delta has not been completely checked
       while (distance < delta) {
-        const tileDomain = this.getTileDomainColumn(grid, base + distance, actorX, column);
+        const tileDomain = this.getTileDomainColumn(grid, base - distance, actorX, column);
         const rest = (base + distance) % unit;
         const stop = rest - (delta - distance) < 0 ? -1 : rest - (delta - distance);
         const actorDomain = [stop, rest];
@@ -144,10 +143,9 @@ export default class ContourCollision {
     return { x, y: -finalDistance };
   }
 
-  private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number): any {
+  private static checkBottom(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number, actorFrame: Frame): any {
     const unit = global.config.unit;
     const halfUnit = unit / 2;
-    const actorFrame = actor.getCurrentFrame();
     const delta = nextPosition.y - actor.y;
     const leftLimit = actorFrame.boundingBox.left + bandMargin;
     const rightLimit = actorFrame.boundingBox.right - bandMargin;
