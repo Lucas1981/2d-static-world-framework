@@ -21,6 +21,8 @@ export default class Generator {
   public static getMaps(data: any, actorAttributes: any): any {
     const result: any = [];
 
+    if (!data.maps[0].grid[0][0].length) global.mainLayer = 0;
+
     for(const map of data.maps) {
       const grid: Grid = Generator.getGrid(map, data);
       const actors: LinkedList = Generator.getActors(map.actors, data, actorAttributes);
