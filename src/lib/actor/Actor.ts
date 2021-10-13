@@ -179,6 +179,23 @@ export default class Actor {
     return frame;
   }
 
+  public getFirstAnimationFrame(): Frame {
+    console.log(this.states[this.stateNames[0]].animationKey);
+    return global.animations.data[this.states[this.stateNames[0]].animationKey].getFirstFrame();
+  }
+
+  public getFirstFrame(): Frame {
+    return global.animations.data[
+      this._state.animationKey
+    ].getFirstFrame();
+  }
+
+  public getLastFrame(): Frame {
+    return global.animations.data[
+      this._state.animationKey
+    ].getLastFrame();
+  }
+
   public hitsGrid(grid: Grid, gridX: number, gridY: number): Boolean {
     const boundingBox = global.animations.data[this._state.animationKey].boundingBox;
     const halfUnit = global.config.unit / 2;
