@@ -121,7 +121,7 @@ export default class ContourCollision {
       // Do this for as long as the delta has not been completely checked
       while (distance < delta) {
         const tileDomain = this.getTileDomainColumn(grid, base - distance, actorX, column);
-        const rest = (base + distance) % unit;
+        const rest = (base - distance) % unit;
         const stop = rest - (delta - distance) < 0 ? -1 : rest - (delta - distance);
         const actorDomain = [stop, rest];
         // Are we overlapping?
