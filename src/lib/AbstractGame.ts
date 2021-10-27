@@ -45,7 +45,7 @@ export default abstract class AbstractGame implements IGame {
 
   private loop(): void {
     global.clock.setTime();
-    if(showFps) console.log(`${Math.floor(1000 / global.clock.elapsedTime)}fps`);
+    if (showFps) console.log(`${Math.floor(1000 / global.clock.elapsedTime)}fps`);
     switch(global.gameState) {
       case GameState.TitleScreen:
         // Do what needs to be done in the title screen

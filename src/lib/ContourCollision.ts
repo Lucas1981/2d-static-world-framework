@@ -10,7 +10,7 @@ export default class ContourCollision {
 
   public static correctActor(grid: Grid, actor: Actor, nextPosition: any, bandMargin: number = 0, frameType: number = 0): any {
     const unit = global.config.unit;
-    const actorFrame: Frame = actor.getCurrentFrame();
+    const actorFrame: Frame = actor.getContourMask() || actor.getCurrentFrame();
 
     // Determine the direction the actor is trying to go in
     if (actor.x > nextPosition.x) {

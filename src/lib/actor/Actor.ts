@@ -258,6 +258,15 @@ export default class Actor {
     return collisions;
   }
 
+  public getContourMask() {
+    return 'contour-mask' in this.states ?
+      global.animations.data[this.states['contour-mask'].animationKey].getFirstFrame() : null;
+  }
+
+  public hasContourMaskAnimation() {
+    return this.stateNames.indexOf('contour-mask') !== -1;
+  }
+
   public isCollidingWith(actor: Actor): boolean {
     return Collision.isColliding(this, actor);
   }

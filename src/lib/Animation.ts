@@ -25,9 +25,9 @@ export default class Animation {
     return frame;
   }
 
-  public getFrame(index): Frame { return this.frames[index]; }
-  public getFirstFrame(): Frame { return this.frames[0]; }
-  public getLastFrame(): Frame { return this.frames[this.frames.length - 1]; }
+  public getFrame(index): Frame { return this.frames[this.indices[index]]; }
+  public getFirstFrame(): Frame { return this.frames[this.indices[0]]; }
+  public getLastFrame(): Frame { return this.frames[this.indices[this.indices.length - 1]]; }
 
   private determineFrame(elapsedTime: any): number {
     const frameNumber: number = Math.floor(elapsedTime * this.framesPerSecond / 1000)

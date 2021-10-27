@@ -7,6 +7,7 @@ export default class PositionCamera implements IProgress {
       /* Adjust the camera position */
 
       // Set up the values we need to calculate
+      const padding = global.config.padding || { top: 0, left: 0, bottom: 0, right: 0 };
       const totalFieldWidth = global.config.gridWidth * global.config.unit;
       const totalFieldHeight = global.config.gridHeight * global.config.unit;
       const distancePlayerToLeft = actor.x; // the left edge is 0, so the x is all we need
@@ -21,9 +22,9 @@ export default class PositionCamera implements IProgress {
       global.cameraY = actor.y - maximumCameraHeight;
 
       // Compare values and make necessary adjustments
-      if (distancePlayerToLeft < maximumCameraWidth) global.cameraX = 0;
-      if (distancePlayerToRight < maximumCameraWidth) global.cameraX = totalFieldWidth - global.config.cameraWidth;
-      if (distancePlayerToTop < maximumCameraHeight) global.cameraY = 0;
-      if (distancePlayerToBottom < maximumCameraHeight) global.cameraY = totalFieldHeight - global.config.cameraHeight;
+      if (distancePlayerToLeft < maximumCameraWidth + padding.left) global.cameraX = padding.left;
+      if (distancePlayerToRight < maximumCameraWidth + padding.right) global.cameraX = totalFieldWidth - global.config.cameraWidth - padding.right;
+      if (distancePlayerToTop < maximumCameraHeight + padding.top) global.cameraY = padding.top;
+      if (distancePlayerToBottom < maximumCameraHeight + padding.bottom) global.cameraY = totalFieldHeight - global.config.cameraHeight - padding.bottom;
     }
 }
