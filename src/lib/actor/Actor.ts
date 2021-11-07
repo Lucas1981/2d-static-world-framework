@@ -5,6 +5,7 @@ import IThreat from './IThreat';
 import IVolition from './IVolition';
 import IVulnerable from './IVulnerable';
 import IActionable from './IActionable';
+import IVisible from './IVisible';
 import Collision from '../Collision';
 import Frame from '../Frame';
 import Grid from '../Grid';
@@ -35,6 +36,9 @@ export default class Actor {
     private volition: IVolition,
     private vulnerable: IVulnerable,
     private actionable: IActionable,
+    private visible: IVisible,
+    private _name: string,
+    private _typeName: string
   ) {
     this.stateNames = Object.keys(this.states);
     this.stateName = this.stateNames[0];
@@ -63,6 +67,14 @@ export default class Actor {
 
   public getTimeSinceLastStateChange() {
     return global.clock.getTime() - this.stateChange;
+  }
+
+  public get name(): string {
+    return this._name;
+  }
+
+  public get typeName(): string {
+    return this._typeName;
   }
 
   public get state(): any {
@@ -146,6 +158,10 @@ export default class Actor {
   public isActive(): Boolean {
     return this.actionable.isActive(this);
   };
+
+  public isVisible(): Boolean {
+    return this.visible.isVisible(this);
+  }
 
   public isAlive(): Boolean {
     return this.alive;

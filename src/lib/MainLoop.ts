@@ -33,7 +33,7 @@ export default class MainLoop {
 
   private moveObjects(progress: boolean): void {
     for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
-      if(!actor.element.isAlive()) {
+      if (!actor.element.isAlive()) {
         global.maps[global.activeMap].actors.remove(actor.element);
       } else {
         if (progress) actor.element.progress();
@@ -44,7 +44,9 @@ export default class MainLoop {
   private drawObjects(animate: boolean) {
     // Then, let's draw everything
     for (let actor = global.maps[global.activeMap].actors.first(); actor !== null; actor = actor.next) {
-      actor.element.draw(animate);
+      if (actor.element.isVisible()) {
+        actor.element.draw(animate);
+      }
     }
   }
 

@@ -8,6 +8,8 @@ import Active from './Active';
 import Passive from './Passive';
 import Benevolent from './Benevolent';
 import Malevolent from './Malevolent';
+import Visible from './Visible';
+import Invisible from './Invisible';
 
 export default {
   'vulnerable': Vulnerable,
@@ -19,5 +21,7 @@ export default {
   'active': Active,
   'passive': Passive,
   'benevolent': Benevolent,
-  'malevolent': Malevolent
+  'malevolent': Malevolent,
+  'visible': Visible,
+  'invisible': Invisible
 }

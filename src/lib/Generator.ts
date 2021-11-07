@@ -11,6 +11,7 @@ import IMovable from './actor/IMovable';
 import IActionable from './actor/IActionable';
 import IVolition from './actor/IVolition';
 import IVulnerable from './actor/IVulnerable';
+import IVisible from './actor/IVisible';
 import IStateChange from './actor/IStateChange';
 import actorOptions from './actor/actor-options';
 import global from './Global';
@@ -60,7 +61,10 @@ export default class Generator {
         new ('threat' in customAttributes ? customAttributes.threat : actorOptions[actorType.threat])(),
         new ('volition' in customAttributes ? customAttributes.volition : actorOptions[actorType.volition])(),
         new ('vulnerable' in customAttributes ? customAttributes.vulnerable : actorOptions[actorType.vulnerable])(),
-        new ('actionable' in customAttributes ? customAttributes.actionable : actorOptions[actorType.actionable])()
+        new ('actionable' in customAttributes ? customAttributes.actionable : actorOptions[actorType.actionable])(),
+        new ('visible' in customAttributes ? customAttributes.visible : actorOptions[actorType.visible || 'visible'])(),
+        actor.name || '',
+        actorType.name || ''
       ));
     }
     return result;
@@ -70,13 +74,15 @@ export default class Generator {
     x: number, y: number, state: number, direction: number, states: any[],
     progress: IProgress[], stateChanger: IStateChange, movable: IMovable,
     harmful: IThreat, malevolent: IVolition, vulnerable: IVulnerable,
-    active: IActionable
+    active: IActionable, visible: IVisible = new actorOptions.visible(),
+    name = '', typeName = ''
   ) {
     global.maps[global.activeMap].actors.push(new Actor(
       // Make sure to correct for the offset of half a unit
       x, y, state, direction, states,
       progress, stateChanger, movable, harmful,
-      malevolent, vulnerable, active
+      malevolent, vulnerable, active, visible,
+      name, typeName
     ));
   }
 

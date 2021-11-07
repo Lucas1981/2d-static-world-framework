@@ -97,7 +97,7 @@ export default class Grid {
 
   public checkGrid(probeX: number, probeY: number, width: number = 0, height: number = 0, bandMargin: number = defaultBandMargin, showTiles = false): any {
     const unit = global.config.unit;
-    const grid = global.maps[global.activeMap].grid[global.mainLayer];
+    const grid = global.maps[global.activeMap].grid;
     const probes = this.getProbes(probeX, probeY, width, height, bandMargin);
     const {
       probeLeftHorizontalBand, probeRightHorizontalBand, probeTopHorizontalBand, probeBottomHorizontalBand,
